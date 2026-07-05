@@ -342,6 +342,7 @@
     <div class="app-bar-title" id="appTitle" style="color: var(--md-sys-color-on-background) !important;">
       Prod<span style="color: var(--md-sys-color-primary) !important;">u</span>co
     </div>
+    <span id="moduleTitle" style="display:none;"></span>
   </div>
   <svg id="themeToggle" onclick="toggleTheme()" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
 </header>
@@ -872,6 +873,17 @@
     if(tabId === 'calendar') renderCal();
     if(tabId === 'lifestyle') renderLifestyle();
     if(tabId === 'diet') renderDiet();
+    // Smooth scroll to "Today" for list-heavy tabs
+    setTimeout(() => {
+      if (tabId === 'lifestyle') {
+        const todayCard = document.getElementById('ls-today-card');
+        if (todayCard) todayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      if (tabId === 'diet') {
+        const todayCard = document.getElementById('diet-today-card');
+        if (todayCard) todayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
   }
 
   function openSubPage(pageId, title) {
@@ -889,12 +901,12 @@
     const moreNav = document.getElementById('nav-more');
     if(moreNav) moreNav.classList.add('active');
 
-    if(pageId === 'fees') renderFees();
     if(pageId === 'transactions') renderTx();
     if(pageId === 'mood') renderMood();
     if(pageId === 'streak') renderStreaks();
     if(pageId === 'attendance') renderAttendance();
     if(pageId === 'foundation') renderGovExam();
+    if(pageId === 'fees') renderCollegeFeesList();
   }
   function openSideNav() {
     document.getElementById('sideNav').classList.add('open');
@@ -1614,7 +1626,7 @@
     }
 
     if(!validTasks.length && !String(events || '').trim()) {
-      container.innerHTML = '<div class="agenda-empty">No tasks or events added for this date.</div>';
+      container.innerHTML = '<div class="agenda-empty">No tasks added to that day</div>';
       return;
     }
 
@@ -1672,8 +1684,27 @@
 
     renderAgenda();
   }
-  function calPrev(){ calMonth--; if(calMonth<0){calMonth=11; calYear--;} renderCal(); }
-  function calNext(){ calMonth++; if(calMonth>11){calMonth=0; calYear++;} renderCal(); }
+  function resetAgendaToViewedMonth() {
+    if (calMonth === today.getMonth() && calYear === today.getFullYear()) {
+      selectedAgendaDate = fd(today);
+    } else {
+      selectedAgendaDate = calYear + '-' + (calMonth + 1) + '-1';
+    }
+  }
+
+  function calPrev() { 
+    calMonth--; 
+    if(calMonth < 0) { calMonth = 11; calYear--; } 
+    resetAgendaToViewedMonth();
+    renderCal(); 
+  }
+
+  function calNext() { 
+    calMonth++; 
+    if(calMonth > 11) { calMonth = 0; calYear++; } 
+    resetAgendaToViewedMonth();
+    renderCal(); 
+  }
 
   function openTaskSheet(key) {
     modalDate = key; selectedAgendaDate = key; renderAgenda();
@@ -1717,7 +1748,7 @@
       const subtitle = summary.length ? summary.join(' • ') : 'No data logged';
       
       html += `
-        <div class="daily-card" onclick="openLifestyleSheet('${key}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
+        <div class="daily-card" ${isToday ? 'id="ls-today-card"' : ''} onclick="openLifestyleSheet('${key}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
           <div class="daily-info">
             <h3 style="${isToday ? 'color: var(--md-sys-color-primary)' : ''}">
               ${d} ${MONTHS[lsMonth].substring(0,3)} ${isToday ? '(Today)' : ''}
@@ -1787,7 +1818,7 @@
       const pct = totalCats ? Math.round((dayDone / totalCats) * 100) : 0;
       
       html += `
-        <div class="daily-card" onclick="openDietSheet('${dietYear}_${dietMonth+1}_${d}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
+        <div class="daily-card" ${isToday ? 'id="diet-today-card"' : ''} onclick="openDietSheet('${dietYear}_${dietMonth+1}_${d}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
           <div class="daily-info">
             <h3 style="${isToday ? 'color: var(--md-sys-color-primary)' : ''}">
               ${d} ${MONTHS[dietMonth].substring(0,3)} ${isToday ? '(Today)' : ''}
@@ -2169,8 +2200,17 @@ document.addEventListener('click', function(e) {
 
 
   // --- INITIALIZATION ---
-  renderDashboard();
-  renderAgenda();
+  document.addEventListener('DOMContentLoaded', () => {
+    // Properly boot the UI and load the first tab
+    switchTab('dashboard');
+    
+    // Register Service Worker for Offline PWA Support
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker Registered successfully'))
+        .catch(err => console.log('Service Worker Registration Failed:', err));
+    }
+  });
 </script>
 </body>
 </html>
