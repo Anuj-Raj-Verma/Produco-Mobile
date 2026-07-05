@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Produco Mobile - Phase 4 (Attendance & Foundation)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --md-sys-color-background: #121212;
+    --md-sys-color-surface: #1E1E1E;
+    --md-sys-color-surface-variant: #2D2D2D;
+    --md-sys-color-on-background: #E3E3E3;
+    --md-sys-color-on-surface: #C4C4C4;
+    --md-sys-color-on-surface-variant: #8E8E8E;
+    --md-sys-color-primary: #c8f069;
+    --md-sys-color-on-primary: #1a1a1a;
+    --md-sys-color-error: #CF6679;
+    --md-sys-color-warning: #f0c069;
+    --md-sys-color-info: #69b4f0;
+    --md-sys-color-outline: #424242;
+    --md-sys-color-success: #81c784;
+    --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px;
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--md-sys-color-background); color: var(--md-sys-color-on-background); font-family: 'Outfit', sans-serif; font-size: 16px; padding-bottom: 80px; }
+
+  /* Temp App Bar for Standalone testing */
+  .app-bar { padding: 16px 20px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;}
+  .app-bar-title { font-size: 20px; font-weight: 600; }
+  
+  /* Segmented Nav */
+  .segment-nav { display: flex; background: var(--md-sys-color-surface-variant); border-radius: var(--radius-sm); margin: 20px; padding: 4px; }
+  .segment-btn { flex: 1; padding: 10px; text-align: center; font-size: 14px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); border-radius: 6px; transition: 0.2s; cursor: pointer; }
+  .segment-btn.active { background: var(--md-sys-color-surface); color: var(--md-sys-color-primary); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  
+  .segment-content { display: none; padding: 0 20px; animation: fadeIn 0.3s; }
+  .segment-content.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Cards */
+  .card { background: var(--md-sys-color-surface); border-radius: var(--radius-md); padding: 16px; margin-bottom: 16px; border: 1px solid var(--md-sys-color-outline); }
+  .card-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+
+  /* Attendance specific */
+  .att-btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .att-btn { flex: 1 1 calc(33% - 8px); padding: 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; text-align: center; border: 1px solid var(--md-sys-color-outline); background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-background); cursor: pointer; }
+  .att-btn.active-present { background: rgba(129, 199, 132, 0.2); border-color: var(--md-sys-color-success); color: var(--md-sys-color-success); }
+  .att-btn.active-absent { background: rgba(207, 102, 121, 0.2); border-color: var(--md-sys-color-error); color: var(--md-sys-color-error); }
+  .att-btn.active-other { background: rgba(105, 180, 240, 0.2); border-color: var(--md-sys-color-info); color: var(--md-sys-color-info); }
+  
+  .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--md-sys-color-outline); }
+  .stat-row:last-child { border-bottom: none; }
+  
+  .day-accordion { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; }
+  .day-header { padding: 16px; font-weight: 600; background: var(--md-sys-color-surface-variant); cursor: pointer; display: flex; justify-content: space-between; }
+  .day-slots { display: none; padding: 12px; }
+  .day-accordion.open .day-slots { display: block; }
+  .slot-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--md-sys-color-outline); font-size: 14px; cursor: pointer; }
+  .slot-item:last-child { border-bottom: none; }
+
+  /* Foundation specific */
+  .gov-check-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--md-sys-color-outline); }
+  .gov-check-row:last-child { border-bottom: none; }
+  .checkbox-pill { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--md-sys-color-surface-variant); cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+  .checkbox-pill.checked { background: rgba(200, 240, 105, 0.2); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
+
+  .prog-bar-bg { height: 6px; background: var(--md-sys-color-surface-variant); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .prog-bar-fill { height: 100%; background: var(--md-sys-color-primary); transition: width 0.3s; }
+
+  .note-card { background: var(--md-sys-color-surface-variant); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 12px; }
+  .note-chip { font-size: 10px; padding: 4px 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 8px; display: inline-block; }
+
+  /* Bottom Sheets & Inputs (Copied from previous phases) */
+  .bottom-sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: none; align-items: flex-end; justify-content: center; }
+  .bottom-sheet-overlay.open { display: flex; }
+  .bottom-sheet { background: var(--md-sys-color-surface); width: 100%; max-width: 600px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 24px; animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .sheet-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 8px; text-transform: uppercase; }
+  .mobile-input, .mobile-select { width: 100%; background: var(--md-sys-color-surface-variant); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-sm); color: var(--md-sys-color-on-background); padding: 14px; font-family: inherit; font-size: 16px; }
+  .btn-primary { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; width: 100%; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; margin-top: 16px; cursor: pointer; }
+  .btn-secondary { background: transparent; color: var(--md-sys-color-on-background); border: 1px solid var(--md-sys-color-outline); width: 100%; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; margin-top: 8px; cursor: pointer; }
+  .fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: none; z-index: 900; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<header class="app-bar">
+  <div class="app-bar-title" id="moduleTitle">Attendance Tracker</div>
+  <button onclick="toggleTestModule()" style="padding:8px; background:var(--md-sys-color-primary); border:none; border-radius:4px;">Swap Module</button>
+</header>
+
+<main id="content">
+
+  <section id="page-attendance" style="display:block;">
+    <div class="segment-nav">
+      <div class="segment-btn active" onclick="switchAttSegment('today', this)">Today</div>
+      <div class="segment-btn" onclick="switchAttSegment('timetable', this)">Timetable</div>
+      <div class="segment-btn" onclick="switchAttSegment('stats', this)">Stats</div>
+    </div>
+
+    <div id="att-seg-today" class="segment-content active">
+      <div style="font-size: 14px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;" id="attTodayDate"></div>
+      <div id="attTodayList"></div>
+    </div>
+
+    <div id="att-seg-timetable" class="segment-content">
+      <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Tap a day to expand, tap a slot to edit.</p>
+      <div id="attTimetableList"></div>
+    </div>
+
+    <div id="att-seg-stats" class="segment-content">
+      <div class="card" id="attOverallCard"></div>
+      <h3 style="font-size: 16px; margin: 20px 0 12px;">Subject Breakdown</h3>
+      <div id="attSubjectStats"></div>
+    </div>
+  </section>
+
+  <section id="page-foundation" style="display:none;">
+    <div class="segment-nav">
+      <div class="segment-btn active" onclick="switchGovSegment('daily', this)">Daily/Week</div>
+      <div class="segment-btn" onclick="switchGovSegment('subjects', this)">Subjects</div>
+      <div class="segment-btn" onclick="switchGovSegment('notes', this)">Notes</div>
+    </div>
+
+    <div id="gov-seg-daily" class="segment-content active">
+      <div class="card">
+        <div class="card-title">Last 7 Days Consistency</div>
+        <div id="govDailyList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="display:flex; justify-content:space-between">Weekly Goals <span id="govWeekLabel" style="font-size:12px; color:var(--md-sys-color-primary)"></span></div>
+        <div id="govWeeklyList"></div>
+        <button class="btn-secondary" style="margin-top:16px" onclick="saveGovWeeklyMobile()">Save Progress</button>
+      </div>
+    </div>
+
+    <div id="gov-seg-subjects" class="segment-content">
+      <div id="govSubjectList"></div>
+    </div>
+
+    <div id="gov-seg-notes" class="segment-content">
+      <div id="govNotesList"></div>
+      <button class="fab" onclick="openGovNoteSheet()">+</button>
+    </div>
+  </section>
+
+</main>
+
+<div class="bottom-sheet-overlay" id="sheetAttSlot" onclick="if(event.target===this) closeSheet('sheetAttSlot')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="attSlotTitle">Edit Slot</div>
+    <input type="hidden" id="attEditDay">
+    <input type="hidden" id="attEditSlot">
+    <div class="form-group">
+      <label class="form-label">Subject Name</label>
+      <input type="text" class="mobile-input" id="attEditSubjName" placeholder="Leave empty for free period">
+    </div>
+    <button class="btn-primary" onclick="saveAttSlotMobile()">Save Slot</button>
+    <button class="btn-secondary" onclick="closeSheet('sheetAttSlot')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="sheetGovNote" onclick="if(event.target===this) closeSheet('sheetGovNote')">
+  <div class="bottom-sheet">
+    <div class="sheet-title">Knowledge Vault Note</div>
+    <input type="hidden" id="govNoteId">
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input type="text" class="mobile-input" id="govNoteTitle">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select id="govNoteCat" class="mobile-select"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea id="govNoteText" class="mobile-input" rows="5"></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveGovNoteMobile()">Save Note</button>
+    <button class="btn-secondary" onclick="closeSheet('sheetGovNote')">Cancel</button>
+  </div>
+</div>
+
+
+<script>
+  // --- UTILS & MOCK DESKTOP DATA STORAGE ---
+  const today = new Date();
+  const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function fd(d) { return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  function sv(k,v) { try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+  function ld(k,def) { try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):def;}catch(e){return def;} }
+  function escapeHtml(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function closeSheet(id) { document.getElementById(id).classList.remove('open'); }
+  
+  // Test toggle
+  let showingAtt = true;
+  function toggleTestModule() {
+    showingAtt = !showingAtt;
+    document.getElementById('page-attendance').style.display = showingAtt ? 'block' : 'none';
+    document.getElementById('page-foundation').style.display = !showingAtt ? 'block' : 'none';
+    document.getElementById('moduleTitle').textContent = showingAtt ? 'Attendance Tracker' : 'Foundation (Gov)';
+  }
+
+  // Segment Switchers
+  function switchAttSegment(seg, btn) {
+    document.querySelectorAll('#page-attendance .segment-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#page-attendance .segment-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('att-seg-' + seg).classList.add('active');
+  }
+  function switchGovSegment(seg, btn) {
+    document.querySelectorAll('#page-foundation .segment-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#page-foundation .segment-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('gov-seg-' + seg).classList.add('active');
+  }
+
+
+  // =====================================================================
+  // MODULE: ATTENDANCE
+  // =====================================================================
+  const ATTENDANCE_DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday'];
+  const ATTENDANCE_SLOTS=[
+    {key:'9-10',label:'9:00 - 10:00 AM',editable:true},
+    {key:'10-11',label:'10:00 - 11:00 AM',editable:true},
+    {key:'11-12',label:'11:00 - 12:00 PM',editable:true},
+    {key:'12-1',label:'12:00 - 1:00 PM',editable:true},
+    {key:'lunch',label:'1:00 - 2:15 PM',editable:false},
+    {key:'2-3',label:'2:15 - 3:15 PM',editable:true},
+    {key:'3-4',label:'3:15 - 4:15 PM',editable:true},
+    {key:'4-5',label:'4:15 - 5:15 PM',editable:true},
+    {key:'5-6',label:'5:15 - 6:15 PM',editable:true}
+  ];
+  
+  function getAttSem(){ return ld('attendance_current', 'sem1'); }
+  function getAttTime(){ return ld('attendance_timetable_'+getAttSem(), {}); }
+  function getAttRecs(){ return ld('attendance_records_'+getAttSem(), []); }
+  
+  function renderAttendance() {
+    renderAttToday();
+    renderAttTimetable();
+    renderAttStats();
+  }
+
+  // Desktop parity: Merge consecutive slots for the same subject
+  function getMergedSchedule(day) {
+    const timetable = getAttTime();
+    const schedule = ATTENDANCE_SLOTS.map(slot => ({
+      slotKey: slot.key, slotLabel: slot.label, subject: timetable[day+'_'+slot.key]||'', editable: slot.editable
+    }));
+    
+    const groups = [];
+    let current = null;
+    
+    schedule.forEach(item => {
+      if(!item.editable) {
+        if(current) groups.push(current);
+        current = null;
+        groups.push({ subject: 'Lunch Break', slotKeys: [item.slotKey], start: item.slotLabel.split('-')[0].trim(), end: item.slotLabel.split('-')[1].trim(), editable: false });
+      } else if (!current || current.subject !== item.subject) {
+        if(current) groups.push(current);
+        current = { subject: item.subject, slotKeys: [item.slotKey], start: item.slotLabel.split('-')[0].trim(), end: item.slotLabel.split('-')[1].trim(), editable: true };
+      } else {
+        current.slotKeys.push(item.slotKey);
+        current.end = item.slotLabel.split('-')[1].trim();
+      }
+    });
+    if(current) groups.push(current);
+    return groups;
+  }
+
+  function renderAttToday() {
+    const weekday = DAYS[today.getDay()]; // Note: desktop logic checks full name. Quick map:
+    const fullDayMap = {'Sun':'Sunday','Mon':'Monday','Tue':'Tuesday','Wed':'Wednesday','Thu':'Thursday','Fri':'Friday','Sat':'Saturday'};
+    const fDay = fullDayMap[weekday];
+    
+    document.getElementById('attTodayDate').textContent = `${fDay}, ${MONTHS[today.getMonth()]} ${today.getDate()}`;
+    const container = document.getElementById('attTodayList');
+    
+    if(!ATTENDANCE_DAYS.includes(fDay)) {
+      container.innerHTML = '<div class="card" style="text-align:center; color:var(--md-sys-color-on-surface-variant)">No scheduled classes today (Weekend).</div>';
+      return;
+    }
+    
+    const schedule = getMergedSchedule(fDay).filter(g => g.subject && g.editable);
+    if(!schedule.length) {
+      container.innerHTML = '<div class="card" style="text-align:center; color:var(--md-sys-color-on-surface-variant)">No classes scheduled. Edit your timetable.</div>';
+      return;
+    }
+    
+    const dateStr = fd(today);
+    let html = '';
+    
+    schedule.forEach(item => {
+      // Find status (if marked)
+      const recs = getAttRecs();
+      const rec = recs.find(r => r.date === dateStr && r.slotKey === item.slotKeys[0]);
+      const status = rec ? rec.status : null;
+      
+      html += `
+        <div class="card">
+          <div style="display:flex; justify-content:space-between">
+            <span style="font-size:18px; font-weight:600;">${item.subject}</span>
+            <span style="font-size:12px; color:var(--md-sys-color-on-surface-variant);">${item.start} - ${item.end}</span>
+          </div>
+          <div class="att-btn-row">
+            <button class="att-btn ${status==='present'?'active-present':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'present')">Present</button>
+            <button class="att-btn ${status==='absent'?'active-absent':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'absent')">Absent</button>
+            <button class="att-btn ${status==='cancelled'?'active-other':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'cancelled')">Cancelled</button>
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  }
+
+  function markAtt(date, day, slotKeysStr, subject, status) {
+    const records = getAttRecs();
+    const slotKeys = slotKeysStr.split(',');
+    
+    slotKeys.forEach(sk => {
+      const idx = records.findIndex(r => r.date === date && r.slotKey === sk);
+      const slotLabel = ATTENDANCE_SLOTS.find(s=>s.key===sk)?.label||'';
+      const record = {date, day, slotKey: sk, subject, status, slotLabel};
+      if(idx >= 0) records[idx] = record; else records.push(record);
+    });
+    sv('attendance_records_'+getAttSem(), records);
+    renderAttendance();
+  }
+
+  function renderAttTimetable() {
+    let html = '';
+    ATTENDANCE_DAYS.forEach(day => {
+      const groups = getMergedSchedule(day);
+      html += `
+        <div class="day-accordion" onclick="this.classList.toggle('open')">
+          <div class="day-header">
+            <span>${day}</span> <span>▼</span>
+          </div>
+          <div class="day-slots" onclick="event.stopPropagation()">
+            ${groups.map(g => `
+              <div class="slot-item" ${g.editable ? `onclick="openAttEditSlot('${day}','${g.slotKeys[0]}','${escapeHtml(g.subject)}', '${g.start} - ${g.end}')"` : ''}>
+                <span style="color:var(--md-sys-color-on-surface-variant)">${g.start} - ${g.end}</span>
+                <span style="font-weight:600; ${!g.editable?'opacity:0.5':''}">${g.subject || '<span style="opacity:0.3; font-weight:normal">Empty</span>'}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById('attTimetableList').innerHTML = html;
+  }
+
+  function openAttEditSlot(day, slotKey, currentSubj, timeLabel) {
+    document.getElementById('attSlotTitle').textContent = `${day} (${timeLabel})`;
+    document.getElementById('attEditDay').value = day;
+    document.getElementById('attEditSlot').value = slotKey;
+    document.getElementById('attEditSubjName').value = currentSubj;
+    document.getElementById('sheetAttSlot').classList.add('open');
+  }
+
+  function saveAttSlotMobile() {
+    const day = document.getElementById('attEditDay').value;
+    const slotKey = document.getElementById('attEditSlot').value;
+    const subj = document.getElementById('attEditSubjName').value.trim();
+    
+    const timetable = getAttTime();
+    // Simplified logic for mobile: updating just that single specific slot. 
+    // Desktop handles grouped edits via prompt. For mobile MVP, single slot edit is safer.
+    if(subj === '') delete timetable[day+'_'+slotKey];
+    else timetable[day+'_'+slotKey] = subj;
+    
+    sv('attendance_timetable_'+getAttSem(), timetable);
+    closeSheet('sheetAttSlot'); renderAttendance();
+  }
+
+  function renderAttStats() {
+    const subjects = new Set();
+    const timetable = getAttTime();
+    Object.values(timetable).forEach(s => { if(s && s.trim()) subjects.add(s.trim()); });
+    
+    const records = getAttRecs();
+    let totP=0, totA=0;
+    let html = '';
+    
+    [...subjects].sort().forEach(sub => {
+      const recs = records.filter(r => r.subject === sub);
+      const p = recs.filter(r => r.status === 'present').length;
+      const a = recs.filter(r => r.status === 'absent').length;
+      totP += p; totA += a;
+      
+      const elig = p + a;
+      const pct = elig ? Math.round(p/elig*100) : 0;
+      const safe = elig ? Math.max(0, Math.floor((p - 3*a)/3)) : 0;
+      const req = elig ? Math.max(0, Math.ceil(3*a - p)) : 1;
+      
+      let cl = pct >= 75 ? 'var(--md-sys-color-success)' : pct > 60 ? 'var(--md-sys-color-warning)' : 'var(--md-sys-color-error)';
+      
+      html += `
+        <div class="card" style="margin-bottom:8px; padding:12px 16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600; font-size:16px">${sub}</div>
+            <div style="font-size:20px; font-weight:700; color:${cl}">${pct}%</div>
+          </div>
+          <div style="display:flex; gap:16px; margin-top:8px; font-size:12px; color:var(--md-sys-color-on-surface-variant)">
+            <span>Present: ${p}</span> <span>Absent: ${a}</span>
+          </div>
+          <div style="margin-top:8px; font-size:12px;">
+            ${pct >= 75 ? `<span style="color:var(--md-sys-color-success)">${safe} safe bunks available</span>` : `<span style="color:var(--md-sys-color-error)">Need ${req} more to reach 75%</span>`}
+          </div>
+        </div>
+      `;
+    });
+    
+    document.getElementById('attSubjectStats').innerHTML = html || '<div style="color:var(--md-sys-color-on-surface-variant)">No subjects added to timetable.</div>';
+    
+    const overallPct = (totP+totA) ? Math.round(totP/(totP+totA)*100) : 0;
+    document.getElementById('attOverallCard').innerHTML = `
+      <div style="text-align:center;">
+        <div style="font-size:14px; color:var(--md-sys-color-on-surface-variant); margin-bottom:4px;">Overall Attendance</div>
+        <div style="font-size:32px; font-weight:700; color:${overallPct>=75?'var(--md-sys-color-success)':'var(--md-sys-color-error)'}">${overallPct}%</div>
+      </div>
+    `;
+  }
+
+  // =====================================================================
+  // MODULE: FOUNDATION (GOV EXAM)
+  // =====================================================================
+  const GOV_SUBJECT_NAMES = ['History','Geography','Polity','Economics'];
+  const GOV_NOTE_CATS = ['Polity','Economy','International Relations','Environment','Science & Technology','Miscellaneous'];
+  
+  function getISOWeek(dt){ const d=new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate())); d.setUTCDate(d.getUTCDate()+4-(d.getUTCDay()||7)); const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1)); const weekNo=Math.ceil((((d-yearStart)/86400000)+1)/7); return {year:d.getUTCFullYear(),week:weekNo}; }
+  function govWeekKey(date){ const w=getISOWeek(date); return `${w.year}-W${String(w.week).padStart(2,'0')}`; }
+
+  function renderGovExam() {
+    renderGovDaily();
+    renderGovWeekly();
+    renderGovSubjects();
+    renderGovNotes();
+  }
+
+  function renderGovDaily() {
+    const container = document.getElementById('govDailyList');
+    let html = '';
+    
+    // Generate last 7 days
+    for(let i=0; i<7; i++) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const key = `gov_daily_${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+      const data = ld(key, {readArticle:false, readNews:false});
+      const dayLabel = i===0 ? 'Today' : i===1 ? 'Yesterday' : `${DAYS[d.getDay()]} ${d.getDate()}`;
+      
+      html += `
+        <div class="gov-check-row">
+          <div style="font-size:14px; width:80px">${dayLabel}</div>
+          <div style="display:flex; gap:8px;">
+            <div class="checkbox-pill ${data.readArticle?'checked':''}" onclick="toggleGovDaily('${key}', 'readArticle')">Article</div>
+            <div class="checkbox-pill ${data.readNews?'checked':''}" onclick="toggleGovDaily('${key}', 'readNews')">News</div>
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  }
+  
+  function toggleGovDaily(key, field) {
+    const data = ld(key, {readArticle:false, readNews:false});
+    data[field] = !data[field];
+    sv(key, data);
+    renderGovDaily();
+  }
+
+  function renderGovWeekly() {
+    const cw = new Date();
+    const key = 'gov_week_'+govWeekKey(cw);
+    document.getElementById('govWeekLabel').textContent = govWeekKey(cw);
+    
+    const data = ld(key, {puzzlesTarget:5, puzzlesCompleted:0, quantTarget:5, quantCompleted:0, socialTarget:1, socialCompleted:false});
+    
+    document.getElementById('govWeeklyList').innerHTML = `
+      <div style="margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px">
+          <span>Puzzles (Target: ${data.puzzlesTarget})</span>
+          <input type="number" id="govW_p" value="${data.puzzlesCompleted}" style="width:60px; background:var(--md-sys-color-surface-variant); border:1px solid var(--md-sys-color-outline); color:white; text-align:center; border-radius:4px;">
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px">
+          <span>Quant (Target: ${data.quantTarget})</span>
+          <input type="number" id="govW_q" value="${data.quantCompleted}" style="width:60px; background:var(--md-sys-color-surface-variant); border:1px solid var(--md-sys-color-outline); color:white; text-align:center; border-radius:4px;">
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:14px; align-items:center;">
+        <span>Social Science Chapter</span>
+        <input type="checkbox" id="govW_s" ${data.socialCompleted ? 'checked':''} style="width:24px; height:24px; accent-color:var(--md-sys-color-primary)">
+      </div>
+    `;
+  }
+  
+  function saveGovWeeklyMobile() {
+    const key = 'gov_week_'+govWeekKey(new Date());
+    const data = ld(key, {puzzlesTarget:5, puzzlesCompleted:0, quantTarget:5, quantCompleted:0, socialTarget:1, socialCompleted:false});
+    data.puzzlesCompleted = parseInt(document.getElementById('govW_p').value) || 0;
+    data.quantCompleted = parseInt(document.getElementById('govW_q').value) || 0;
+    data.socialCompleted = document.getElementById('govW_s').checked;
+    sv(key, data);
+    alert('Weekly progress saved!');
+    renderGovWeekly();
+  }
+
+  function renderGovSubjects() {
+    let subjects = ld('gov_subjects', null);
+    if(!subjects || subjects.length !== GOV_SUBJECT_NAMES.length) {
+      subjects = GOV_SUBJECT_NAMES.map(name => ({name, totalChapters:20, completedChapters:0}));
+      sv('gov_subjects', subjects);
+    }
+    
+    let html = '';
+    subjects.forEach((s, idx) => {
+      const pct = s.totalChapters ? Math.min(100, Math.round((s.completedChapters/s.totalChapters)*100)) : 0;
+      html += `
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px">
+            <span style="font-weight:600; font-size:18px">${s.name}</span>
+            <span style="font-size:14px; color:var(--md-sys-color-primary)">${pct}%</span>
+          </div>
+          <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+          
+          <div style="display:flex; justify-content:space-between; margin-top:16px; align-items:center;">
+            <div style="font-size:12px; color:var(--md-sys-color-on-surface-variant)">Completed / Total</div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="number" value="${s.completedChapters}" onchange="updateGovSubj(${idx}, 'completedChapters', this.value)" style="width:50px; background:var(--md-sys-color-surface-variant); border:none; color:white; padding:4px; text-align:center; border-radius:4px;">
+              <span>/</span>
+              <input type="number" value="${s.totalChapters}" onchange="updateGovSubj(${idx}, 'totalChapters', this.value)" style="width:50px; background:var(--md-sys-color-surface-variant); border:none; color:white; padding:4px; text-align:center; border-radius:4px;">
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById('govSubjectList').innerHTML = html;
+  }
+  
+  function updateGovSubj(idx, field, val) {
+    const subs = ld('gov_subjects', []);
+    subs[idx][field] = Math.max(0, parseInt(val)||0);
+    sv('gov_subjects', subs);
+    renderGovSubjects();
+  }
+
+  function renderGovNotes() {
+    const notes = ld('gov_notes', []).sort((a,b) => new Date(b.date) - new Date(a.date));
+    const container = document.getElementById('govNotesList');
+    
+    if(!notes.length) { container.innerHTML = '<div style="text-align:center; margin-top:40px; color:var(--md-sys-color-on-surface-variant)">No notes yet. Tap + to add.</div>'; return; }
+    
+    container.innerHTML = notes.map(n => `
+      <div class="note-card" onclick="openGovNoteSheet('${n.id}')">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div style="font-weight:600; font-size:16px; margin-bottom:4px;">${escapeHtml(n.title)}</div>
+          <div style="font-size:12px; color:var(--md-sys-color-on-surface-variant)">${n.date}</div>
+        </div>
+        <div style="font-size:14px; color:var(--md-sys-color-on-surface-variant); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(n.notes)}</div>
+        <div class="note-chip">${n.category}</div>
+      </div>
+    `).join('');
+  }
+
+  function openGovNoteSheet(id = null) {
+    const sel = document.getElementById('govNoteCat');
+    if(!sel.options.length) sel.innerHTML = GOV_NOTE_CATS.map(c => `<option>${c}</option>`).join('');
+    
+    const notes = ld('gov_notes', []);
+    const note = id ? notes.find(n => n.id === id) : null;
+    
+    document.getElementById('govNoteId').value = id || '';
+    document.getElementById('govNoteTitle').value = note ? note.title : '';
+    document.getElementById('govNoteCat').value = note ? note.category : GOV_NOTE_CATS[0];
+    document.getElementById('govNoteText').value = note ? note.notes : '';
+    
+    document.getElementById('sheetGovNote').classList.add('open');
+  }
+
+  function saveGovNoteMobile() {
+    const id = document.getElementById('govNoteId').value;
+    const title = document.getElementById('govNoteTitle').value;
+    const cat = document.getElementById('govNoteCat').value;
+    const txt = document.getElementById('govNoteText').value;
+    if(!title) return;
+    
+    let notes = ld('gov_notes', []);
+    if(id) {
+      const idx = notes.findIndex(n => n.id === id);
+      if(idx>=0) { notes[idx].title = title; notes[idx].category = cat; notes[idx].notes = txt; }
+    } else {
+      notes.unshift({ id: 'gvn_'+Date.now(), date: fd(today), title: title, category: cat, notes: txt });
+    }
+    sv('gov_notes', notes);
+    closeSheet('sheetGovNote');
+    renderGovNotes();
+  }
+
+  // --- INIT ---
+  renderAttendance();
+  renderGovExam();
+
+</script>
+</body>
+</html>

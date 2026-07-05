@@ -325,7 +325,6 @@
 .status-chip.pending { background: rgba(207, 102, 121, 0.2); color: var(--md-sys-color-error); }
 .status-chip.paid { background: rgba(129, 199, 132, 0.2); color: var(--md-sys-color-success); }
 
-/* Multi-month dropdown */
 .cf-month-picker { position: relative; width: 100%; }
 .cf-month-dropdown { position: absolute; bottom: 100%; left: 0; right: 0; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-sm); z-index: 3000; max-height: 200px; overflow-y: auto; display: none; padding: 8px 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.5); }
 .cf-month-option { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; color: var(--md-sys-color-on-background); cursor: pointer; }
@@ -1714,7 +1713,7 @@
     document.getElementById('sheetTasks').innerHTML = tasks.map((t,i) => `
       <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
         <input type="checkbox" id="mtc${i}" ${t.done ? 'checked' : ''} style="width:24px;height:24px;accent-color:var(--md-sys-color-primary)">
-        <input type="text" id="mtt${i}" class="mobile-input" value="${escapeHtml(t.text).replace(/"/g,'&quot;')}" placeholder="Task ${i+1}..." style="margin-bottom:0">
+        <input type="text" id="mtt${i}" class="mobile-input" value="${escapeHtml(t.text).replace(/\"/g,'&quot;')}" placeholder="Task ${i+1}..." style="margin-bottom:0">
       </div>
     `).join('');
     document.getElementById('sheetNotes').value = ld('events_'+key, '') || '';
