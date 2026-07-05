@@ -428,39 +428,36 @@
   </section>
 
   <section id="page-focus" class="page">
-    <div class="module-header" style="margin-bottom: 0;">
+    <div class="module-header">
       <h2>Focus Engine</h2>
     </div>
     
-    <div class="segment-nav" style="margin: 16px 0 24px 0;">
-      <div class="segment-btn active" onclick="switchFocusSegment('tracker', this)">Auto-Tracker</div>
-      <div class="segment-btn" onclick="switchFocusSegment('pomodoro', this)">Pomodoro</div>
-    </div>
-
-    <div id="focus-seg-tracker" class="segment-content active" style="text-align: center;">
-      <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Counts up. Automatically logs decimal hours to Lifestyle when stopped.</p>
-      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;" id="trackerCats">
-        <button class="focus-cat-btn active" onclick="setTrackerCat('study', this)">📚 Study</button>
-        <button class="focus-cat-btn" onclick="setTrackerCat('workout', this)">🏋️ Workout</button>
-        <button class="focus-cat-btn" onclick="setTrackerCat('screen', this)">📱 Screen</button>
+    <div style="text-align: center; margin-top: 20px;">
+      <!-- Category Selector -->
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;">
+        <button class="focus-cat-btn active" id="fcat-study" onclick="setFocusCategory('study')">📚 Study</button>
+        <button class="focus-cat-btn" id="fcat-workout" onclick="setFocusCategory('workout')">🏋️ Workout</button>
+        <button class="focus-cat-btn" id="fcat-screen" onclick="setFocusCategory('screen')">📱 Screen</button>
       </div>
+
+      <!-- Circular Timer Display -->
       <div style="width: 240px; height: 240px; border-radius: 50%; border: 8px solid var(--md-sys-color-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; background: var(--md-sys-color-surface);">
-        <div id="trackerDisplay" style="font-size: 48px; font-weight: 700; font-family: monospace;">00:00:00</div>
+        <div id="focusTimeDisplay" style="font-size: 48px; font-weight: 700; font-family: monospace;">00:00</div>
       </div>
-      <button class="btn-primary" id="trackerBtn" onclick="toggleTracker()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
-    </div>
 
-    <div id="focus-seg-pomodoro" class="segment-content" style="text-align: center;">
-      <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Counts down. Alerts you when finished.</p>
-      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;" id="pomoDurs">
-        <button class="focus-cat-btn active" onclick="setPomoDur(25, this)">25m</button>
-        <button class="focus-cat-btn" onclick="setPomoDur(30, this)">30m</button>
-        <button class="focus-cat-btn" onclick="setPomoDur(60, this)">60m</button>
+      <!-- Duration Selector -->
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;" id="focusDurations">
+        <button class="btn-secondary active" onclick="setFocusDuration(0, this)">Stopwatch</button>
+        <button class="btn-secondary" onclick="setFocusDuration(25, this)">25m</button>
+        <button class="btn-secondary" onclick="setFocusDuration(30, this)">30m</button>
+        <button class="btn-secondary" onclick="setFocusDuration(60, this)">60m</button>
       </div>
-      <div style="width: 240px; height: 240px; border-radius: 50%; border: 8px solid var(--md-sys-color-warning); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; background: var(--md-sys-color-surface);">
-        <div id="pomoDisplay" style="font-size: 56px; font-weight: 700; font-family: monospace;">25:00</div>
+
+      <!-- Controls -->
+      <div style="display: flex; justify-content: center; gap: 16px;">
+        <button class="btn-primary" id="focusStartBtn" onclick="toggleFocusTimer()" style="width: 120px; font-size: 18px;">START</button>
       </div>
-      <button class="btn-primary" id="pomoBtn" onclick="togglePomo()" style="width: 140px; font-size: 18px; margin: 0 auto; background: var(--md-sys-color-warning); color: #1a1a1a;">START</button>
+      <div id="focusStatusMsg" style="margin-top: 16px; font-size: 12px; color: var(--md-sys-color-on-surface-variant);">Ready to focus.</div>
     </div>
   </section>
 
@@ -661,28 +658,22 @@
 
 <nav class="bottom-nav">
   <div class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-    Home
+    <div class="nav-icon">⚏</div><div>Home</div>
   </div>
   <div class="nav-item" onclick="switchTab('calendar')" id="nav-calendar">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-    Calendar
+    <div class="nav-icon">📅</div><div>Calendar</div>
   </div>
   <div class="nav-item" onclick="switchTab('focus')" id="nav-focus">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--md-sys-color-primary)"><circle cx="12" cy="13" r="8"></circle><polyline points="12 9 12 13 14 15"></polyline><line x1="12" y1="2" x2="12" y2="4"></line></svg>
-    Focus
+    <div class="nav-icon" style="color: var(--md-sys-color-primary); font-size: 28px;">⏱️</div><div style="font-weight: 700;">Focus</div>
   </div>
   <div class="nav-item" onclick="switchTab('lifestyle')" id="nav-lifestyle">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-    Lifestyle
+    <div class="nav-icon">🕒</div><div>Lifestyle</div>
   </div>
   <div class="nav-item" onclick="switchTab('diet')" id="nav-diet">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"></path><path d="M10 2c1 .5 2 2 2 5"></path></svg>
-    Diet
+    <div class="nav-icon">🍎</div><div>Diet</div>
   </div>
   <div class="nav-item" onclick="switchTab('more')" id="nav-more">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-    More
+    <div class="nav-icon">⋮</div><div>More</div>
   </div>
 </nav>
 
@@ -2065,133 +2056,139 @@
   }
 
   // --- FOCUS ENGINE ---
-  let trackerInterval = null, pomoInterval = null;
-  let trackerCat = 'study', pomoDur = 25;
+  let focusInterval;
+  let focusCategory = 'study';
+  let focusDurationMins = 0; // 0 = stopwatch mode
+  
+  function setFocusCategory(cat) {
+    if(ld('focus_active', false)) return alert("Cannot change category while timer is running.");
+    focusCategory = cat;
+    document.querySelectorAll('.focus-cat-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('fcat-' + cat).classList.add('active');
+  }
 
-  function switchFocusSegment(seg, btn) {
-    document.querySelectorAll('#page-focus .segment-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('#page-focus .segment-content').forEach(c => c.classList.remove('active'));
+  function setFocusDuration(mins, btn) {
+    if(ld('focus_active', false)) return alert("Cannot change duration while timer is running.");
+    focusDurationMins = mins;
+    document.querySelectorAll('#focusDurations .btn-secondary').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('focus-seg-' + seg).classList.add('active');
+    updateFocusDisplay(mins * 60);
   }
 
-  function formatTime(secs, includeHours=true) {
-    const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60), s = secs % 60;
-    const pad = (n) => n.toString().padStart(2, '0');
-    return includeHours ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  function formatTime(totalSeconds) {
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    if(h > 0) return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   }
 
-  // 1. AUTO-TRACKER LOGIC
-  function setTrackerCat(cat, btn) {
-    if(ld('tracker_active', false)) return alert("Cannot change category while tracking.");
-    trackerCat = cat;
-    document.querySelectorAll('#trackerCats .focus-cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  function updateFocusDisplay(seconds) {
+    document.getElementById('focusTimeDisplay').textContent = formatTime(seconds);
   }
 
-  function toggleTracker() {
-    if (!ld('tracker_active', false)) {
-      sv('tracker_active', true);
-      sv('tracker_start', Date.now());
-      sv('tracker_cat', trackerCat);
-      document.getElementById('trackerBtn').textContent = "STOP & SAVE";
-      document.getElementById('trackerBtn').style.backgroundColor = "var(--md-sys-color-error)";
-      trackerInterval = setInterval(tickTracker, 1000);
-    } else {
-      clearInterval(trackerInterval);
-      sv('tracker_active', false);
-      const start = ld('tracker_start', Date.now());
-      const hours = ((Date.now() - start) / 3600000).toFixed(2);
-      
-      document.getElementById('trackerBtn').textContent = "START";
-      document.getElementById('trackerBtn').style.backgroundColor = "var(--md-sys-color-primary)";
-      document.getElementById('trackerDisplay').textContent = "00:00:00";
-      
-      if (hours > 0.01) {
-        saveToLifestyle(ld('tracker_cat', 'study'), parseFloat(hours));
-        alert(`Logged ${hours} hours to Lifestyle!`);
+  function toggleFocusTimer() {
+    const isActive = ld('focus_active', false);
+    
+    if (!isActive) {
+      // START TIMER
+      if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+        Notification.requestPermission();
       }
+      
+      sv('focus_active', true);
+      sv('focus_start_time', Date.now());
+      sv('focus_target_mins', focusDurationMins);
+      sv('focus_cat', focusCategory);
+      
+      document.getElementById('focusStartBtn').textContent = "STOP & SAVE";
+      document.getElementById('focusStartBtn').style.backgroundColor = "var(--md-sys-color-error)";
+      document.getElementById('focusStatusMsg').textContent = "Focus session is active. You can safely close the app.";
+      
+      focusInterval = setInterval(focusTick, 1000);
+    } else {
+      // STOP TIMER & SAVE TO LIFESTYLE
+      clearInterval(focusInterval);
+      sv('focus_active', false);
+      
+      const startTime = ld('focus_start_time', Date.now());
+      const elapsedMs = Date.now() - startTime;
+      const elapsedHours = (elapsedMs / (1000 * 60 * 60)).toFixed(2);
+      
+      if (elapsedHours > 0.01) {
+        saveToLifestyle(ld('focus_cat', 'study'), parseFloat(elapsedHours));
+        alert(`Logged ${elapsedHours} hours to ${ld('focus_cat', 'study')}!`);
+      }
+      
+      document.getElementById('focusStartBtn').textContent = "START";
+      document.getElementById('focusStartBtn').style.backgroundColor = "var(--md-sys-color-primary)";
+      document.getElementById('focusStatusMsg').textContent = "Session saved to Lifestyle.";
+      updateFocusDisplay(focusDurationMins * 60);
     }
   }
 
-  function tickTracker() {
-    if(!ld('tracker_active', false)) return;
-    const elapsed = Math.floor((Date.now() - ld('tracker_start', Date.now())) / 1000);
-    document.getElementById('trackerDisplay').textContent = formatTime(elapsed, true);
+  function focusTick() {
+    if(!ld('focus_active', false)) return;
+    
+    const startTime = ld('focus_start_time', Date.now());
+    const targetMins = ld('focus_target_mins', 0);
+    const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+    
+    if (targetMins === 0) {
+      // Stopwatch mode
+      updateFocusDisplay(elapsedSeconds);
+    } else {
+      // Pomodoro mode
+      const targetSeconds = targetMins * 60;
+      const remaining = targetSeconds - elapsedSeconds;
+      
+      if (remaining <= 0) {
+        updateFocusDisplay(0);
+        clearInterval(focusInterval);
+        sv('focus_active', false);
+        document.getElementById('focusStartBtn').textContent = "START";
+        document.getElementById('focusStartBtn').style.backgroundColor = "var(--md-sys-color-primary)";
+        
+        // Auto-save
+        saveToLifestyle(ld('focus_cat', 'study'), (targetMins / 60));
+        
+        // Android Notification
+        if (Notification.permission === "granted") {
+          new Notification("Produco Timer Complete!", { body: `Your ${targetMins}m ${ld('focus_cat', 'study')} session is done. Time logged automatically.` });
+        } else {
+          alert("Focus session complete! Time has been logged.");
+        }
+        document.getElementById('focusStatusMsg').textContent = "Session complete and saved.";
+      } else {
+        updateFocusDisplay(remaining);
+      }
+    }
   }
 
   function saveToLifestyle(category, hoursToAdd) {
     const key = `ls_${today.getFullYear()}_${today.getMonth()+1}_${today.getDate()}`;
     let dailyData = ld(key, { study: '', screen: '', workout: '', wake: '', sleep: '' });
+    
     let currentVal = parseFloat(dailyData[category] || 0);
     dailyData[category] = (currentVal + hoursToAdd).toFixed(2);
+    
     sv(key, dailyData);
     if(typeof renderLifestyle === 'function') renderLifestyle();
   }
 
-  // 2. POMODORO LOGIC
-  function setPomoDur(mins, btn) {
-    if(ld('pomo_active', false)) return alert("Cannot change duration while running.");
-    pomoDur = mins;
-    document.querySelectorAll('#pomoDurs .focus-cat-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('pomoDisplay').textContent = formatTime(mins * 60, false);
-  }
-
-  function togglePomo() {
-    if (!ld('pomo_active', false)) {
-      if (Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission();
-      sv('pomo_active', true);
-      sv('pomo_start', Date.now());
-      sv('pomo_dur', pomoDur);
-      document.getElementById('pomoBtn').textContent = "CANCEL";
-      document.getElementById('pomoBtn').style.backgroundColor = "var(--md-sys-color-error)";
-      pomoInterval = setInterval(tickPomo, 1000);
-    } else {
-      clearInterval(pomoInterval);
-      sv('pomo_active', false);
-      document.getElementById('pomoBtn').textContent = "START";
-      document.getElementById('pomoBtn').style.backgroundColor = "var(--md-sys-color-warning)";
-      document.getElementById('pomoDisplay').textContent = formatTime(pomoDur * 60, false);
-    }
-  }
-
-  function tickPomo() {
-    if(!ld('pomo_active', false)) return;
-    const elapsed = Math.floor((Date.now() - ld('pomo_start', Date.now())) / 1000);
-    const target = ld('pomo_dur', 25) * 60;
-    const remaining = target - elapsed;
-    
-    if (remaining <= 0) {
-      clearInterval(pomoInterval);
-      sv('pomo_active', false);
-      document.getElementById('pomoBtn').textContent = "START";
-      document.getElementById('pomoBtn').style.backgroundColor = "var(--md-sys-color-warning)";
-      document.getElementById('pomoDisplay').textContent = formatTime(ld('pomo_dur', 25) * 60, false);
-      
-      if (Notification.permission === "granted") {
-        new Notification("Timer Complete!", { body: `Your ${ld('pomo_dur', 25)} minute focus session is done.` });
-      } else {
-        alert(`Your ${ld('pomo_dur', 25)} minute focus session is complete!`);
-      }
-    } else {
-      document.getElementById('pomoDisplay').textContent = formatTime(remaining, false);
-    }
-  }
-
-  // RECOVERY ON LOAD
+  // Restore state on load if timer was running in background
   document.addEventListener('DOMContentLoaded', () => {
-    if (ld('tracker_active', false)) {
-      document.getElementById('trackerBtn').textContent = "STOP & SAVE";
-      document.getElementById('trackerBtn').style.backgroundColor = "var(--md-sys-color-error)";
-      trackerInterval = setInterval(tickTracker, 1000);
-      tickTracker();
-    }
-    if (ld('pomo_active', false)) {
-      document.getElementById('pomoBtn').textContent = "CANCEL";
-      document.getElementById('pomoBtn').style.backgroundColor = "var(--md-sys-color-error)";
-      pomoInterval = setInterval(tickPomo, 1000);
-      tickPomo();
+    if (ld('focus_active', false)) {
+      focusCategory = ld('focus_cat', 'study');
+      focusDurationMins = ld('focus_target_mins', 0);
+      setFocusCategory(focusCategory);
+      
+      document.getElementById('focusStartBtn').textContent = "STOP & SAVE";
+      document.getElementById('focusStartBtn').style.backgroundColor = "var(--md-sys-color-error)";
+      document.getElementById('focusStatusMsg').textContent = "Session recovered from background.";
+      
+      focusInterval = setInterval(focusTick, 1000);
+      focusTick();
     }
   });
 
