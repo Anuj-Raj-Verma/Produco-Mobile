@@ -470,9 +470,6 @@
       <div class="module-month" id="txMonthLabel"></div>
       <button class="icon-btn" onclick="txNext()">→</button>
     </div>
-    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px; margin-top: -8px;">
-      <button class="btn-secondary" style="margin: 0; padding: 6px 12px; width: auto; font-size: 12px;" onclick="exportTxPdf()">Export PDF</button>
-    </div>
     <div class="tx-summary">
       <div class="tx-box"><h4>Income</h4><div class="val green" id="txTotCredit">₹0</div></div>
       <div class="tx-box"><h4>Expense</h4><div class="val red" id="txTotDebit">₹0</div></div>
@@ -1062,55 +1059,6 @@
     renderTx();
   }
 
-  async function exportTxPdf() {
-    if(!window.jspdf || !window.jspdf.jsPDF) { 
-      alert("PDF library is still loading. Please wait a moment."); return; 
-    }
-    
-    const data = getTxData();
-    if(data.credit.length === 0 && data.debit.length === 0) {
-      alert("No transactions to export for this month."); return;
-    }
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    let debitTot = 0, creditTot = 0;
-    data.debit.forEach(r => debitTot += parseFloat(r.amount||0));
-    data.credit.forEach(r => creditTot += parseFloat(r.amount||0));
-    const bal = creditTot - debitTot;
-    const monthName = MONTHS[txMonth];
-    
-    doc.setFontSize(18); doc.text('PRODUCO', 14, 20);
-    doc.setFontSize(12); doc.text(`Transaction Report: ${monthName} ${txYear}`, 14, 28);
-    
-    // Summary Header
-    doc.setFontSize(10); 
-    doc.text(`Total Income: Rs. ${creditTot.toFixed(0)}`, 14, 36);
-    doc.text(`Total Expense: Rs. ${debitTot.toFixed(0)}`, 70, 36);
-    doc.text(`Balance: Rs. ${bal.toFixed(0)}`, 130, 36);
-    
-    const rows = [];
-    data.credit.forEach((r, i) => rows.push([i+1, 'Income', r.label || 'Unnamed', `+ Rs. ${parseFloat(r.amount).toFixed(0)}`]));
-    data.debit.forEach((r, i) => rows.push([data.credit.length + i + 1, 'Expense', r.label || 'Unnamed', `- Rs. ${parseFloat(r.amount).toFixed(0)}`]));
-    
-    doc.autoTable({
-      startY: 42,
-      head: [['#', 'Type', 'Category / Source', 'Amount']],
-      body: rows,
-      styles: { fontSize: 10 },
-      headStyles: { fillColor: [200, 240, 105], textColor: [26, 26, 26] },
-      didParseCell: function(data) {
-        if (data.section === 'body' && data.column.index === 3) {
-          if (data.row.raw[1] === 'Income') data.cell.styles.textColor = [56, 142, 60]; // Green
-          if (data.row.raw[1] === 'Expense') data.cell.styles.textColor = [207, 102, 121]; // Red
-        }
-      }
-    });
-    
-    doc.save(`Produco_Transactions_${monthName}_${txYear}.pdf`);
-  }
-
   // --- MOOD TRACKER ---
   function renderMood() {
     document.getElementById('moodMonthLabel').textContent = MONTHS[moodMonth] + ' ' + moodYear;
@@ -1609,38 +1557,15 @@
   }
   function generateNoteCardHtml(n) {
     return `
-      <div class="note-card" onclick="openGovNoteSheet('${n.id}')" style="position: relative;">
+      <div class="note-card" onclick="openGovNoteSheet('${n.id}')">
         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-          <div style="font-weight:600; font-size:16px; margin-bottom:4px; padding-right: 12px; flex: 1;">${escapeHtml(n.title)}</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="font-size:12px; color:var(--md-sys-color-on-surface-variant)">${n.date}</div>
-            <button onclick="deleteGovNote('${n.id}', event)" style="background:none; border:none; color:var(--md-sys-color-error); font-size:16px; cursor:pointer; padding:0;">🗑</button>
-          </div>
+          <div style="font-weight:600; font-size:16px; margin-bottom:4px;">${escapeHtml(n.title)}</div>
+          <div style="font-size:12px; color:var(--md-sys-color-on-surface-variant)">${n.date}</div>
         </div>
         <div style="font-size:14px; color:var(--md-sys-color-on-surface-variant); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(n.notes)}</div>
         <div class="note-chip">${n.category}</div>
       </div>
     `;
-  }
-
-  function deleteGovNote(id, e) {
-    // Prevent the click from bubbling up and opening the edit sheet
-    if (e) e.stopPropagation();
-    
-    if (!confirm("Are you sure you want to delete this note?")) return;
-    
-    let notes = ld('gov_notes', []);
-    notes = notes.filter(n => n.id !== id);
-    sv('gov_notes', notes);
-    
-    // Re-render the main dashboard view
-    renderGovNotes();
-    
-    // If the "View All" sheet is currently open, dynamically refresh its content so the note disappears immediately
-    const sheet = document.getElementById('sheetAllGovNotes');
-    if (sheet && sheet.classList.contains('open')) {
-      openAllGovNotesSheet(); 
-    }
   }
 
   function renderGovNotes() {
