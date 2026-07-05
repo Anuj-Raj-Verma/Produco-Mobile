@@ -2135,10 +2135,6 @@ function renderFees() {
   if(acadPendingEl) acadPendingEl.textContent = '₹'+acadPending.toLocaleString('en-IN');
   const messPendingEl = document.getElementById('cfMessPending');
   if(messPendingEl) messPendingEl.textContent = '₹'+messPending.toLocaleString('en-IN');
-  const totalPaidEl = document.getElementById('cfTotalPaid');
-  if(totalPaidEl) {
-    totalPaidEl.textContent = '₹' + (acadPaid + messPaid).toLocaleString('en-IN');
-  }
 }
 
 function openFeeSheet(id = null) {
