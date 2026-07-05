@@ -242,60 +242,11 @@
     {key:'5-6',label:'5:15 - 6:15 PM',editable:true}
   ];
   
-// --- Semester Management ---
-  function getAttendanceSemesters() {
-    let sems = ld('attendance_semesters_list', []);
-    if (sems.length === 0) {
-      sems = [{ id: 'sem1', name: 'Semester 1' }];
-      sv('attendance_semesters_list', sems);
-    }
-    return sems;
-  }
-
-  function getAttSem() {
-    const sems = getAttendanceSemesters();
-    let current = ld('attendance_current_sem_id', null);
-    if (!current || !sems.find(s => s.id === current)) {
-      current = sems[0].id;
-      sv('attendance_current_sem_id', current);
-    }
-    return current;
-  }
-
-  function initAttendanceSemesters() {
-    const sel = document.getElementById('attSemesterSelect');
-    if (!sel) return;
-    const sems = getAttendanceSemesters();
-    const current = getAttSem();
-    sel.innerHTML = sems.map(s => `<option value="${s.id}" ${s.id === current ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('');
-  }
-
-  function changeAttendanceSemester() {
-    const sel = document.getElementById('attSemesterSelect');
-    sv('attendance_current_sem_id', sel.value);
-    renderAttendance();
-  }
-
-  function createNewSemester() {
-    const name = prompt("Enter a name for the new semester (e.g., 'Semester 3'):");
-    if (!name || !name.trim()) return;
-    
-    let sems = getAttendanceSemesters();
-    const newId = 'sem_' + Date.now();
-    sems.push({ id: newId, name: name.trim() });
-    
-    sv('attendance_semesters_list', sems);
-    sv('attendance_current_sem_id', newId);
-    
-    initAttendanceSemesters();
-    renderAttendance();
-  }
-
+  function getAttSem(){ return ld('attendance_current', 'sem1'); }
   function getAttTime(){ return ld('attendance_timetable_'+getAttSem(), {}); }
   function getAttRecs(){ return ld('attendance_records_'+getAttSem(), []); }
-
+  
   function renderAttendance() {
-    initAttendanceSemesters();
     renderAttToday();
     renderAttTimetable();
     renderAttStats();
