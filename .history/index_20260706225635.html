@@ -2824,7 +2824,6 @@
     d[type].push({amount: amt, label: label});
     sv(`tx_${txYear}_${txMonth+1}`, d);
     closeSheet('txSheet'); renderTx();
-    try { triggerHaptic('medium'); } catch(e){}
   }
   function deleteTx(type, idx) {
     if(!confirm('Delete transaction?')) return;
@@ -3029,7 +3028,6 @@
     sv('streaks', streaks);
     closeSheet('streakSheet'); 
     renderStreaks();
-    try { triggerHaptic('medium'); } catch(e){}
   }
   function deleteStreak(id) {
     if(!confirm('Delete this streak permanently?')) return;
@@ -3231,7 +3229,6 @@
     else timetable[day+'_'+slotKey] = subj;
     sv('attendance_timetable_'+getAttSem(), timetable);
     closeSheet('sheetAttSlot'); renderAttendance();
-    try { triggerHaptic('medium'); } catch(e){}
   }
   function renderAttStats() {
     const subjects = new Set();
@@ -3343,10 +3340,8 @@
     data.quantCompleted = parseInt(document.getElementById('govW_q').value) || 0;
     data.socialCompleted = document.getElementById('govW_s').checked;
     sv(key, data);
-      sv(key, data);
-      alert('Weekly progress saved!');
-      renderGovWeekly();
-      try { triggerHaptic('medium'); } catch(e){}
+    alert('Weekly progress saved!');
+    renderGovWeekly();
   }
   function renderGovSubjects() {
     let subjects = ld('gov_subjects', null);
@@ -3513,7 +3508,6 @@
     sv('gov_notes', notes);
     closeSheet('sheetGovNote');
     renderGovNotes();
-    try { triggerHaptic('medium'); } catch(e){}
   }
 
   // --- GOD MODE ANALYTICS ENGINE ---
@@ -3864,7 +3858,6 @@
     const notes = document.getElementById('sheetNotes').value;
     if(notes.trim()) sv('events_'+modalDate, notes); else localStorage.removeItem('events_'+modalDate);
     closeSheet('taskSheet'); renderCal(); renderAgenda(); renderDashboard();
-    try { triggerHaptic('medium'); } catch(e){}
   }
 
   // --- FOCUS ENGINE ---
@@ -4812,10 +4805,8 @@ async function saveFeeMobile(e) {
   else records.mess.push(payload);
   
   setCollegeFeesRecords(records); 
-  setCollegeFeesRecords(records); 
   closeSheet('sheetFee'); 
   renderFees();
-  try { triggerHaptic('medium'); } catch(e){}
 }
 
 function deleteFeeMobile() {

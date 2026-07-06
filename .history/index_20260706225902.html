@@ -3343,10 +3343,8 @@
     data.quantCompleted = parseInt(document.getElementById('govW_q').value) || 0;
     data.socialCompleted = document.getElementById('govW_s').checked;
     sv(key, data);
-      sv(key, data);
-      alert('Weekly progress saved!');
-      renderGovWeekly();
-      try { triggerHaptic('medium'); } catch(e){}
+    alert('Weekly progress saved!');
+    renderGovWeekly();
   }
   function renderGovSubjects() {
     let subjects = ld('gov_subjects', null);
@@ -4812,10 +4810,8 @@ async function saveFeeMobile(e) {
   else records.mess.push(payload);
   
   setCollegeFeesRecords(records); 
-  setCollegeFeesRecords(records); 
   closeSheet('sheetFee'); 
   renderFees();
-  try { triggerHaptic('medium'); } catch(e){}
 }
 
 function deleteFeeMobile() {
