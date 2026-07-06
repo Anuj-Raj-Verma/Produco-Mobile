@@ -4475,7 +4475,7 @@
       const isPastOrToday = iterDate <= todayDate;
       
       cats.forEach((_, ci) => {
-        const key = `diet_${currentYear}_${currentMonth+1}_${d}_${ci}`;
+        const key = `diet_${dietYear}_${dietMonth+1}_${d}_${ci}`;
         const v = ld(key, null);
         if (isPastOrToday) monthTotal++;
         if (v === true || v === 'true') { dayDone++; monthDone++; }
