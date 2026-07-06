@@ -3226,7 +3226,6 @@
     document.getElementById('attTimetableList').innerHTML = html;
   }
   function openAttEditSlot(day, slotKey, currentSubj, timeLabel) {
-    try { triggerHaptic('light'); } catch(e){}
     document.getElementById('attSlotTitle').textContent = `${day} (${timeLabel})`;
     document.getElementById('attEditDay').value = day;
     document.getElementById('attEditSlot').value = slotKey;
@@ -3453,7 +3452,6 @@
   }
 
   function openAllGovNotesSheet() {
-    try { triggerHaptic('light'); } catch(e){}
     const notes = ld('gov_notes', []).sort((a,b) => new Date(b.date) - new Date(a.date));
     document.getElementById('allGovNotesContent').innerHTML = notes.map(generateNoteCardHtml).join('');
     document.getElementById('sheetAllGovNotes').classList.add('open');
@@ -3500,7 +3498,6 @@
   }
 
   function openGovNoteSheet(id = null) {
-    try { triggerHaptic('light'); } catch(e){}
     const sel = document.getElementById('govNoteCat');
     if(!sel.options.length) sel.innerHTML = GOV_NOTE_CATS.map(c => `<option>${c}</option>`).join('');
     const notes = ld('gov_notes', []);
@@ -3861,7 +3858,6 @@
   }
 
   function openTaskSheet(key) {
-    try { triggerHaptic('light'); } catch(e){}
     modalDate = key; selectedAgendaDate = key; renderAgenda();
     const [y,m,d] = key.split('-');
     document.getElementById('sheetDate').textContent = MONTHS[parseInt(m)-1] + ' ' + d + ', ' + y;
@@ -4101,7 +4097,6 @@
       }
       if (timerCircle) timerCircle.classList.add('liquid-timer-active');
       pomoInterval = setInterval(tickPomo, 1000);
-      try { triggerHaptic('medium'); } catch(e){}
 
     } else {
       clearInterval(pomoInterval);
@@ -4113,7 +4108,6 @@
       document.getElementById('pomoDisplay').textContent = formatTime(pomoDur * 60, false);
 
       if (timerCircle) timerCircle.classList.remove('liquid-timer-active');
-      try { triggerHaptic('medium'); } catch(e){}
     }
     updateFocusNavIndicator();
   }
@@ -4315,7 +4309,6 @@
         menu.style.opacity = '1';
         menu.style.transform = 'translateY(0)';
       }, 10);
-      try { triggerHaptic('light'); } catch(e){}
     } else {
       menu.style.opacity = '0';
       menu.style.transform = 'translateY(-10px)';
@@ -4323,7 +4316,6 @@
       setTimeout(() => {
         menu.style.display = 'none';
       }, 300);
-      try { triggerHaptic('light'); } catch(e){}
     }
   }
 
@@ -4373,8 +4365,6 @@
     // If the user clicks "Cancel", stop immediately
     if (!userConfirmed) return;
 
-    try { triggerHaptic('medium'); } catch(e){}
-
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -4415,7 +4405,6 @@
   }
 
   function openLifestyleSheet(key) {
-    try { triggerHaptic('light'); } catch(e){}
     document.getElementById('lsDateKey').value = key;
     const [_, y, m, d] = key.split('_');
     document.getElementById('lsSheetTitle').textContent = `Lifestyle: ${d} ${MONTHS[parseInt(m)-1]}`;
@@ -4502,7 +4491,6 @@
   function dietNext(){ dietMonth++; if(dietMonth>11){dietMonth=0; dietYear++;} renderDiet(); }
 
   function openDietSheet(dateString) {
-    try { triggerHaptic('light'); } catch(e){}
     document.getElementById('dietDateKey').value = dateString;
     const [y, m, d] = dateString.split('_');
     document.getElementById('dietSheetTitle').textContent = `Diet: ${d} ${MONTHS[parseInt(m)-1]}`;
@@ -4746,7 +4734,6 @@ function renderFees() {
 }
 
 function openFeeSheet(id = null) {
-  try { triggerHaptic('light'); } catch(e){}
   initCfDropdown();
   const records = getCollegeFeesRecords();
   const all = [...records.academic, ...records.mess];

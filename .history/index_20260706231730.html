@@ -4746,7 +4746,6 @@ function renderFees() {
 }
 
 function openFeeSheet(id = null) {
-  try { triggerHaptic('light'); } catch(e){}
   initCfDropdown();
   const records = getCollegeFeesRecords();
   const all = [...records.academic, ...records.mess];
