@@ -522,7 +522,7 @@
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
         <div style="background-color: var(--md-sys-color-surface-variant); padding: 16px; border-radius: 20px; display: flex; flex-direction: column; gap: 8px;">
-          <div style="font-size: 13px; font-weight: 600; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Study Hours</div>
+          <div style="font-size: 13px; font-weight: 600; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Total Focus</div>
           <div id="kpiTotalFocus" style="font-size: 28px; font-weight: 800; color: var(--md-sys-color-primary);">0.0h</div>
         </div>
         <div style="background-color: var(--md-sys-color-surface-variant); padding: 16px; border-radius: 20px; display: flex; flex-direction: column; gap: 8px;">
@@ -532,7 +532,7 @@
       </div>
 
       <div style="background-color: var(--md-sys-color-surface-variant); border-radius: 24px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-        <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 20px 0;">Study Breakdown</h3>
+        <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 20px 0;">Focus Matrix</h3>
         <div id="studyChartContainer" style="position: relative; height: 220px; width: 100%;">
           <canvas id="studyTagChart"></canvas>
         </div>
@@ -1050,12 +1050,10 @@
     const past7DaysLabels = [];
     const studyData = [];
     const screenData = [];
-    const now = new Date();
-    const themeTextColor = getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-on-background').trim() || '#000';
 
     for (let i = 6; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(now.getDate() - i);
+      let d = new Date();
+      d.setDate(new Date().getDate() - i);
       const key = `ls_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
       const ls = ld(key, null);
       const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' });
