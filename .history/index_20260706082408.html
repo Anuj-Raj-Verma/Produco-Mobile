@@ -491,11 +491,13 @@
       <div class="module-month" id="lsMonthLabel"></div>
       <button class="icon-btn" onclick="lsNext()">→</button>
     </div>
+    <!-- 1-Click Sleep Tracker -->
+    <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+      <button id="sleepToggleBtn" class="btn-primary" style="width: 100%; padding: 16px; font-size: 18px; border-radius: 16px; background-color: var(--md-sys-color-primary);" onclick="toggleSleepState()">
+        🛏️ Go to Sleep
+      </button>
+    </div>
     <div id="lsList"></div>
-    <!-- 1-Click Sleep Tracker FAB -->
-    <button id="sleepToggleBtn" onclick="toggleSleepState()" style="position: fixed; bottom: 85px; right: 20px; z-index: 1000; padding: 16px 24px; font-size: 15px; font-weight: bold; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; border: none; cursor: pointer;">
-      🛏️ Go to Sleep
-    </button>
   </section>
 
   <section id="page-diet" class="page">
@@ -2470,20 +2472,15 @@
     
     if (isSleeping) {
       btn.innerHTML = "☀️ Wake Up";
-      // Use the theme's native error/warning colors for high contrast
-      btn.style.backgroundColor = "var(--md-sys-color-error, #B3261E)"; 
-      btn.style.color = "var(--md-sys-color-on-error, #FFFFFF)"; 
+      btn.style.backgroundColor = "#FF9800"; // Bright Orange
+      btn.style.color = "#000000"; // Black text
+      btn.style.border = "none";
     } else {
       btn.innerHTML = "🛏️ Go to Sleep";
-      // Use the theme's native primary accent color
-      btn.style.backgroundColor = "var(--md-sys-color-primary, #D4E157)"; 
-      btn.style.color = "var(--md-sys-color-on-primary, #000000)"; 
+      btn.style.backgroundColor = "#4CAF50"; // Bright Green
+      btn.style.color = "#FFFFFF"; // White text
+      btn.style.border = "none";
     }
-    
-    // Maintain FAB shape and shadow
-    btn.style.borderRadius = "100px";
-    btn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.25)";
-    btn.style.border = "none";
   }
 
   // 1-Click Sleep Tracker Logic

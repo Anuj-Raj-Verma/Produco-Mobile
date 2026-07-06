@@ -491,11 +491,13 @@
       <div class="module-month" id="lsMonthLabel"></div>
       <button class="icon-btn" onclick="lsNext()">→</button>
     </div>
+    <!-- 1-Click Sleep Tracker -->
+    <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+      <button id="sleepToggleBtn" class="btn-primary" style="width: 100%; padding: 16px; font-size: 18px; border-radius: 16px; background-color: var(--md-sys-color-primary);" onclick="toggleSleepState()">
+        🛏️ Go to Sleep
+      </button>
+    </div>
     <div id="lsList"></div>
-    <!-- 1-Click Sleep Tracker FAB -->
-    <button id="sleepToggleBtn" onclick="toggleSleepState()" style="position: fixed; bottom: 85px; right: 20px; z-index: 1000; padding: 16px 24px; font-size: 15px; font-weight: bold; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; border: none; cursor: pointer;">
-      🛏️ Go to Sleep
-    </button>
   </section>
 
   <section id="page-diet" class="page">
@@ -2380,11 +2382,6 @@
     if (typeof updateFocusNavIndicator === 'function') {
       updateFocusNavIndicator();
     }
-    
-    // 4. Update Sleep Button UI
-    if (typeof updateSleepBtnUI === 'function') {
-      updateSleepBtnUI();
-    }
   });
 
   // --- LIFESTYLE ---
@@ -2459,82 +2456,60 @@
   function lsPrev(){ lsMonth--; if(lsMonth<0){lsMonth=11; lsYear--;} renderLifestyle(); }
   function lsNext(){ lsMonth++; if(lsMonth>11){lsMonth=0; lsYear++;} renderLifestyle(); }
 
-  // 1-Click Sleep Tracker UI
+  // 1-Click Sleep Tracker State
   function updateSleepBtnUI() {
     const btn = document.getElementById('sleepToggleBtn');
     if (!btn) return;
     
-    // Strictly convert LocalStorage value to a boolean
-    let rawState = ld('is_sleeping', false);
-    const isSleeping = (rawState === true || rawState === 'true');
-    
+    const isSleeping = ld('is_sleeping', false);
     if (isSleeping) {
       btn.innerHTML = "☀️ Wake Up";
-      // Use the theme's native error/warning colors for high contrast
-      btn.style.backgroundColor = "var(--md-sys-color-error, #B3261E)"; 
-      btn.style.color = "var(--md-sys-color-on-error, #FFFFFF)"; 
+      btn.style.backgroundColor = "var(--md-sys-color-tertiary)";
     } else {
       btn.innerHTML = "🛏️ Go to Sleep";
-      // Use the theme's native primary accent color
-      btn.style.backgroundColor = "var(--md-sys-color-primary, #D4E157)"; 
-      btn.style.color = "var(--md-sys-color-on-primary, #000000)"; 
+      btn.style.backgroundColor = "var(--md-sys-color-primary)";
     }
-    
-    // Maintain FAB shape and shadow
-    btn.style.borderRadius = "100px";
-    btn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.25)";
-    btn.style.border = "none";
   }
 
-  // 1-Click Sleep Tracker Logic
   function toggleSleepState() {
-    let rawState = ld('is_sleeping', false);
-    const isSleeping = (rawState === true || rawState === 'true');
-    
-    // Add the Safety Confirmation Popup
-    const actionText = isSleeping ? "wake up" : "go to sleep";
-    const userConfirmed = window.confirm(`Are you sure you want to log your time to ${actionText} right now?`);
-    
-    // If the user clicks "Cancel", stop immediately
-    if (!userConfirmed) return;
-
+    const isSleeping = ld('is_sleeping', false);
     const now = new Date();
+    
+    // Format current time as HH:MM
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const timeStr = `${hours}:${minutes}`;
 
+    // Determine which day's record to update
     let targetDate = new Date();
     
     if (!isSleeping) {
-      // User is going to sleep. Apply after-midnight rule.
+      // User is going to sleep. 
+      // Apply the After-Midnight rule: If between 12:00 AM and 1:59 AM, log to yesterday.
       if (now.getHours() < 2) {
         targetDate.setDate(targetDate.getDate() - 1);
       }
       
       const key = `ls_${targetDate.getFullYear()}_${targetDate.getMonth()+1}_${targetDate.getDate()}`;
       let dailyData = ld(key, { study: '', screen: '', workout: '', wake: '', sleep: '', tags: {} });
-      
       dailyData.sleep = timeStr;
       sv(key, dailyData);
+      
       sv('is_sleeping', true);
       
     } else {
-      // User is waking up.
+      // User is waking up. Log to today.
       const key = `ls_${targetDate.getFullYear()}_${targetDate.getMonth()+1}_${targetDate.getDate()}`;
       let dailyData = ld(key, { study: '', screen: '', workout: '', wake: '', sleep: '', tags: {} });
-      
       dailyData.wake = timeStr;
       sv(key, dailyData);
+      
       sv('is_sleeping', false);
     }
     
-    // Force UI and DOM updates
+    // Update the UI
     updateSleepBtnUI();
-    if (typeof renderLifestyle === 'function') {
-      renderLifestyle();
-    } else {
-      console.warn("renderLifestyle is not defined. Data saved, but please refresh the page to see changes.");
-    }
+    if(typeof renderLifestyle === 'function') renderLifestyle();
   }
 
   function openLifestyleSheet(key) {

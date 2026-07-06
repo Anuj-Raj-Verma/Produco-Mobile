@@ -2464,26 +2464,22 @@
     const btn = document.getElementById('sleepToggleBtn');
     if (!btn) return;
     
-    // Strictly convert LocalStorage value to a boolean
     let rawState = ld('is_sleeping', false);
     const isSleeping = (rawState === true || rawState === 'true');
     
     if (isSleeping) {
       btn.innerHTML = "☀️ Wake Up";
-      // Use the theme's native error/warning colors for high contrast
-      btn.style.backgroundColor = "var(--md-sys-color-error, #B3261E)"; 
-      btn.style.color = "var(--md-sys-color-on-error, #FFFFFF)"; 
+      btn.style.backgroundColor = "#FF9800"; 
+      btn.style.color = "#000000"; 
     } else {
       btn.innerHTML = "🛏️ Go to Sleep";
-      // Use the theme's native primary accent color
-      btn.style.backgroundColor = "var(--md-sys-color-primary, #D4E157)"; 
-      btn.style.color = "var(--md-sys-color-on-primary, #000000)"; 
+      btn.style.backgroundColor = "#4CAF50"; 
+      btn.style.color = "#FFFFFF"; 
     }
     
-    // Maintain FAB shape and shadow
+    // Maintain FAB shape and shadow across state changes
     btn.style.borderRadius = "100px";
     btn.style.boxShadow = "0 4px 12px rgba(0,0,0,0.25)";
-    btn.style.border = "none";
   }
 
   // 1-Click Sleep Tracker Logic
