@@ -32,18 +32,18 @@
     --md-sys-color-info: #69b4f0;
     --md-sys-color-outline: #424242;
     --md-sys-color-success: #81c784;
-
-    /* Liquid Glass: Light Mode Canvas */
-    --mesh-bg-color: #f2f5f9;
-    --orb-1: radial-gradient(circle at 15% 15%, rgba(173, 216, 230, 0.7) 0%, transparent 45%);
-    --orb-2: radial-gradient(circle at 85% 20%, rgba(255, 182, 193, 0.6) 0%, transparent 50%);
-    --orb-3: radial-gradient(circle at 50% 85%, rgba(221, 160, 221, 0.5) 0%, transparent 55%);
-    --orb-4: radial-gradient(circle at 10% 90%, rgba(152, 251, 152, 0.5) 0%, transparent 40%);
     
     --radius-sm: 8px;
     --radius-md: 16px;
     --radius-lg: 24px;
     --nav-height: 80px;
+
+    /* Light Mode Mesh Canvas */
+    --mesh-bg-color: #f0f4f8;
+    --orb-1: radial-gradient(circle at 15% 15%, rgba(135, 206, 250, 0.7) 0%, transparent 45%);
+    --orb-2: radial-gradient(circle at 85% 20%, rgba(255, 182, 193, 0.65) 0%, transparent 50%);
+    --orb-3: radial-gradient(circle at 50% 85%, rgba(221, 160, 221, 0.6) 0%, transparent 55%);
+    --orb-4: radial-gradient(circle at 10% 90%, rgba(152, 251, 152, 0.5) 0%, transparent 40%);
   }
 
   .light {
@@ -60,25 +60,6 @@
     --md-sys-color-info: #1e6fb8;
     --md-sys-color-outline: #E0E0E0;
     --md-sys-color-success: #388e3c;
-
-    --mesh-bg-color: #f2f5f9;
-    --orb-1: radial-gradient(circle at 15% 15%, rgba(173, 216, 230, 0.7) 0%, transparent 45%);
-    --orb-2: radial-gradient(circle at 85% 20%, rgba(255, 182, 193, 0.6) 0%, transparent 50%);
-    --orb-3: radial-gradient(circle at 50% 85%, rgba(221, 160, 221, 0.5) 0%, transparent 55%);
-    --orb-4: radial-gradient(circle at 10% 90%, rgba(152, 251, 152, 0.5) 0%, transparent 40%);
-  }
-
-  body.dark-mode, [data-theme="dark"], body:not(.light) {
-    /* Liquid Glass: Dark Mode Canvas & Text Fixes */
-    --mesh-bg-color: #000000;
-    --orb-1: radial-gradient(circle at 10% 10%, rgba(10, 132, 255, 0.35) 0%, transparent 55%);
-    --orb-2: radial-gradient(circle at 90% 20%, rgba(213, 120, 255, 0.3) 0%, transparent 60%);
-    --orb-3: radial-gradient(circle at 50% 85%, rgba(0, 250, 146, 0.2) 0%, transparent 65%);
-    --orb-4: radial-gradient(circle at 20% 90%, rgba(255, 69, 58, 0.25) 0%, transparent 50%);
-
-    --md-sys-color-on-background: #ffffff !important;
-    --md-sys-color-on-surface: #ffffff !important;
-    --md-sys-color-on-surface-variant: rgba(255, 255, 255, 0.75) !important;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -92,187 +73,11 @@
     padding-bottom: var(--nav-height);
   }
 
-  .mesh-background {
-    position: fixed;
-    inset: 0;
-    z-index: -999;
-    background-color: var(--mesh-bg-color);
-    background-image: var(--orb-1), var(--orb-2), var(--orb-3), var(--orb-4);
-    background-attachment: fixed;
-    transition: background-color 0.5s ease;
-    pointer-events: none;
-  }
-
-  .liquid-panel {
-    background: rgba(255, 255, 255, 0.4) !important;
-    backdrop-filter: blur(32px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(32px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-  }
-
-  .liquid-inner {
-    background: rgba(255, 255, 255, 0.25) !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  }
-
-  .liquid-card {
-    background: rgba(255, 255, 255, 0.4) !important;
-    backdrop-filter: blur(24px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-    border-radius: 24px !important;
-    padding: 20px;
-  }
-
-  body.dark-mode .liquid-card, [data-theme="dark"] .liquid-card {
-    background: rgba(30, 30, 30, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  }
-
-  .liquid-sub-card {
-    background: rgba(255, 255, 255, 0.25) !important;
-    backdrop-filter: blur(16px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-  }
-
-  body.dark-mode .liquid-sub-card, [data-theme="dark"] .liquid-sub-card {
-    background: rgba(30, 30, 30, 0.25) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  }
-
-  .liquid-modal {
-    background: rgba(255, 255, 255, 0.6) !important;
-    backdrop-filter: blur(32px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.8) !important;
-    border-radius: 28px !important;
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-  }
-
-  body.dark-mode .liquid-modal, [data-theme="dark"] .liquid-modal {
-    background: rgba(30, 30, 30, 0.6) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  }
-
-  .liquid-btn {
-    background: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(16px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.7) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-    color: inherit !important;
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.2s ease !important;
-    cursor: pointer;
-  }
-
-  .liquid-btn:active {
-    transform: scale(0.96) !important;
-    background: rgba(255, 255, 255, 0.45) !important;
-  }
-
-  .glass-icon-btn {
-    background: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    border-radius: 50% !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    color: var(--md-sys-color-on-surface) !important;
-    transition: transform 0.2s ease, background 0.2s ease !important;
-  }
-  .glass-icon-btn:active {
-    transform: scale(0.9) !important;
-    background: rgba(255, 255, 255, 0.5) !important;
-  }
-
-  .liquid-slider-track {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(var(--slider-count, 2), minmax(0, 1fr));
-    align-items: center;
-    /* Lockdown: uniform inner padding so the pill has equal breathing room left/right */
-    padding: 4px !important;
-    box-sizing: border-box !important;
-    border-radius: 999px;
-    margin: 16px 0 24px;
-    min-height: 52px;
-    overflow: hidden;
-  }
-
-  .liquid-slider-pill {
-    position: absolute !important;
-    left: 0 !important;
-    top: 4px !important;
-    height: calc(100% - 8px) !important;
-    border-radius: 99px;
-    z-index: 1;
-    margin: 0 !important;
-    transform-origin: center;
-    will-change: transform, width;
-    transition: none !important;
-  }
-
-  .liquid-slider-label {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface-variant);
-    transition: color 0.4s ease;
-    margin: 0 !important;
-    cursor: pointer;
-  }
-
-  .liquid-slider-label.active {
-    color: var(--md-sys-color-on-background);
-  }
-
-  body.dark-mode .liquid-panel, [data-theme="dark"] .liquid-panel {
-    background: rgba(30, 30, 30, 0.4) !important;
-    backdrop-filter: blur(32px) saturate(120%) !important;
-    -webkit-backdrop-filter: blur(32px) saturate(120%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  }
-
-  body.dark-mode .liquid-inner, [data-theme="dark"] .liquid-inner {
-    background: rgba(0, 0, 0, 0.25) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  }
-
-  body.dark-mode .liquid-btn, [data-theme="dark"] .liquid-btn {
-    background: rgba(50, 50, 50, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  }
-
-  body.dark-mode .liquid-btn:active, [data-theme="dark"] .liquid-btn:active {
-    background: rgba(70, 70, 70, 0.5) !important;
-  }
-
   /* App Bar & Nav */
   .app-bar {
-    position: sticky; top: 0; z-index: 100; background: transparent !important;
+    position: sticky; top: 0; z-index: 100; background: var(--md-sys-color-background);
     padding: calc(16px + env(safe-area-inset-top)) 20px 16px 20px; display: flex; justify-content: space-between; align-items: center;
-    border-bottom: none;
+    border-bottom: 1px solid var(--md-sys-color-outline);
   }
   .app-bar-title { 
     font-size: 24px; 
@@ -306,9 +111,9 @@
 
   .side-nav {
     position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 85vw;
-    background: transparent !important; z-index: 3001;
+    z-index: 3001;
     transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-    display: flex; flex-direction: column; border-right: none; border: none; box-shadow: none;
+    display: flex; flex-direction: column; border-right: 1px solid var(--md-sys-color-outline);
   }
   .side-nav.open { transform: translateX(0); }
 
@@ -323,96 +128,15 @@
     cursor: pointer; transition: background 0.2s;
   }
   .side-nav-item:active, .side-nav-item:hover {
-    background: rgba(255,255,255,0.14);
-    color: var(--md-sys-color-primary);
+    background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-primary);
   }
 
-  /* --- 1. Floating Dynamic Liquid Dock --- */
-  .bottom-nav, #bottomNav {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(100% - 32px);
-    max-width: 400px;
-    height: 64px;
-    border-radius: 999px !important;
-    padding: 0 8px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.4) !important;
-    backdrop-filter: blur(32px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(32px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-    z-index: 1000;
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+    background: var(--md-sys-color-surface); border-top: 1px solid var(--md-sys-color-outline);
+    display: flex; justify-content: space-around; align-items: center; z-index: 1000;
+    padding-bottom: env(safe-area-inset-bottom);
   }
-
-  body.dark-mode .bottom-nav, [data-theme="dark"] .bottom-nav,
-  body.dark-mode #bottomNav, [data-theme="dark"] #bottomNav {
-    background: rgba(30, 30, 30, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
-  }
-
-  /* --- 2. Horizontal Nav Items --- */
-  .bottom-nav .nav-item, #bottomNav .nav-item {
-    flex-direction: row !important;
-    justify-content: center;
-    gap: 8px;
-    padding: 0 16px;
-    height: 48px;
-    border-radius: 999px;
-    z-index: 2;
-    background: transparent !important;
-  }
-
-  /* Fix SVG margins for horizontal layout */
-  .bottom-nav .nav-item svg, #bottomNav .nav-item svg { margin-bottom: 0 !important; flex-shrink: 0; }
-
-  /* --- 3. The Expanding Text Magic --- */
-  .bottom-nav .nav-item span, #bottomNav .nav-item span {
-    max-width: 0;
-    overflow: hidden;
-    opacity: 0;
-    margin-left: -4px;
-    font-size: 13px;
-    font-weight: 700;
-    transition: max-width 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.5s ease,
-                margin-left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    white-space: nowrap;
-  }
-
-  .bottom-nav .nav-item.active span, #bottomNav .nav-item.active span {
-    max-width: 100px;
-    opacity: 1;
-    margin-left: 0;
-  }
-
-  /* --- 4. The Perfect Glass Pill --- */
-  /* --- Phase 1: GPU-Accelerated Physics Pill --- */
-  .nav-liquid-pill {
-    position: absolute;
-    left: 0;
-    height: 48px;
-    top: 8px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-    z-index: 1;
-    transform-origin: center;
-    will-change: transform, width;
-  }
-
-  body.dark-mode .nav-liquid-pill, [data-theme="dark"] .nav-liquid-pill {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
-  }
-
   .nav-item {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
     color: var(--md-sys-color-on-surface-variant); font-size: 12px; font-weight: 500;
@@ -431,6 +155,38 @@
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.6) !important;
   }
 
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(24px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  body.dark-mode .glass-panel,
+  [data-theme="dark"] .glass-panel {
+    background: rgba(15, 15, 15, 0.65) !important;
+    backdrop-filter: blur(24px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  .glass-input {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: var(--md-sys-color-on-surface) !important;
+    border-radius: var(--radius-sm);
+  }
+
+  body.dark-mode .glass-input,
+  [data-theme="dark"] .glass-input {
+    background: rgba(40, 40, 40, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
   body.dark-mode .glass-dock,
   [data-theme="dark"] .glass-dock {
     background: rgba(20, 20, 20, 0.45) !important;
@@ -440,84 +196,80 @@
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
   }
 
-  /* Hub Tile Squish Physics */
-  .hub-tile:active {
-    transform: scale(0.96) !important;
-    background: rgba(255, 255, 255, 0.3) !important;
+  /* Apple-Style Dark Mode Mesh Canvas */
+  body.dark-mode,
+  body.dark-theme,
+  [data-theme="dark"] {
+    --mesh-bg-color: #000000;
+    --orb-1: radial-gradient(circle at 10% 10%, rgba(10, 132, 255, 0.4) 0%, transparent 55%);
+    --orb-2: radial-gradient(circle at 90% 20%, rgba(213, 120, 255, 0.35) 0%, transparent 60%);
+    --orb-3: radial-gradient(circle at 50% 85%, rgba(0, 250, 146, 0.25) 0%, transparent 65%);
+    --orb-4: radial-gradient(circle at 20% 90%, rgba(255, 69, 58, 0.3) 0%, transparent 50%);
+
+    /* High-Contrast Dark Mode Text & Accents */
+    --md-sys-color-on-background: #ffffff !important;
+    --md-sys-color-on-surface: #ffffff !important;
+    --md-sys-color-on-surface-variant: rgba(255, 255, 255, 0.75) !important;
+    --md-sys-color-primary: #4ade80 !important; /* Bright neon green for accents */
   }
-  body.dark-mode .hub-tile:active, [data-theme="dark"] .hub-tile:active {
+
+  /* Glass Buttons (Start, Sleep, Present, etc.) */
+  .glass-btn {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    color: var(--md-sys-color-on-surface) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease;
+    border-radius: 12px;
+    padding: 12px 18px;
+  }
+  body.dark-mode .glass-btn, [data-theme="dark"] .glass-btn {
     background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  }
+  .glass-btn.sleep-active { background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; }
+  .glass-btn.primary { background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; }
+  .glass-btn.danger { background: var(--md-sys-color-error) !important; color: var(--md-sys-color-on-error, #fff) !important; }
+  .glass-btn.warning { background: var(--md-sys-color-warning) !important; color: var(--md-sys-color-on-background) !important; }
+
+  /* Glass Inner (For nested lists like Attendance/Foundation) */
+  .glass-inner {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px;
+    padding: 10px;
+  }
+  body.dark-mode .glass-inner, [data-theme="dark"] .glass-inner {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+
+  /* Mesh Background Styling */
+  .mesh-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -999;
+    background-color: var(--mesh-bg-color);
+    background-image: var(--orb-1), var(--orb-2), var(--orb-3), var(--orb-4);
+    background-attachment: fixed;
+    transition: background-color 0.5s ease, background-image 0.5s ease;
   }
 
   /* Layout & Cards */
-  html { scroll-behavior: smooth; }
-  * { -ms-overflow-style: none; scrollbar-width: none; }
-  *::-webkit-scrollbar { width: 0; height: 0; }
-
-  .page { display: none; padding: 20px; }
+  .page { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
   .page.active { display: block; }
-  .page-enter { animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
-  @keyframes pageEnter { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   .card {
-    background: rgba(255, 255, 255, 0.24);
-    backdrop-filter: blur(20px) saturate(150%);
-    -webkit-backdrop-filter: blur(20px) saturate(150%);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  }
-  body.dark-mode .card, [data-theme="dark"] .card {
-    background: rgba(30, 30, 30, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    background: var(--md-sys-color-surface); border-radius: var(--radius-md);
+    padding: 20px; margin-bottom: 16px; border: 1px solid var(--md-sys-color-outline);
   }
   .card-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--md-sys-color-on-background); }
-
-  .tx-box,
-  .cf-box,
-  .cf-card,
-  .streak-card,
-  .daily-card,
-  .list-tile,
-  .agenda-item,
-  .agenda-event,
-  .day-accordion,
-  .segment-nav,
-  .note-card {
-    background: rgba(255, 255, 255, 0.24);
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  }
-  body.dark-mode .tx-box,
-  body.dark-mode .cf-box,
-  body.dark-mode .cf-card,
-  body.dark-mode .streak-card,
-  body.dark-mode .daily-card,
-  body.dark-mode .list-tile,
-  body.dark-mode .agenda-item,
-  body.dark-mode .agenda-event,
-  body.dark-mode .day-accordion,
-  body.dark-mode .segment-nav,
-  body.dark-mode .note-card,
-  [data-theme="dark"] .tx-box,
-  [data-theme="dark"] .cf-box,
-  [data-theme="dark"] .cf-card,
-  [data-theme="dark"] .streak-card,
-  [data-theme="dark"] .daily-card,
-  [data-theme="dark"] .list-tile,
-  [data-theme="dark"] .agenda-item,
-  [data-theme="dark"] .agenda-event,
-  [data-theme="dark"] .day-accordion,
-  [data-theme="dark"] .segment-nav,
-  [data-theme="dark"] .note-card {
-    background: rgba(30, 30, 30, 0.28);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
 
   /* Reusable Header */
   .module-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -542,18 +294,9 @@
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
   .cal-dow { text-align: center; font-size: 12px; color: var(--md-sys-color-on-surface-variant); font-weight: 600; margin-bottom: 8px; }
   .cal-day {
-    aspect-ratio: 1;
-    background: rgba(255, 255, 255, 0.16);
-    border-radius: 50%;
+    aspect-ratio: 1; background: transparent; border-radius: 50%; border: 1px solid transparent;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 500; position: relative;
-    border: 1px solid rgba(255,255,255,0.2);
-    cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
-  }
-  body.dark-mode .cal-day, [data-theme="dark"] .cal-day {
-    background: rgba(24,24,24,0.28);
-    border-color: rgba(255,255,255,0.12);
+    font-size: 14px; font-weight: 500; position: relative; cursor: pointer;
   }
   .cal-day.today { border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
   .cal-day.other-month { opacity: 0.3; }
@@ -561,44 +304,28 @@
 
   /* Daily List Cards (Lifestyle & Diet) */
   .daily-card {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.06);
+    background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    transition: background 0.2s;
   }
-  body.dark-mode .daily-card, [data-theme="dark"] .daily-card {
-    background: rgba(24,24,24,0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .daily-card:active { background: rgba(255,255,255,0.12); }
+  .daily-card:active { background: var(--md-sys-color-surface-variant); }
   .daily-info h3 { font-size: 16px; margin-bottom: 4px; }
   .daily-info p { font-size: 13px; color: var(--md-sys-color-on-surface-variant); }
   
   /* Progress Ring */
   .progress-ring {
     width: 44px; height: 44px; border-radius: 50%;
-    background: conic-gradient(var(--md-sys-color-primary) var(--p), rgba(255,255,255,0.16) 0);
+    background: conic-gradient(var(--md-sys-color-primary) var(--p), var(--md-sys-color-surface-variant) 0);
     display: flex; align-items: center; justify-content: center; position: relative;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.24);
   }
-  .progress-ring::before { content: ""; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+  .progress-ring::before { content: ""; width: 36px; height: 36px; border-radius: 50%; background: var(--md-sys-color-surface); }
   .progress-ring span { position: absolute; font-size: 11px; font-weight: 700; color: var(--md-sys-color-on-background); }
 
-  /* --- Solid Theme Highlight for Active Timer --- */
-  .bottom-nav .nav-item.timer-live svg,
-  .bottom-nav .nav-item.timer-live span,
-  #nav-focus.timer-live svg,
-  #nav-focus.timer-live span {
+  /* Dynamic Focus Tab Indicator */
+  #nav-focus.timer-live:not(.active) svg {
     color: var(--md-sys-color-primary) !important;
-    font-weight: 700 !important;
+    filter: drop-shadow(0 0 4px rgba(200, 240, 105, 0.4));
   }
 
   /* Focus Engine */
@@ -612,48 +339,16 @@
     border-color: var(--md-sys-color-primary);
   }
 
-  /* --- Liquid Glass Active Selected State --- */
-  .liquid-btn.active-liquid-tag {
-    background: rgba(255, 255, 255, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 1) !important;
-    color: var(--md-sys-color-primary) !important;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 1) !important;
-    transform: scale(1.02);
-  }
-
-  body.dark-mode .liquid-btn.active-liquid-tag, [data-theme="dark"] .liquid-btn.active-liquid-tag {
-    background: rgba(255, 255, 255, 0.25) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-  }
-
   /* Bottom Sheets */
   .bottom-sheet-overlay {
-    position: fixed; inset: 0; background: rgba(8, 12, 28, 0.64); z-index: 2000;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000;
     display: none; align-items: flex-end; justify-content: center;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
   .bottom-sheet-overlay.open { display: flex; }
   .bottom-sheet {
-    background: rgba(255, 255, 255, 0.66);
-    backdrop-filter: blur(28px) saturate(180%);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    width: 100%; max-width: 600px;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    padding: 24px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.85);
-    animation: slideUp 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  body.dark-mode .bottom-sheet, [data-theme="dark"] .bottom-sheet {
-    background: rgba(20, 20, 20, 0.64);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    background: var(--md-sys-color-surface); width: 100%; max-width: 600px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 24px;
+    animation: slideUp 0.3s cubic-bezier(0.1, 0.9, 0.2, 1); max-height: 90vh; overflow-y: auto;
   }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   
@@ -662,720 +357,127 @@
   .form-group { margin-bottom: 16px; }
   .form-label { display: block; font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
   .mobile-input, .mobile-select {
-    width: 100%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
-    border-radius: var(--radius-sm); color: var(--md-sys-color-on-background); padding: 14px;
-    font-family: inherit; font-size: 16px; min-height: 48px;
-    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
-    appearance: none; -webkit-appearance: none;
+    width: 100%; background: var(--md-sys-color-surface-variant); border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--radius-sm); color: var(--md-sys-color-on-background); padding: 14px; font-family: inherit; font-size: 16px;
   }
-  .mobile-input:focus, .mobile-select:focus { outline: none; border-color: var(--md-sys-color-primary); background: rgba(255,255,255,0.2); box-shadow: 0 0 0 4px rgba(200,240,105,0.12); }
-  .mobile-select {
-    background-image: linear-gradient(45deg, transparent 50%, var(--md-sys-color-on-surface-variant) 50%), linear-gradient(135deg, var(--md-sys-color-on-surface-variant) 50%, transparent 50%);
-    background-position: calc(100% - 16px) center, calc(100% - 12px) center;
-    background-size: 6px 6px, 6px 6px;
-    background-repeat: no-repeat;
-    padding-right: 40px;
-  }
-  .liquid-select { width: 100%; appearance: none; border-radius: var(--radius-sm); padding: 14px; }
+  .mobile-input:focus, .mobile-select:focus { outline: none; border-color: var(--md-sys-color-primary); }
   
   /* Diet Checklist */
-  .diet-item-card {
+  .checklist-item {
     display: flex; align-items: center; justify-content: space-between;
     padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline);
-    transition: background-color 0.3s ease, border-color 0.3s ease !important;
-  }
-  .diet-item-card.checked {
-    background: rgba(74, 222, 128, 0.2) !important;
-    border: 1px solid rgba(74, 222, 128, 0.5) !important;
   }
   .checklist-item:last-child { border-bottom: none; }
   .checklist-label { font-size: 16px; font-weight: 500; }
   .custom-checkbox {
-    width: 28px; height: 28px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
-    background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer;
+    width: 28px; height: 28px; border-radius: 6px; border: 2px solid var(--md-sys-color-outline);
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer;
   }
   .custom-checkbox.checked { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); }
   .custom-checkbox.checked::after { content: "✓"; color: var(--md-sys-color-on-primary); font-weight: bold; font-size: 18px; }
 
   /* Buttons */
-  .btn-primary, .btn-secondary {
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-  }
   .btn-primary { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; width: 100%; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; margin-top: 16px; cursor: pointer; }
   .btn-secondary { background: transparent; color: var(--md-sys-color-on-background); border: 1px solid var(--md-sys-color-outline); width: 100%; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; margin-top: 8px; cursor: pointer; }
-  .btn-primary:active, .btn-secondary:active { transform: scale(0.98); box-shadow: 0 10px 22px rgba(0,0,0,0.08); }
 
   /* Charts */
   .chart-container { position: relative; height: 200px; width: 100%; margin-bottom: 20px; }
-
-  #page-stats .view-section,
-  #page-stats header {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  /* --- Liquid Glass Doughnut Chart --- */
-  .liquid-doughnut-chart {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    /* The mask hollows out the center of the circle to create a perfect ring */
-    -webkit-mask: radial-gradient(circle, transparent 55%, black 56%);
-    mask: radial-gradient(circle, transparent 55%, black 56%);
-    box-shadow: inset 0 4px 12px rgba(255,255,255,0.4);
-  }
-
-  .liquid-legend-box {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-  }
 
   /* More / Transactions / Mood / Streaks */
   .cal-day.mood-good { background: rgba(200,240,105,0.2); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
   .cal-day.mood-normal { background: rgba(240,192,105,0.2); border-color: var(--md-sys-color-warning); color: var(--md-sys-color-warning); }
   .cal-day.mood-bad { background: rgba(207,102,121,0.2); border-color: var(--md-sys-color-error); color: var(--md-sys-color-error); }
-  .list-tile {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 16px;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: var(--radius-md);
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.06);
-  }
-  body.dark-mode .list-tile, [data-theme="dark"] .list-tile {
-    background: rgba(22, 22, 22, 0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.24);
-  }
+  .list-tile { display: flex; align-items: center; justify-content: space-between; padding: 18px 16px; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-md); margin-bottom: 12px; cursor: pointer; font-size: 16px; font-weight: 500; }
   .list-tile svg { color: var(--md-sys-color-primary); }
   .tx-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-  .tx-box {
-    background: rgba(255, 255, 255, 0.18);
-    padding: 16px;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 12px 30px rgba(0,0,0,0.06);
-  }
-  body.dark-mode .tx-box, [data-theme="dark"] .tx-box {
-    background: rgba(24, 24, 24, 0.32);
-    border: 1px solid rgba(255,255,255,0.14);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 30px rgba(0,0,0,0.22);
-  }
+  .tx-box { background: var(--md-sys-color-surface); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--md-sys-color-outline); }
   .tx-box h4 { font-size: 12px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
   .agenda-card { margin-top: 16px; }
   .agenda-list { display: flex; flex-direction: column; gap: 10px; }
-  .agenda-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 12px 14px;
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: var(--radius-sm);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
-  }
-  body.dark-mode .agenda-item, [data-theme="dark"] .agenda-item {
-    background: rgba(24, 24, 24, 0.3);
-    border-color: rgba(255,255,255,0.12);
-  }
+  .agenda-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; background: var(--md-sys-color-surface-variant); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-sm); }
   .agenda-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--md-sys-color-primary); margin-top: 2px; flex-shrink: 0; }
   .agenda-item.done .agenda-text { color: var(--md-sys-color-on-surface-variant); text-decoration: line-through; opacity: 0.7; }
   .agenda-empty { padding: 18px 8px; text-align: center; color: var(--md-sys-color-on-surface-variant); font-size: 14px; }
-  .agenda-event {
-    margin-top: 12px;
-    padding: 14px;
-    border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    color: var(--md-sys-color-on-background);
-    white-space: pre-wrap;
-    line-height: 1.5;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
-  }
-  body.dark-mode .agenda-event, [data-theme="dark"] .agenda-event {
-    background: rgba(24, 24, 24, 0.3);
-    border-color: rgba(255,255,255,0.12);
-  }
+  .agenda-event { margin-top: 12px; padding: 14px; border-radius: var(--radius-sm); background: var(--md-sys-color-surface-variant); border: 1px solid var(--md-sys-color-outline); color: var(--md-sys-color-on-background); white-space: pre-wrap; line-height: 1.5; }
   .tx-box .val { font-size: 20px; font-weight: 600; font-family: monospace; }
   .val.green { color: var(--md-sys-color-success); }
   .val.red { color: var(--md-sys-color-error); }
-  .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
-  body.dark-mode .tx-item, [data-theme="dark"] .tx-item { border-bottom-color: rgba(255,255,255,0.1); }
+  .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline); }
   .tx-item:last-child { border-bottom: none; }
   .tx-item-left { display: flex; flex-direction: column; gap: 4px; }
   .tx-title { font-size: 16px; font-weight: 500; }
-  .tx-type { font-size: 12px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.18); width: fit-content; }
-  body.dark-mode .tx-type, [data-theme="dark"] .tx-type { background: rgba(255,255,255,0.08); }
+  .tx-type { font-size: 12px; padding: 2px 6px; border-radius: 4px; background: var(--md-sys-color-surface-variant); width: fit-content; }
   .tx-amt { font-family: monospace; font-size: 16px; font-weight: 600; }
   .tx-del { background:none; border:none; color: var(--md-sys-color-error); font-size: 20px; padding: 4px 8px; cursor: pointer; }
-  .streak-card { background: rgba(255, 255, 255, 0.24); border: 1px solid rgba(255, 255, 255, 0.55); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
-  body.dark-mode .streak-card, [data-theme="dark"] .streak-card { background: rgba(30, 30, 30, 0.28); border: 1px solid rgba(255, 255, 255, 0.16); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  .streak-card { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; }
   .streak-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
   .streak-title { font-size: 18px; font-weight: 600; }
   .streak-meta { font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px; }
-  .streak-bar-bg { height: 8px; background: rgba(255, 255, 255, 0.18); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
-  body.dark-mode .streak-bar-bg, [data-theme="dark"] .streak-bar-bg { background: rgba(255,255,255,0.08); }
+  .streak-bar-bg { height: 8px; background: rgba(150,150,150,0.3); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
   .streak-bar-fill { height: 100%; background: var(--md-sys-color-primary); transition: width 0.3s; }
-  .note-card {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: var(--radius-sm);
-    padding: 16px;
-    margin-bottom: 12px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
-  }
-  body.dark-mode .note-card, [data-theme="dark"] .note-card {
-    background: rgba(24, 24, 24, 0.28);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .note-chip { font-size: 10px; padding: 4px 8px; background: rgba(255,255,255,0.12); border-radius: 4px; margin-top: 8px; display: inline-block; }
-  .cf-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  .cf-box {
-    background: rgba(255, 255, 255, 0.18);
-    padding: 16px;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
-  }
-  body.dark-mode .cf-box, [data-theme="dark"] .cf-box {
-    background: rgba(24, 24, 24, 0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .cf-box h4 { font-size: 11px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
-  .cf-box .val { font-size: 18px; font-weight: 600; font-family: monospace; }
-  .cf-filter-sel {
-    background: rgba(255,255,255,0.16);
-    color: var(--md-sys-color-on-background);
-    border: 1px solid rgba(255,255,255,0.28);
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    outline: none;
-  }
-  body.dark-mode .cf-filter-sel, [data-theme="dark"] .cf-filter-sel {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.18);
-  }
-  .cf-card {
-    background: rgba(255, 255, 255, 0.18);
-    padding: 16px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 12px;
-    border: 1px solid rgba(255,255,255,0.4);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
-  }
-  body.dark-mode .cf-card, [data-theme="dark"] .cf-card {
-    background: rgba(24,24,24,0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .cf-card.paid { border-color: var(--md-sys-color-success); background: rgba(129, 199, 132, 0.1); }
-  .cf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-  .cf-title { font-size: 16px; font-weight: 600; color: var(--md-sys-color-on-background); }
-  .cf-amt { font-family: monospace; font-size: 18px; font-weight: 600; }
-  .cf-meta { font-size: 12px; color: var(--md-sys-color-on-surface-variant); line-height: 1.4; margin-top: 4px; }
-
-  .status-chip { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-top: 8px; }
-  .status-chip.pending { background: rgba(207, 102, 121, 0.18); color: var(--md-sys-color-error); }
-  .status-chip.paid { background: rgba(129, 199, 132, 0.18); color: var(--md-sys-color-success); }
-
-  .cf-month-picker { position: relative; width: 100%; }
-  .cf-month-dropdown {
-    position: absolute; bottom: 100%; left: 0; right: 0;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.32);
-    border-radius: var(--radius-sm);
-    z-index: 3000;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-    padding: 8px 0;
-    box-shadow: 0 -4px 18px rgba(0,0,0,0.15);
-  }
-  body.dark-mode .cf-month-dropdown, [data-theme="dark"] .cf-month-dropdown {
-    background: rgba(24,24,24,0.28);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: 0 -4px 18px rgba(0,0,0,0.22);
-  }
-  .cf-month-option { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; color: var(--md-sys-color-on-background); cursor: pointer; }
-
-  .liquid-fab, .fab, .add-btn, .plus-btn {
-    position: fixed;
-    bottom: calc(var(--nav-height) + 20px);
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    color: var(--md-sys-color-primary) !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    background: linear-gradient(135deg, rgba(74, 222, 128, 0.3), rgba(74, 222, 128, 0.05)) !important;
-    backdrop-filter: blur(20px) saturate(150%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
-    box-shadow:
-      0 12px 32px 0 rgba(0, 0, 0, 0.12),
-      inset 0 4px 6px rgba(255, 255, 255, 0.7),
-      inset 0 -4px 6px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    z-index: 900;
-    cursor: pointer;
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease !important;
-  }
-  .liquid-fab:active, .fab:active, .add-btn:active, .plus-btn:active {
-    transform: scale(0.92) !important;
-    box-shadow:
-      0 4px 12px 0 rgba(0, 0, 0, 0.1),
-      inset 0 2px 4px rgba(255, 255, 255, 0.5),
-      inset 0 -2px 4px rgba(0, 0, 0, 0.05) !important;
-  }
-  body.dark-mode .liquid-fab, [data-theme="dark"] .liquid-fab,
-  body.dark-mode .fab, [data-theme="dark"] .fab,
-  body.dark-mode .add-btn, [data-theme="dark"] .add-btn,
-  body.dark-mode .plus-btn, [data-theme="dark"] .plus-btn {
-    background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.02)) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow:
-      0 12px 32px 0 rgba(0, 0, 0, 0.4),
-      inset 0 2px 4px rgba(255, 255, 255, 0.2) !important;
-  }
+  .fab { position: fixed; bottom: calc(var(--nav-height) + 20px); right: 20px; width: 56px; height: 56px; border-radius: 50%; background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); border: none; z-index: 900; cursor: pointer; }
 
   /* Attendance / Foundation */
-  .segment-nav {
-    display: flex;
-    background: rgba(255,255,255,0.16);
-    border: 1px solid rgba(255,255,255,0.38);
-    border-radius: var(--radius-sm);
-    margin: 20px;
-    padding: 4px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-  }
-  body.dark-mode .segment-nav, [data-theme="dark"] .segment-nav {
-    background: rgba(24,24,24,0.3);
-    border-color: rgba(255,255,255,0.12);
-  }
-  .segment-btn {
-    flex: 1;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--md-sys-color-on-surface-variant);
-    border-radius: 6px;
-    transition: 0.2s;
-    cursor: pointer;
-  }
-  .segment-btn.active {
-    background: rgba(255,255,255,0.34);
-    color: var(--md-sys-color-primary);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-  }
-  body.dark-mode .segment-btn.active, [data-theme="dark"] .segment-btn.active {
-    background: rgba(255,255,255,0.16);
-  }
+  .segment-nav { display: flex; background: var(--md-sys-color-surface-variant); border-radius: var(--radius-sm); margin: 20px; padding: 4px; }
+  .segment-btn { flex: 1; padding: 10px; text-align: center; font-size: 14px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); border-radius: 6px; transition: 0.2s; cursor: pointer; }
+  .segment-btn.active { background: var(--md-sys-color-surface); color: var(--md-sys-color-primary); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
   .segment-content { display: none; padding: 0 20px; animation: fadeIn 0.3s; }
   .segment-content.active { display: block; }
   .att-btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-  .att-btn {
-    flex: 1 1 calc(33% - 8px);
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.4);
-    background: rgba(255,255,255,0.18);
-    color: var(--md-sys-color-on-background);
-    cursor: pointer;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
-  }
-  body.dark-mode .att-btn, [data-theme="dark"] .att-btn {
-    background: rgba(24,24,24,0.28);
-    border-color: rgba(255,255,255,0.12);
-  }
+  .att-btn { flex: 1 1 calc(33% - 8px); padding: 8px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; text-align: center; border: 1px solid var(--md-sys-color-outline); background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-background); cursor: pointer; }
   .att-btn.active-present { background: rgba(129, 199, 132, 0.2); border-color: var(--md-sys-color-success); color: var(--md-sys-color-success); }
   .att-btn.active-absent { background: rgba(207, 102, 121, 0.2); border-color: var(--md-sys-color-error); color: var(--md-sys-color-error); }
   .att-btn.active-other { background: rgba(105, 180, 240, 0.2); border-color: var(--md-sys-color-info); color: var(--md-sys-color-info); }
-  .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
-  body.dark-mode .stat-row, [data-theme="dark"] .stat-row { border-bottom-color: rgba(255,255,255,0.1); }
+  .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--md-sys-color-outline); }
   .stat-row:last-child { border-bottom: none; }
-  .day-accordion {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: var(--radius-sm);
-    margin-bottom: 12px;
-    overflow: hidden;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.06);
-  }
-  body.dark-mode .day-accordion, [data-theme="dark"] .day-accordion {
-    background: rgba(24,24,24,0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .day-header {
-    padding: 16px;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.12);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.24);
-  }
-  body.dark-mode .day-header, [data-theme="dark"] .day-header {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255,255,255,0.12);
-  }
+  .day-accordion { background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; }
+  .day-header { padding: 16px; font-weight: 600; background: var(--md-sys-color-surface-variant); cursor: pointer; display: flex; justify-content: space-between; }
   .day-slots { display: none; padding: 12px; }
   .day-accordion.open .day-slots { display: block; }
-  .slot-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.18); font-size: 14px; cursor: pointer; }
+  .slot-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--md-sys-color-outline); font-size: 14px; cursor: pointer; }
   .slot-item:last-child { border-bottom: none; }
-  .gov-check-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
+  .gov-check-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--md-sys-color-outline); }
   .gov-check-row:last-child { border-bottom: none; }
-  .checkbox-pill {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    background: rgba(255, 255, 255, 0.14);
-    cursor: pointer;
-    transition: 0.2s;
-    border: 1px solid rgba(255,255,255,0.22);
-  }
-  body.dark-mode .checkbox-pill, [data-theme="dark"] .checkbox-pill {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255,255,255,0.14);
-  }
+  .checkbox-pill { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: var(--md-sys-color-surface-variant); cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
   .checkbox-pill.checked { background: rgba(200, 240, 105, 0.2); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
-  .prog-bar-bg { height: 6px; background: rgba(150, 150, 150, 0.2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
-
-  .glass-dropdown-item {
-    padding: 14px 20px;
-    cursor: pointer;
-    color: var(--md-sys-color-on-surface);
-    font-weight: 500;
-    transition: background 0.2s ease;
-  }
-  .glass-dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-  body.dark-mode .glass-dropdown-item:hover, [data-theme="dark"] .glass-dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
+  .prog-bar-bg { height: 6px; background: rgba(150,150,150,0.3); border-radius: 3px; overflow: hidden; margin-top: 8px; }
   .prog-bar-fill { height: 100%; background: var(--md-sys-color-primary); transition: width 0.3s; }
-
-  /* --- Liquid Swirl Internal Animation --- */
-  @keyframes liquidSwirl {
-    0% { transform: rotate(0deg) scale(1.5); }
-    100% { transform: rotate(360deg) scale(1.5); }
-  }
-
-  .liquid-timer-active::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(from 0deg, transparent 0%, rgba(74, 222, 128, 0.15) 25%, rgba(10, 132, 255, 0.15) 50%, rgba(213, 120, 255, 0.15) 75%, transparent 100%);
-    filter: blur(24px);
-    animation: liquidSwirl 8s linear infinite;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-
-  .liquid-timer-active::before {
-    opacity: 1;
-  }
-
-  body.dark-mode .liquid-timer-active::before, [data-theme="dark"] .liquid-timer-active::before {
-    background: conic-gradient(from 0deg, transparent 0%, rgba(74, 222, 128, 0.3) 25%, rgba(10, 132, 255, 0.3) 50%, rgba(213, 120, 255, 0.3) 75%, transparent 100%);
-  }
-
-  /* --- Liquid Glass Active Breathing --- */
-  @keyframes liquidPulseLight {
-    0% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); }
-    50% { transform: scale(1.02); box-shadow: 0 20px 60px rgba(74, 222, 128, 0.2), inset 0 2px 4px rgba(255,255,255,0.9); }
-    100% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); }
-  }
-
-  @keyframes liquidPulseDark {
-    0% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
-    50% { transform: scale(1.02); box-shadow: 0 20px 60px rgba(74, 222, 128, 0.15), inset 0 2px 4px rgba(255,255,255,0.25); }
-    100% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
-  }
-
-  .liquid-timer-active {
-    animation: liquidPulseLight 4s ease-in-out infinite !important;
-    border: 1px solid rgba(74, 222, 128, 0.6) !important;
-    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-
-  body.dark-mode .liquid-timer-active, [data-theme="dark"] .liquid-timer-active {
-    animation: liquidPulseDark 4s ease-in-out infinite !important;
-    border: 1px solid rgba(74, 222, 128, 0.4) !important;
-  }
-
-  /* Red Stop Button Morph State */
-  .liquid-btn-stop {
-    background: rgba(255, 69, 58, 0.25) !important;
-    border-color: rgba(255, 69, 58, 0.5) !important;
-    color: #ff453a !important;
-  }
-  .liquid-input {
-    width: 100%;
-    max-width: 120px;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.32);
-    color: var(--md-sys-color-on-background);
-    padding: 8px 10px;
-    border-radius: 8px;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-  }
-  body.dark-mode .liquid-input, [data-theme="dark"] .liquid-input {
-    background: rgba(24,24,24,0.32);
-    border-color: rgba(255,255,255,0.14);
-  }
-
-  .note-card {
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    padding: 16px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 12px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
-  }
-  body.dark-mode .note-card, [data-theme="dark"] .note-card {
-    background: rgba(24, 24, 24, 0.28);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
+  .note-card { background: var(--md-sys-color-surface-variant); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 12px; }
   .note-chip { font-size: 10px; padding: 4px 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 8px; display: inline-block; }
 
   /* Phase 5: College Fees UI */
-  .cf-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  .cf-box {
-    background: rgba(255, 255, 255, 0.18);
-    padding: 16px;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.4);
-    text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
-  }
-  body.dark-mode .cf-box, [data-theme="dark"] .cf-box {
-    background: rgba(24, 24, 24, 0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .cf-box h4 { font-size: 11px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
-  .cf-box .val { font-size: 18px; font-weight: 600; font-family: monospace; }
-  .val.green { color: var(--md-sys-color-success); }
-  .val.red { color: var(--md-sys-color-error); }
+.cf-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.cf-box { background: var(--md-sys-color-surface); padding: 16px; border-radius: var(--radius-md); border: 1px solid var(--md-sys-color-outline); text-align: center;}
+.cf-box h4 { font-size: 11px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
+.cf-box .val { font-size: 18px; font-weight: 600; font-family: monospace; }
+.val.green { color: var(--md-sys-color-success); } 
+.val.red { color: var(--md-sys-color-error); }
 
-  .cf-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; scrollbar-width: none; }
-  .cf-filters::-webkit-scrollbar { display: none; }
-  .cf-filter-sel {
-    background: rgba(255,255,255,0.16);
-    color: var(--md-sys-color-on-background);
-    border: 1px solid rgba(255,255,255,0.28);
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    outline: none;
-  }
-  body.dark-mode .cf-filter-sel, [data-theme="dark"] .cf-filter-sel {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.18);
-  }
+.cf-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; scrollbar-width: none; }
+.cf-filters::-webkit-scrollbar { display: none; }
+.cf-filter-sel { background: var(--md-sys-color-surface-variant); color: var(--md-sys-color-on-background); border: 1px solid var(--md-sys-color-outline); padding: 8px 12px; border-radius: 20px; font-size: 13px; white-space: nowrap; flex-shrink: 0; outline: none; }
 
-  .cf-card {
-    background: rgba(255, 255, 255, 0.18);
-    padding: 16px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 12px;
-    border: 1px solid rgba(255,255,255,0.4);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
-  }
-  body.dark-mode .cf-card, [data-theme="dark"] .cf-card {
-    background: rgba(24,24,24,0.32);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
-  }
-  .cf-card.paid { border-color: var(--md-sys-color-success); background: rgba(129, 199, 132, 0.1); }
-  .cf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-  .cf-title { font-size: 16px; font-weight: 600; color: var(--md-sys-color-on-background); }
-  .cf-amt { font-family: monospace; font-size: 18px; font-weight: 600; }
-  .cf-meta { font-size: 12px; color: var(--md-sys-color-on-surface-variant); line-height: 1.4; margin-top: 4px; }
+.cf-card { background: var(--md-sys-color-surface); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1px solid var(--md-sys-color-outline); }
+.cf-card.paid { border-color: var(--md-sys-color-success); background: rgba(129, 199, 132, 0.05); }
+.cf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.cf-title { font-size: 16px; font-weight: 600; color: var(--md-sys-color-on-background); }
+.cf-amt { font-family: monospace; font-size: 18px; font-weight: 600; }
+.cf-meta { font-size: 12px; color: var(--md-sys-color-on-surface-variant); line-height: 1.4; margin-top: 4px;}
 
-  .status-chip { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-top: 8px; }
-  .status-chip.pending { background: rgba(207, 102, 121, 0.2); color: var(--md-sys-color-error); }
-  .status-chip.paid { background: rgba(129, 199, 132, 0.2); color: var(--md-sys-color-success); }
+.status-chip { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-top: 8px; }
+.status-chip.pending { background: rgba(207, 102, 121, 0.2); color: var(--md-sys-color-error); }
+.status-chip.paid { background: rgba(129, 199, 132, 0.2); color: var(--md-sys-color-success); }
 
-  .cf-month-picker { position: relative; width: 100%; }
-  .cf-month-dropdown {
-    position: absolute; bottom: 100%; left: 0; right: 0;
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.32);
-    border-radius: var(--radius-sm);
-    z-index: 3000;
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-    padding: 8px 0;
-    box-shadow: 0 -4px 18px rgba(0,0,0,0.15);
-  }
-  body.dark-mode .cf-month-dropdown, [data-theme="dark"] .cf-month-dropdown {
-    background: rgba(24,24,24,0.28);
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: 0 -4px 18px rgba(0,0,0,0.22);
-  }
-  .cf-month-option { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; color: var(--md-sys-color-on-background); cursor: pointer; }
-
-  /* --- Liquid Glass Checkbox & Diet Rows --- */
-  .liquid-checkbox {
-    width: 28px; height: 28px; border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  .liquid-checkbox.checked {
-    background: rgba(74, 222, 128, 0.8) !important;
-    border-color: rgba(74, 222, 128, 1) !important;
-    transform: scale(1.1);
-  }
-  .liquid-checkbox.checked::after {
-    content: "✓";
-    color: #1a1a1a;
-    font-weight: 800;
-    font-size: 16px;
-  }
-  body.dark-mode .liquid-checkbox, [data-theme="dark"] .liquid-checkbox {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.2);
-  }
-
-  /* --- THE BULLETPROOF LIQUID TOGGLE --- */
-  .liquid-toggle {
-    position: relative;
-    display: inline-block;
-    width: 52px;
-    height: 32px;
-    flex-shrink: 0; /* Prevents squishing */
-  }
-
-  /* Hide default checkbox */
-  .liquid-toggle input {
-    display: none;
-  }
-
-  /* The Track */
-  .liquid-toggle .toggle-track {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 34px;
-    transition: background-color 0.4s ease, border-color 0.4s ease;
-  }
-
-  /* The Glass Ball (Generated purely by CSS, cannot disappear) */
-  .liquid-toggle .toggle-track::before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 2px; /* Perfect 2px gap on left */
-    bottom: 2px; /* Perfect 2px gap on bottom */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
-    backdrop-filter: blur(10px);
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 1);
-    transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  /* Checked State: Track goes green */
-  .liquid-toggle input:checked + .toggle-track {
-    background-color: rgba(74, 222, 128, 0.5);
-    border-color: rgba(74, 222, 128, 0.8);
-  }
-
-  /* Checked State: Ball moves right */
-  .liquid-toggle input:checked + .toggle-track::before {
-    transform: translateX(20px); /* Perfect mathematical distance for symmetry */
-  }
-  
-  /* Dark-mode header and liquid-glass fixes: remove harsh white top highlight */
-  body.dark-mode header,
-  [data-theme="dark"] header,
-  body.dark-mode .app-bar,
-  [data-theme="dark"] .app-bar,
-  body.dark-mode .top-bar {
-    border-top: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Soften/remove inset highlights on liquid surfaces in dark mode */
-  body.dark-mode .liquid-panel,
-  [data-theme="dark"] .liquid-panel,
-  body.dark-mode .liquid-card,
-  [data-theme="dark"] .liquid-card,
-  body.dark-mode .liquid-sub-card,
-  [data-theme="dark"] .liquid-sub-card,
-  body.dark-mode .liquid-inner,
-  [data-theme="dark"] .liquid-inner {
-    /* Keep dark glass look but remove white inset highlight */
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.03) !important;
-  }
-
-  /* Bottom nav and pill: remove inset white sheen in dark mode */
-  body.dark-mode .nav-liquid-pill,
-  [data-theme="dark"] .nav-liquid-pill,
-  body.dark-mode .bottom-nav,
-  [data-theme="dark"] .bottom-nav {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.03) !important;
-  }
-
-  body.dark-mode .liquid-btn,
-  [data-theme="dark"] .liquid-btn {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.03) !important;
-  }
-
-  /* Highly specific override to remove top highlight on the app header in dark mode */
-  body.dark-mode .app-bar.liquid-panel,
-  [data-theme="dark"] .app-bar.liquid-panel {
-    border-top: none !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-  }
+.cf-month-picker { position: relative; width: 100%; }
+.cf-month-dropdown { position: absolute; bottom: 100%; left: 0; right: 0; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--radius-sm); z-index: 3000; max-height: 200px; overflow-y: auto; display: none; padding: 8px 0; box-shadow: 0 -4px 12px rgba(0,0,0,0.5); }
+.cf-month-option { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; color: var(--md-sys-color-on-background); cursor: pointer; }
 </style>
 </head>
 <body>
-<div class="mesh-background"></div>
+    <!-- Phase 1: Liquid Glass Mesh Background -->
+    <div class="mesh-background"></div>
 
-<header class="app-bar liquid-panel" style="padding: calc(16px + env(safe-area-inset-top)) 20px 16px 20px; border-radius: 0 0 24px 24px;">
+<header class="glass-panel" style="padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 24px 24px; position: sticky; top: 0; z-index: 100;">
   <div style="display:flex; align-items:center; gap:12px;">
     <button class="back-btn" id="backBtn" onclick="goBackToMore()">←</button>
     <button id="menuBtn" onclick="openSideNav()" style="background:none; border:none; cursor:pointer; display:flex; align-items:center; padding: 0;" aria-label="Open navigation menu" type="button">
@@ -1390,7 +492,7 @@
 </header>
 
 <div class="side-nav-overlay" id="sideNavOverlay" onclick="closeSideNav()"></div>
-<div class="side-nav liquid-panel" id="sideNav" style="border-radius: 0 24px 24px 0; overflow: hidden;">
+<div class="side-nav glass-panel" id="sideNav">
   <div class="side-nav-header">
     <div class="app-bar-title" style="font-size: 28px; color: var(--md-sys-color-on-background) !important;">
       Prod<span style="color: var(--md-sys-color-primary) !important;">u</span>co
@@ -1401,7 +503,7 @@
     <div class="side-nav-item" onclick="switchTab('home'); closeSideNav();">Home</div>
     <div class="side-nav-item" onclick="switchTab('calendar'); closeSideNav();">Calendar</div>
     <div class="side-nav-item" onclick="switchTab('health'); closeSideNav();">Health</div>
-    <!-- Stats & Analytics removed -->
+    <div class="side-nav-item" onclick="switchTab('stats'); closeSideNav();">Stats & Analytics</div>
     <div style="height: 1px; background: var(--md-sys-color-outline); margin: 12px 0;"></div>
     <div class="side-nav-item" onclick="openSubPage('transactions', 'Transactions'); closeSideNav();">Transactions</div>
     <div class="side-nav-item" onclick="openSubPage('mood', 'Mood Tracker'); closeSideNav();">Mood Tracker</div>
@@ -1433,26 +535,28 @@
 
 <main id="content">
   <section id="page-dashboard" class="page active">
-    <div class="card liquid-panel" style="border-color: rgba(200,240,105,0.2);">
+    <div class="glass-panel" style="border-radius: 20px; padding: 20px; margin-bottom: 20px;">
       <div class="card-title" id="dash-greeting" style="font-size: 22px; margin-bottom: 8px;">Good morning, Anuj</div>
       <div id="dash-summary" style="font-size: 14px; color: var(--md-sys-color-on-surface-variant);">Loading...</div>
     </div>
 
-    <div style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0;">Smart Insights</div>
-    <div id="smart-insights-feed" style="display: flex; flex-direction: column; gap: 12px;"></div>
+    <div class="glass-panel" style="border-radius: 20px; padding: 20px; margin-bottom: 20px;">
+      <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">Smart Insights</div>
+      <div id="smart-insights-feed" style="display: flex; flex-direction: column; gap: 12px;"></div>
+    </div>
   </section>
 
   <section id="page-calendar" class="page">
-    <div class="card liquid-panel">
+    <div class="card">
       <div class="module-header">
-        <button class="icon-btn liquid-btn" onclick="calPrev()">←</button>
+        <button class="icon-btn glass-btn" onclick="calPrev()">←</button>
         <div class="module-month" id="calMonthLabel"></div>
-        <button class="icon-btn liquid-btn" onclick="calNext()">→</button>
+        <button class="icon-btn glass-btn" onclick="calNext()">→</button
       </div>
       <div class="cal-grid" id="calGrid"></div>
     </div>
 
-    <div class="card liquid-panel" style="margin-top: 16px;">
+    <div class="card" style="margin-top: 16px;">
       <div class="card-title" id="agendaTitle" style="margin-bottom: 12px;">Today's Agenda</div>
       <div id="calAgendaContent"></div>
     </div>
@@ -1463,60 +567,40 @@
       <h2>Focus Engine</h2>
     </div>
     
-    <div class="liquid-slider-track liquid-inner" id="focusSliderTrack" style="--slider-count: 2;">
-      <div class="liquid-slider-pill liquid-btn" id="focusSliderPill" style="width: calc(50% - 4px); left: 4px;"></div>
-      
-      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'focusSliderPill', () => switchFocusMode('auto'))" id="label-auto">
-        Auto-Tracker
-      </div>
-      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'focusSliderPill', () => switchFocusMode('pomodoro'))" id="label-pomodoro">
-        Pomodoro
-      </div>
+    <div class="segment-nav glass-inner" style="margin: 16px 0 24px 0;">
+      <div class="segment-btn active glass-btn" onclick="switchFocusSegment('tracker', this)">Auto-Tracker</div>
+      <div class="segment-btn glass-btn" onclick="switchFocusSegment('pomodoro', this)">Pomodoro</div>
     </div>
 
     <div id="focus-seg-tracker" class="segment-content active" style="text-align: center;">
       <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Counts up. Automatically logs decimal hours to Lifestyle when stopped.</p>
       <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;" id="trackerCats">
-        <button class="focus-cat-btn focus-category-btn active liquid-btn active-liquid-tag" onclick="selectLiquidTag(this, 'focus-category-btn'); setTrackerCat('study', this)">📚 Study</button>
-        <button class="focus-cat-btn focus-category-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-category-btn'); setTrackerCat('workout', this)">🏋️ Workout</button>
-        <button class="focus-cat-btn focus-category-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-category-btn'); setTrackerCat('screen', this)">📱 Screen</button>
+        <button class="focus-cat-btn active" onclick="setTrackerCat('study', this)">📚 Study</button>
+        <button class="focus-cat-btn" onclick="setTrackerCat('workout', this)">🏋️ Workout</button>
+        <button class="focus-cat-btn" onclick="setTrackerCat('screen', this)">📱 Screen</button>
       </div>
       <div id="studyTagContainer" style="margin-bottom: 24px; transition: all 0.3s;">
-        <select id="studyTagSelect" class="mobile-select liquid-btn" style="display: none; width: 200px; padding: 8px; font-size: 13px;">
+        <select id="studyTagSelect" class="mobile-select glass-input" style="width: 200px; padding: 8px; font-size: 13px;">
           <option value="University">🏛️ University Exams</option>
           <option value="LeetCode">💻 LeetCode / DSA</option>
           <option value="Hackathon">🚀 Hackathon / Projects</option>
           <option value="GovPrep">📚 Gov Exam Prep</option>
         </select>
-
-        <div id="glassDropdownWrapper" style="position: relative; width: 100%; max-width: 250px; margin: 0 auto 24px auto;">
-          <div id="glassDropdownSelected" class="liquid-btn" style="padding: 12px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;" onclick="toggleGlassDropdown()">
-            <span id="glassDropdownText">🏛️ University Exams</span>
-            <span class="material-symbols-outlined" style="font-size: 20px; transition: transform 0.3s ease;" id="glassDropdownIcon">expand_more</span>
-          </div>
-
-          <div id="glassDropdownMenu" class="liquid-panel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; width: 100%; border-radius: 20px; z-index: 200; flex-direction: column; overflow: hidden; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);">
-            <div class="glass-dropdown-item" onclick="selectGlassTag('University Exams', '🏛️')">🏛️ University Exams</div>
-            <div class="glass-dropdown-item" onclick="selectGlassTag('LeetCode / DSA', '💻')">💻 LeetCode / DSA</div>
-            <div class="glass-dropdown-item" onclick="selectGlassTag('Hackathon / Projects', '🚀')">🚀 Hackathon / Projects</div>
-            <div class="glass-dropdown-item" onclick="selectGlassTag('Gov Exam Prep', '📚')">📚 Gov Exam Prep</div>
-          </div>
-        </div>
       </div>
-      <div id="focusTimerCircle" class="liquid-panel" style="width: 240px; height: 240px; border-radius: 50%; border: 8px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; position: relative; overflow: hidden; z-index: 1;">
-        <div id="trackerDisplay" style="font-size: 48px; font-weight: 700; font-family: monospace; position: relative; z-index: 2;">00:00:00</div>
+      <div class="glass-panel" style="width: 240px; height: 240px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+        <div id="trackerDisplay" style="font-size: 48px; font-weight: 700; font-family: monospace;">00:00:00</div>
       </div>
-      <button class="btn-primary liquid-btn" id="trackerBtn" onclick="toggleTracker()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
+      <button id="trackerBtn" class="glass-btn primary" onclick="toggleTracker()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
     </div>
 
     <div id="focus-seg-pomodoro" class="segment-content" style="text-align: center;">
       <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Counts down. Alerts you when finished.</p>
       <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;" id="pomoDurs">
-        <button class="focus-cat-btn focus-time-btn active liquid-btn active-liquid-tag" onclick="selectLiquidTag(this, 'focus-time-btn'); setPomoDur(25, this)">25m</button>
-        <button class="focus-cat-btn focus-time-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-time-btn'); setPomoDur(30, this)">30m</button>
-        <button class="focus-cat-btn focus-time-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-time-btn'); setPomoDur(60, this)">60m</button>
+        <button class="focus-cat-btn active" onclick="setPomoDur(25, this)">25m</button>
+        <button class="focus-cat-btn" onclick="setPomoDur(30, this)">30m</button>
+        <button class="focus-cat-btn" onclick="setPomoDur(60, this)">60m</button>
       </div>
-      <div class="liquid-panel" style="width: 240px; height: 240px; border-radius: 50%; border: 8px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+      <div class="glass-panel" style="width: 240px; height: 240px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
         <div id="pomoDisplay" style="font-size: 56px; font-weight: 700; font-family: monospace;">25:00</div>
       </div>
       <div style="margin-bottom: 24px;">
@@ -1526,173 +610,126 @@
         </label>
         <div style="font-size: 11px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">If you leave the app for >15s, the timer will fail.</div>
       </div>
-      <button class="btn-primary liquid-btn" id="pomoBtn" onclick="togglePomo()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
+      <button id="pomoBtn" class="glass-btn primary" onclick="togglePomo()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
     </div>
   </section>
 
-  <section id="page-health" class="page" style="padding-bottom: 140px;">
+  <section id="page-health" class="page">
     <div class="module-header">
-      <button class="icon-btn liquid-btn" onclick="lsPrev()">←</button>
+      <button class="icon-btn glass-btn" onclick="lsPrev()">←</button>
       <div class="module-month" id="lsMonthLabel"></div>
-      <button class="icon-btn liquid-btn" onclick="lsNext()">→</button>
+      <button class="icon-btn glass-btn" onclick="lsNext()">→</button>
     </div>
     <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--md-sys-color-on-background);">Health & Wellness</h2>
-
-    <div class="liquid-slider-track liquid-inner" id="healthSliderTrack" style="margin: 0 20px 24px 20px; --slider-count: 2;">
-      <div class="liquid-slider-pill liquid-btn" id="healthSliderPill" style="width: calc(50% - 4px); left: 4px;"></div>
-      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'healthSliderPill', () => toggleHealthView('lifestyle'))">Lifestyle</div>
-      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'healthSliderPill', () => toggleHealthView('diet'))">Diet</div>
+    <div id="lsList"></div>
+    <div class="card" style="margin-top: 24px;">
+      <div class="card-title" style="text-align:center; font-size: 14px;">Monthly Consistency</div>
+      <div class="chart-container"><canvas id="dietPieChart"></canvas></div>
     </div>
-
-    <div id="health-lifestyle-content">
-      <div id="lsList"></div>
-      <div class="card liquid-panel" style="margin-top: 24px;">
-        <div class="card-title" style="text-align:center; font-size: 14px;">Monthly Consistency</div>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 32px; padding-bottom: 12px;">
-          <div class="liquid-doughnut-chart" style="background: conic-gradient(rgba(74, 222, 128, 0.85) 0% 70%, rgba(255, 255, 255, 0.15) 70% 100%); border: 1px solid rgba(255,255,255,0.2);"></div>
-          <div style="display: flex; flex-direction: column; gap: 16px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div class="liquid-legend-box" style="background: rgba(74, 222, 128, 0.85); box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);"></div>
-              <span style="font-weight: 600; font-size: 14px;">Completed</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div class="liquid-legend-box" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);"></div>
-              <span style="font-weight: 600; font-size: 14px;">Missed</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="health-diet-content" style="display: none; padding-bottom: 140px; animation: fadeIn 0.3s ease;">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
-      <button class="liquid-btn" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;" onclick="dietPrev()">←</button>
-      <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: var(--md-sys-color-on-surface);" id="dietMonthLabel">Month Year</h2>
-      <button class="liquid-btn" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;" onclick="dietNext()">→</button>
-    </div>
-
-    <div class="liquid-panel" style="margin: 0 20px 24px 20px; padding: 24px; border-radius: 24px;">
-      <h3 style="text-align: center; margin-top: 0; margin-bottom: 20px; font-weight: 600;">Monthly Consistency</h3>
-      <div style="display: flex; align-items: center; justify-content: center; gap: 32px;">
-        
-        <div id="dynamicDietRing" style="width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(rgba(74, 222, 128, 0.85) 0% 0%, rgba(255, 255, 255, 0.15) 0% 100%); -webkit-mask: radial-gradient(circle, transparent 55%, black 56%); mask: radial-gradient(circle, transparent 55%, black 56%); border: 1px solid rgba(255,255,255,0.2); transition: background 0.5s ease;"></div>
-        
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-           <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 16px; height: 16px; border-radius: 4px; background: rgba(74, 222, 128, 0.85); box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);"></div>
-              <span style="font-weight: 600; font-size: 14px; color: var(--md-sys-color-on-surface);">Completed</span>
-           </div>
-           <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 16px; height: 16px; border-radius: 4px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);"></div>
-              <span style="font-weight: 600; font-size: 14px; color: var(--md-sys-color-on-surface);">Missed</span>
-           </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="dietList" style="display: flex; flex-direction: column; gap: 12px; padding: 0 20px;"></div>
-  </div>
-
+    <div id="dietList"></div>
     <!-- 1-Click Sleep Tracker FAB -->
-    <button id="sleepToggleBtn" class="liquid-btn" onclick="toggleSleepState()" style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; padding: 16px 24px; font-size: 15px; font-weight: bold; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; border: none; cursor: pointer;">
+    <button id="sleepToggleBtn" class="glass-btn" onclick="toggleSleepState()" style="position: fixed; bottom: 104px; right: 20px; z-index: 1000; padding: 16px 24px; font-size: 15px; font-weight: bold; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; cursor: pointer;">
       🛏️ Go to Sleep
     </button>
   </section>
 
-  <!-- Stats & Analytics page removed -->
+  <section id="page-stats" class="page" style="padding: 16px;">
+    <!-- STATS TAB (Analytics Hub) -->
+    <div id="stats" class="view-section glass-panel" style="padding: 24px 20px;">
+      <div style="margin-bottom: 24px;">
+        <h2 style="font-size: 28px; font-weight: 800; margin: 0; color: var(--md-sys-color-on-background);">Analytics Hub</h2>
+        <p style="margin: 4px 0 0 0; font-size: 14px; color: var(--md-sys-color-on-surface-variant);">Your 7-day performance overview</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+        <div class="glass-panel" style="padding: 16px; border-radius: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 13px; font-weight: 600; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Study Hours</div>
+          <div id="kpiTotalFocus" style="font-size: 28px; font-weight: 800; color: var(--md-sys-color-primary);">0.0h</div>
+        </div>
+        <div class="glass-panel" style="padding: 16px; border-radius: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 13px; font-weight: 600; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Screen Time</div>
+          <div id="kpiTotalScreen" style="font-size: 28px; font-weight: 800; color: var(--md-sys-color-error, #F44336);">0.0h</div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="border-radius: 24px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 20px 0;">Study Breakdown</h3>
+        <div id="studyChartContainer" style="position: relative; height: 220px; width: 100%;">
+          <canvas id="studyTagChart"></canvas>
+        </div>
+        <div id="noTagDataMsg" style="display: none; text-align: center; padding: 20px 0;">
+          <div style="font-size: 40px; margin-bottom: 12px; opacity: 0.5;">📉</div>
+          <div style="font-size: 15px; font-weight: 600; color: var(--md-sys-color-on-surface);">No Focus Data Yet</div>
+          <div style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">Start a tagged study session to see your breakdown.</div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="border-radius: 24px; padding: 24px; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+        <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 20px 0;">7-Day Trends</h3>
+        <div style="position: relative; height: 220px; width: 100%;">
+          <canvas id="trendBarChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="page-hub" class="page">
     <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--md-sys-color-on-background);">Control Hub</h2>
-    <!-- Control Hub: Stats tile removed -->
-    <div class="list-tile liquid-panel" onclick="openSubPage('fees', 'College Fees')">
+    <div class="menu-item glass-panel" onclick="switchTab('stats')" style="border-radius: 16px; padding: 16px 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+      <div style="font-weight: 600; font-size: 16px;">Stats & Analytics</div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--md-sys-color-primary);">
+        <path d="M4 19h16"></path>
+        <path d="M7 14v5"></path>
+        <path d="M12 10v9"></path>
+        <path d="M17 6v13"></path>
+      </svg>
+    </div>
+    <div class="list-tile glass-panel" onclick="openSubPage('fees', 'College Fees')">
       <span>College Fees</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
     </div>
-    <div class="list-tile liquid-panel" onclick="openSubPage('transactions', 'Transactions')">
+    <div class="list-tile glass-panel" onclick="openSubPage('transactions', 'Transactions')">
       <span>Transactions</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
     </div>
-    <div class="list-tile liquid-panel" onclick="openSubPage('mood', 'Mood Tracker')">
+    <div class="list-tile glass-panel" onclick="openSubPage('mood', 'Mood Tracker')">
       <span>Mood Tracker</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
     </div>
-    <div class="list-tile liquid-panel" onclick="openSubPage('streak', 'Streaks')">
+    <div class="list-tile glass-panel" onclick="openSubPage('streak', 'Streaks')">
       <span>Streaks</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
     </div>
-    <div class="list-tile liquid-panel" onclick="openSubPage('attendance', 'Attendance Tracker')">
+    <div class="list-tile glass-panel" onclick="openSubPage('attendance', 'Attendance Tracker')">
       <span>Attendance Tracker</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
     </div>
-    <div class="list-tile liquid-panel" onclick="openSubPage('foundation', 'Foundation (Gov)')">
+    <div class="list-tile glass-panel" onclick="openSubPage('foundation', 'Foundation (Gov)')">
       <span>Foundation (Gov)</span>
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
     </div>
   </section>
 
-  <section id="page-more" class="page">
-  <div style="padding: 10px 0 24px 8px;">
-    <h2 style="margin: 0; font-size: 28px; font-weight: 700; color: var(--md-sys-color-on-surface);">Control Hub</h2>
-  </div>
-
-  <div style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 120px;">
-    
-    <!-- Hub tile for Stats removed -->
-
-    <div class="liquid-panel hub-tile" onclick="openSubPage('fees', 'College Fees')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
-      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">College Fees</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-    </div>
-
-    <div class="liquid-panel hub-tile" onclick="openSubPage('transactions', 'Transactions')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
-      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Transactions</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-    </div>
-
-    <div class="liquid-panel hub-tile" onclick="openSubPage('mood', 'Mood Tracker')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
-      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Mood Tracker</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-    </div>
-
-    <div class="liquid-panel hub-tile" onclick="openSubPage('streak', 'Streaks')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
-      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Streaks</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-    </div>
-
-    <div class="liquid-panel hub-tile" onclick="openSubPage('attendance', 'Attendance Tracker')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
-      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Attendance Tracker</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-    </div>
-
-    <div class="liquid-panel hub-tile" onclick="openSubPage('foundation', 'Foundation (Gov)')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
-      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Foundation (Gov)</span>
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-    </div>
-
-  </div>
-
-  </section>
-
   <section id="page-transactions" class="page">
     <div class="module-header">
-      <button class="icon-btn liquid-btn" onclick="txPrev()">←</button>
+      <button class="icon-btn glass-btn" onclick="txPrev()">←</button>
       <div class="module-month" id="txMonthLabel"></div>
-      <button class="icon-btn liquid-btn" onclick="txNext()">→</button>
+      <button class="icon-btn glass-btn" onclick="txNext()">→</button>
     </div>
     <div style="display: flex; justify-content: flex-end; margin-bottom: 12px; margin-top: -8px;">
       <button class="btn-secondary" style="margin: 0; padding: 6px 12px; width: auto; font-size: 12px;" onclick="exportTxPdf()">Export PDF</button>
     </div>
     <div class="tx-summary">
-      <div class="tx-box"><h4>Income</h4><div class="val green" id="txTotCredit">₹0</div></div>
-      <div class="tx-box"><h4>Expense</h4><div class="val red" id="txTotDebit">₹0</div></div>
+      <div class="tx-box glass-panel"><h4>Income</h4><div class="val green" id="txTotCredit">₹0</div></div>
+      <div class="tx-box glass-panel"><h4>Expense</h4><div class="val red" id="txTotDebit">₹0</div></div>
     </div>
-    <div class="tx-box" style="margin-bottom: 20px; text-align: center;">
+    <div class="tx-box glass-panel" style="margin-bottom: 20px; text-align: center;">
       <h4>Balance</h4><div class="val" id="txTotBal">₹0</div>
     </div>
     <div class="card" style="padding:0; overflow:hidden;">
       <div id="txList" style="padding: 0 16px;"></div>
     </div>
-    <button class="fab liquid-fab" onclick="openTxSheet()">+</button>
+    <button class="fab" onclick="openTxSheet()">+</button>
   </section>
 
   <section id="page-fees" class="page">
@@ -1731,20 +768,20 @@
   </div>
 
   <div id="cfList"></div>
-  <button class="fab liquid-fab" onclick="openFeeSheet()">+</button>
+  <button class="fab" onclick="openFeeSheet()">+</button>
 </section>
 
   <section id="page-mood" class="page">
     <div class="module-header">
-      <button class="icon-btn liquid-btn glass-icon-btn" onclick="moodPrev()">←</button>
+      <button class="icon-btn glass-btn" onclick="moodPrev()">←</button>
       <div class="module-month" id="moodMonthLabel"></div>
-      <button class="icon-btn liquid-btn glass-icon-btn" onclick="moodNext()">→</button>
+      <button class="icon-btn glass-btn" onclick="moodNext()">→</button>
     </div>
-    <div class="card liquid-card">
+    <div class="card glass-panel">
       <div class="card-title" style="text-align:center; font-size: 14px;">Monthly Overview</div>
       <div style="position:relative; height:180px; width:100%; margin-bottom:20px;"><canvas id="moodPieChart"></canvas></div>
     </div>
-    <div class="card liquid-card">
+    <div class="card glass-panel">
       <div class="cal-grid" id="moodGrid"></div>
       <div style="display:flex; justify-content:center; gap:16px; margin-top:20px; font-size:12px; color:var(--md-sys-color-on-surface-variant);">
         <span style="color:var(--md-sys-color-primary)">● Good</span>
@@ -1756,7 +793,7 @@
 
   <section id="page-streak" class="page">
     <div id="streakList"></div>
-    <button class="fab liquid-fab" onclick="openStreakSheet()">+</button>
+    <button class="fab" onclick="openStreakSheet()">+</button>
   </section>
 
   <section id="page-attendance" class="page">
@@ -1765,18 +802,10 @@
       <button class="btn-secondary" style="margin: 0; padding: 8px 12px; width: auto; font-size: 13px;" onclick="createNewSemester()">+ New Sem</button>
     </div>
     
-    <div class="liquid-slider-track liquid-inner" id="attendanceSliderTrack" style="--slider-count: 3; margin: 0 20px 24px 20px;">
-      <div class="liquid-slider-pill liquid-btn" id="attendancePill" style="width: calc(33.33% - 4px); left: 4px;"></div>
-      
-      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'attendancePill', () => switchAttSegment('today'))" id="label-today">
-        Today
-      </div>
-      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'attendancePill', () => switchAttSegment('timetable'))" id="label-timetable">
-        Timetable
-      </div>
-      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'attendancePill', () => switchAttSegment('stats'))" id="label-att-stats">
-        Stats
-      </div>
+    <div class="segment-nav glass-inner">
+      <div class="segment-btn active glass-btn" onclick="switchAttSegment('today', this)">Today</div>
+      <div class="segment-btn glass-btn" onclick="switchAttSegment('timetable', this)">Timetable</div>
+      <div class="segment-btn glass-btn" onclick="switchAttSegment('stats', this)">Stats</div>
     </div>
     <div id="att-seg-today" class="segment-content active">
       <div style="font-size: 14px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;" id="attTodayDate"></div>
@@ -1794,18 +823,10 @@
   </section>
 
   <section id="page-foundation" class="page">
-    <div class="liquid-slider-track liquid-inner" id="foundationSliderTrack" style="--slider-count: 3; margin: 0 20px 24px 20px;">
-      <div class="liquid-slider-pill liquid-btn" id="foundationPill" style="width: calc(33.33% - 4px); left: 4px;"></div>
-      
-      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'foundationPill', () => switchGovSegment('daily'))" id="label-daily">
-        Daily/Week
-      </div>
-      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'foundationPill', () => switchGovSegment('subjects'))" id="label-subjects">
-        Subjects
-      </div>
-      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'foundationPill', () => switchGovSegment('notes'))" id="label-notes">
-        Notes
-      </div>
+    <div class="segment-nav glass-inner">
+      <div class="segment-btn active glass-btn" onclick="switchGovSegment('daily', this)">Daily/Week</div>
+      <div class="segment-btn glass-btn" onclick="switchGovSegment('subjects', this)">Subjects</div>
+      <div class="segment-btn glass-btn" onclick="switchGovSegment('notes', this)">Notes</div>
     </div>
     <div id="gov-seg-daily" class="segment-content active">
       <div class="card">
@@ -1830,53 +851,34 @@
       <div id="govNotesViewAllBtn" style="display:none; text-align:center; margin-top:12px;">
         <button class="btn-secondary" onclick="openAllGovNotesSheet()">View All Notes</button>
       </div>
-      <button class="fab liquid-fab" onclick="openGovNoteSheet()">+</button>
+      <button class="fab" onclick="openGovNoteSheet()">+</button>
     </div>
-  </section>
-
-  <section id="page-diet" class="page">
-    <!-- Date Navigation Header -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 0 20px 0;">
-      <button class="liquid-btn" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;" onclick="dietPrev()">←</button>
-      <h2 style="margin: 0; font-size: 20px; font-weight: 600;" id="dietMonthLabel"></h2>
-      <button class="liquid-btn" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px;" onclick="dietNext()">→</button>
-    </div>
-
-    <!-- Monthly Consistency Card (Uses Chart.js Canvas) -->
-    <div class="liquid-panel" style="margin-bottom: 24px; padding: 24px; border-radius: 24px;">
-      <h3 style="text-align: center; margin-top: 0; margin-bottom: 20px; font-weight: 600; font-size: 16px;">Monthly Consistency</h3>
-      <div class="chart-container" style="position:relative; height:180px; width:100%;"><canvas id="dietPieChart"></canvas></div>
-    </div>
-
-    <!-- The Dynamic List Container -->
-    <div id="dietList" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 40px;"></div>
   </section>
 </main>
 
-<nav class="bottom-nav">
-  <div class="nav-liquid-pill" id="bottomNavPill"></div>
+<div id="bottomNav" class="glass-dock" style="position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 400px; border-radius: 24px; padding: 6px 12px; display: flex; justify-content: space-around; align-items: center; z-index: 999;">
+      
+      <div class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--md-sys-color-on-surface); transition: all 0.3s ease;">
+        <span class="material-symbols-outlined" style="font-size: 24px; margin-bottom: 2px;">grid_view</span>
+        <span style="font-size: 11px; font-weight: 600;">Home</span>
+      </div>
+      
+      <div class="nav-item" onclick="switchTab('focus')" id="nav-focus" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--md-sys-color-on-surface-variant); transition: all 0.3s ease;">
+        <span class="material-symbols-outlined" style="font-size: 24px; margin-bottom: 2px;">timer</span>
+        <span style="font-size: 11px; font-weight: 600;">Focus</span>
+      </div>
+      
+      <div class="nav-item" onclick="switchTab('health')" id="nav-health" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--md-sys-color-on-surface-variant); transition: all 0.3s ease;">
+        <span class="material-symbols-outlined" style="font-size: 24px; margin-bottom: 2px;">health_and_safety</span>
+        <span style="font-size: 11px; font-weight: 600;">Health</span>
+      </div>
+      
+      <div class="nav-item" onclick="switchTab('hub')" id="nav-hub" style="display: flex; flex-direction: column; align-items: center; cursor: pointer; color: var(--md-sys-color-on-surface-variant); transition: all 0.3s ease;">
+        <span class="material-symbols-outlined" style="font-size: 24px; margin-bottom: 2px;">account_circle</span>
+        <span style="font-size: 11px; font-weight: 600;">Hub</span>
+      </div>
 
-  <div class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-    <span>Home</span>
-  </div>
-  
-  <div class="nav-item" onclick="switchTab('focus')" id="nav-focus">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"></circle><polyline points="12 9 12 13 14 15"></polyline><line x1="12" y1="2" x2="12" y2="4"></line></svg>
-    <span>Focus</span>
-  </div>
-  
-  <div class="nav-item" onclick="switchTab('health')" id="nav-health">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path><line x1="12" y1="8" x2="12" y2="14"></line><line x1="9" y1="11" x2="15" y2="11"></line></svg>
-    <span>Health</span>
-  </div>
-  
-  <div class="nav-item" onclick="switchTab('more')" id="nav-more">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="10" r="3"></circle><path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"></path></svg>
-    <span>Hub</span>
-  </div>
-
-</nav>
+    </div>
 
 <div class="bottom-sheet-overlay" id="taskSheet" onclick="if(event.target===this) closeSheet('taskSheet')">
   <div class="bottom-sheet">
@@ -1923,11 +925,11 @@
 </div>
 
 <div class="bottom-sheet-overlay" id="dietSheet" onclick="if(event.target===this) closeSheet('dietSheet')">
-  <div class="bottom-sheet liquid-panel" style="background: rgba(255, 255, 255, 0.2) !important; border-top: 1px solid rgba(255,255,255,0.5) !important;">
-    <div class="sheet-title" id="dietSheetTitle" style="color: var(--md-sys-color-on-surface);">Diet Checklist</div>
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="dietSheetTitle">Diet Checklist</div>
     <input type="hidden" id="dietDateKey">
-    <div id="dietChecklist" style="margin-bottom: 24px;"></div>
-    <button class="liquid-btn" style="width: 100%; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 16px; text-align: center;" onclick="closeSheet('dietSheet')">Done</button>
+    <div id="dietChecklist"></div>
+    <button class="btn-primary" onclick="closeSheet('dietSheet')">Done</button>
   </div>
 </div>
 
@@ -2093,7 +1095,7 @@
   const today = new Date();
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const DEFAULT_DIET_CATS = ['Breakfast', 'Lunch', 'Dinner', 'Snacks', 'Water', 'Fruits', 'Vegetables', 'Protein', 'Milk', 'Oats'];
+  const DEFAULT_DIET_CATS = ['Breakfast','Lunch','Dinner','Oats','Milk','Peanuts','Water (2 Litres)','Banana','Protein (100 gm)','No Sugar'];
   
   let calYear = today.getFullYear(), calMonth = today.getMonth();
   let lsYear = today.getFullYear(), lsMonth = today.getMonth();
@@ -2116,29 +1118,15 @@
   function toggleTheme() { const isLight = document.body.classList.toggle('light'); sv('theme', isLight ? 'light' : 'dark'); renderDietChart(); }
   if(ld('theme','dark') === 'light') document.body.classList.add('light');
 
-  // Navigation Logic (null-safe)
+  // Navigation Logic
   function switchTab(tabId) {
-    if (typeof closeSideNav === 'function') closeSideNav();
-
-    // Hide all pages and clear nav active states safely
-    document.querySelectorAll('.page').forEach(p => { if (p) p.classList.remove('active'); });
-    document.querySelectorAll('.nav-item').forEach(n => { if (n) n.classList.remove('active'); });
-
-    // Resolve target page safely (supports both 'page-<id>' and direct id)
-    const page = document.getElementById('page-' + tabId) || document.getElementById(tabId);
-    if (!page) {
-      console.warn(`Safe skip: Page ${tabId} does not exist.`);
-      const appTitleFallback = document.getElementById('appTitle');
-      if (appTitleFallback) appTitleFallback.innerHTML = 'Prod<span style="color: var(--md-sys-color-primary) !important;">u</span>co';
-      const moduleTitleFallback = document.getElementById('moduleTitle');
-      if (moduleTitleFallback) moduleTitleFallback.textContent = '';
-      return; // Exit safely if the page was removed
-    }
-    page.classList.add('active');
-
-    // Activate matching nav item if present
-    const nav = document.getElementById('nav-' + tabId) || document.querySelector(`.bottom-nav .nav-item[onclick*="${tabId}"]`);
-    if (nav) nav.classList.add('active');
+    closeSideNav();
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const page = document.getElementById('page-' + tabId);
+    if(page) page.classList.add('active');
+    const nav = document.getElementById('nav-' + tabId);
+    if(nav) nav.classList.add('active');
 
     const backBtn = document.getElementById('backBtn');
     if (backBtn) backBtn.classList.remove('visible');
@@ -2146,17 +1134,14 @@
     if (appTitle) appTitle.innerHTML = 'Prod<span style="color: var(--md-sys-color-primary) !important;">u</span>co';
     const menuBtn = document.getElementById('menuBtn');
     if (menuBtn) menuBtn.style.display = 'flex';
-    const moduleTitle = document.getElementById('moduleTitle');
-    if (moduleTitle) moduleTitle.textContent = '';
+    document.getElementById('moduleTitle').textContent = '';
 
-    // Route-specific rendering (only call if functions exist)
-    if (tabId === 'dashboard' && typeof renderDashboard === 'function') renderDashboard();
-    if (tabId === 'calendar' && typeof renderCal === 'function') renderCal();
-    if (tabId === 'health') {
+    if(tabId === 'dashboard') renderDashboard();
+    if(tabId === 'calendar') renderCal();
+    if(tabId === 'health') {
       if (typeof renderLifestyle === 'function') renderLifestyle();
       if (typeof renderDiet === 'function') renderDiet();
     }
-
     // Smooth scroll to "Today" for list-heavy tabs
     setTimeout(() => {
       if (tabId === 'health') {
@@ -2165,457 +1150,128 @@
       }
     }, 100);
 
-    if (nav && typeof moveBottomNavPill === 'function') moveBottomNavPill(nav);
-    if (page && typeof animatePageEntrance === 'function') animatePageEntrance(page);
-    // Initialize segmented sliders for newly-activated pages
-    setTimeout(() => { if (typeof initializeAllSliders === 'function') initializeAllSliders(); }, 50);
-  }
-
-  function animatePageEntrance(pageElement) {
-    if (!pageElement) return;
-    pageElement.classList.remove('page-enter');
-    void pageElement.offsetWidth;
-    pageElement.classList.add('page-enter');
-  }
-
-  // ==========================================
-  // LIQUID GLASS SPRING PHYSICS ENGINE
-  // ==========================================
-
-  let liquidPhysicsRAF = null;
-  let dockObserver = null;
-
-  // 1. The State Machine
-  let pillState = {
-    x: 0, w: 0,        // Current actual position/width
-    vX: 0, vW: 0,      // Current velocity
-    targetX: 0, targetW: 0 // Target destination
-  };
-
-  // 2. Physical Constants (Softened: more responsive, less stiff feel)
-  // Slightly higher stiffness, lower mass and damping for smoother, less "stiff" motion
-  const SPRING = {
-    stiffness: 0.018,    // Slightly stronger pull for better responsiveness
-    damping: 0.86,       // Reduced damping so it flows instead of feeling stuck
-    mass: 1.2,           // Lower mass so it accelerates/decelerates more naturally
-    stretchFactor: 0.12  // Moderate stretch to keep the liquid illusion
-  };
-
-  // 3. The 60-FPS Physics Loop
-  function runLiquidPhysics() {
-    const pill = document.getElementById('bottomNavPill');
-    if (!pill) return;
-
-    // Fluid Viscosity Math (Exponential Decay)
-    const viscosity = 0.08;
-    pillState.vX = (pillState.targetX - pillState.x) * viscosity;
-    pillState.vW = (pillState.targetW - pillState.w) * viscosity;
-
-    pillState.x += pillState.vX;
-    pillState.w += pillState.vW;
-
-    const rawStretch = Math.abs(pillState.vX) * 0.06;
-    const stretch = 1 + Math.min(rawStretch, 0.20);
-
-    if (Math.abs(pillState.vX) > 0.1) {
-      pill.style.transformOrigin = pillState.vX > 0 ? 'left center' : 'right center';
-    }
-
-    pill.style.transform = `translate3d(${pillState.x}px, 0, 0) scaleX(${stretch})`;
-    pill.style.width = `${pillState.w}px`;
-
-    if (Math.abs(pillState.targetX - pillState.x) > 0.05 || Math.abs(pillState.targetW - pillState.w) > 0.05) {
-      liquidPhysicsRAF = requestAnimationFrame(runLiquidPhysics);
-    } else {
-      pill.style.transform = `translate3d(${pillState.targetX}px, 0, 0) scaleX(1)`;
-      pill.style.width = `${pillState.targetW}px`;
-      liquidPhysicsRAF = null; 
-    }
-  }
-
-  // 4. The Controller
-  function moveBottomNavPill(activeNavEl) {
-    if (!activeNavEl) return;
-
-    // Snap instantly on first boot so it doesn't fly in from off-screen
-    if (pillState.w === 0) {
-      pillState.x = activeNavEl.offsetLeft;
-      pillState.w = activeNavEl.offsetWidth;
-    }
-
-    // Clear old tracker
-    if (dockObserver) dockObserver.disconnect();
-
-    // Attach ResizeObserver to the active tab.
-    // As the CSS expands the text label, this updates the target coordinates.
-    dockObserver = new ResizeObserver(() => {
-      pillState.targetX = activeNavEl.offsetLeft;
-      pillState.targetW = activeNavEl.offsetWidth;
-      
-      // Ignite the physics engine if it went to sleep
-      if (!liquidPhysicsRAF) {
-        liquidPhysicsRAF = requestAnimationFrame(runLiquidPhysics);
-      }
-    });
-    
-    dockObserver.observe(activeNavEl);
-  }
-
-  // Toggle Health Views (Lifestyle vs Diet)
-  function toggleHealthView(view) {
-    const lifestyleContent = document.getElementById('health-lifestyle-content');
-    const dietContent = document.getElementById('health-diet-content');
-    const sleepBtn = document.querySelector('button[onclick*="Sleep"], #sleepToggleBtn');
-    if (!lifestyleContent || !dietContent) return;
-
-    if (view === 'lifestyle') {
-      lifestyleContent.style.display = 'block';
-      dietContent.style.display = 'none';
-      if (sleepBtn) sleepBtn.style.display = '';
-
+    // Fix for Chart.js Hidden Canvas Bug
+    if (tabId === 'stats') {
       setTimeout(() => {
-        const todayCard = document.getElementById('ls-today-card');
-        if (todayCard) todayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
-    } else if (view === 'diet') {
-      lifestyleContent.style.display = 'none';
-      dietContent.style.display = 'block';
-      if (sleepBtn) sleepBtn.style.display = 'none';
-      renderDiet();
-
-      setTimeout(() => {
-        const todayCard = document.getElementById('diet-today-card');
-        if (todayCard) todayCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 100);
+        if (typeof renderStatsDashboard === 'function') renderStatsDashboard();
+      }, 50);
     }
-    // Ensure sliders initialize when the health tab switches
-    setTimeout(initializeAllSliders, 50);
-  }
-
-  // ==========================================
-  // GENERALIZED LIQUID SLIDER PHYSICS
-  // ==========================================
-  const liquidSliderStates = new WeakMap();
-
-  function animateLiquidSlider(activeBtn, pill) {
-    if (!activeBtn || !pill) return;
-
-    // Initialize physics state for this specific pill if it doesn't exist
-    if (!liquidSliderStates.has(pill)) {
-      liquidSliderStates.set(pill, {
-        x: activeBtn.offsetLeft, 
-        w: activeBtn.offsetWidth,
-        vX: 0, vW: 0, raf: null
-      });
-      // Snap pill instantly to active button on first render (state will be used below)
-      pill.style.transform = `translate3d(${activeBtn.offsetLeft}px, 0, 0) scaleX(1)`;
-      pill.style.width = `${activeBtn.offsetWidth}px`;
-    }
-
-    const state = liquidSliderStates.get(pill);
-    const targetX = activeBtn.offsetLeft;
-    const targetW = activeBtn.offsetWidth;
-
-    // Snap instantly if it's the first time rendering (width is 0)
-    if (state.w === 0) {
-      state.x = targetX;
-      state.w = targetW;
-    }
-
-    // Cancel any existing animation frame for this specific pill
-    if (state.raf) cancelAnimationFrame(state.raf);
-
-    const loop = () => {
-      // 1. Fluid Viscosity Math (Exponential Decay)
-      // Replaces the bouncy spring. It continuously eases into the target with ZERO impact.
-      const viscosity = 0.08; // The "honey" factor. Lower = thicker, lazier flow.
-
-      state.vX = (targetX - state.x) * viscosity;
-      state.vW = (targetW - state.w) * viscosity;
-
-      state.x += state.vX;
-      state.w += state.vW;
-
-      // 2. Dynamic Liquid Stretch
-      // Multiplies the fluid velocity to stretch the glass, clamped at 20% to prevent spilling
-      const rawStretch = Math.abs(state.vX) * 0.06;
-      const stretch = 1 + Math.min(rawStretch, 0.20);
-
-      // Anchor stretch origin to the tail of the movement
-      if (Math.abs(state.vX) > 0.1) {
-        pill.style.transformOrigin = state.vX > 0 ? 'left center' : 'right center';
-      }
-
-      // 3. Paint to the GPU
-      pill.style.transform = `translate3d(${state.x}px, 0, 0) scaleX(${stretch})`;
-      pill.style.width = `${state.w}px`;
-
-      // 4. Micro-Precision Termination
-      if (Math.abs(targetX - state.x) > 0.05 || Math.abs(targetW - state.w) > 0.05) {
-        state.raf = requestAnimationFrame(loop);
-      } else {
-        // Flawless, invisible snap to the exact integer coordinate
-        pill.style.transform = `translate3d(${targetX}px, 0, 0) scaleX(1)`;
-        pill.style.width = `${targetW}px`;
-        state.raf = null;
-      }
-    };
-    
-    // Ignite the physics loop
-    state.raf = requestAnimationFrame(loop);
-  }
-
-  // Initialize all sliders on the page (starter motor)
-  function initializeAllSliders() {
-    document.querySelectorAll('.liquid-slider-track').forEach(track => {
-      const pill = track.querySelector('.liquid-slider-pill');
-      const activeLabel = track.querySelector('.liquid-slider-label.active') || track.querySelector('.liquid-slider-label');
-      if (pill && activeLabel && activeLabel.offsetWidth > 0) {
-        animateLiquidSlider(activeLabel, pill);
-      }
-    });
   }
 
   function renderStatsDashboard() {
-    const breakdownCtx = document.getElementById('studyTagChart');
-    const trendsCtx = document.getElementById('trendBarChart');
-    const kpiTotalFocus = document.getElementById('kpiTotalFocus');
-    const kpiTotalScreen = document.getElementById('kpiTotalScreen');
-    const noDataMsg = document.getElementById('noTagDataMsg');
-    const studyChartContainer = document.getElementById('studyChartContainer');
+    let tagTotals = {};
+    let totalTaggedHours = 0;
+    let totalFocus7Days = 0;
+    let totalScreen7Days = 0;
 
-    if (!breakdownCtx || !trendsCtx) {
-      console.warn('Analytics canvas elements not found in DOM.');
-      return;
-    }
-
-    const now = new Date();
     const past7DaysLabels = [];
     const studyData = [];
     const screenData = [];
-    let totalFocus7Days = 0;
-    let totalScreen7Days = 0;
-    let totalWorkout7Days = 0;
-    let tagTotals = {};
+    const now = new Date();
+    const themeTextColor = getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-on-background').trim() || '#000';
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(now.getDate() - i);
       const key = `ls_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
-      const ls = ld(key, { study: 0, screen: 0, workout: 0, tags: {} });
+      const ls = ld(key, null);
+      const dayLabel = d.toLocaleDateString('en-US', { weekday: 'short' });
+      past7DaysLabels.push(dayLabel);
 
-      const dailyStudy = parseFloat(ls.study || 0) || 0;
-      const dailyScreen = parseFloat(ls.screen || 0) || 0;
-      const dailyWorkout = parseFloat(ls.workout || 0) || 0;
+      let dailyStudy = 0;
+      let dailyScreen = 0;
 
-      totalFocus7Days += dailyStudy;
-      totalScreen7Days += dailyScreen;
-      totalWorkout7Days += dailyWorkout;
+      if (ls) {
+        dailyStudy = parseFloat(ls.study) || 0;
+        dailyScreen = parseFloat(ls.screen) || 0;
+        totalFocus7Days += dailyStudy;
+        totalScreen7Days += dailyScreen;
 
-      if (ls.tags && typeof ls.tags === 'object') {
-        for (const [tag, hours] of Object.entries(ls.tags)) {
-          const hrs = parseFloat(hours) || 0;
-          if (hrs > 0) {
-            tagTotals[tag] = (tagTotals[tag] || 0) + hrs;
+        if (ls.tags) {
+          for (const [tag, hours] of Object.entries(ls.tags)) {
+            const hrs = parseFloat(hours);
+            if (hrs > 0) {
+              tagTotals[tag] = (tagTotals[tag] || 0) + hrs;
+              totalTaggedHours += hrs;
+            }
           }
         }
       }
 
       studyData.push(dailyStudy);
       screenData.push(dailyScreen);
-      past7DaysLabels.push(`${d.getDate()} ${MONTHS[d.getMonth()].slice(0, 3)}`);
     }
 
-    const hasLiveTotals = totalFocus7Days > 0 || totalScreen7Days > 0 || totalWorkout7Days > 0;
-    const displayFocus = hasLiveTotals ? totalFocus7Days : 0.7;
-    const displayScreen = hasLiveTotals ? totalScreen7Days : 1.0;
-    const displayWorkout = hasLiveTotals ? totalWorkout7Days : 2.1;
+    const kpiTotalFocus = document.getElementById('kpiTotalFocus');
+    const kpiTotalScreen = document.getElementById('kpiTotalScreen');
+    if (kpiTotalFocus) kpiTotalFocus.innerText = totalFocus7Days.toFixed(1) + 'h';
+    if (kpiTotalScreen) kpiTotalScreen.innerText = totalScreen7Days.toFixed(1) + 'h';
 
-    if (kpiTotalFocus) kpiTotalFocus.innerText = `${displayFocus.toFixed(1)}h`;
-    if (kpiTotalScreen) kpiTotalScreen.innerText = `${displayScreen.toFixed(1)}h`;
-    if (studyChartContainer) studyChartContainer.style.display = 'block';
-    if (noDataMsg) noDataMsg.style.display = 'none';
+    const noDataMsg = document.getElementById('noTagDataMsg');
+    const chartContainer = document.getElementById('studyChartContainer');
 
-    const hasTagTotals = Object.keys(tagTotals).length > 0;
-    const breakdownLabels = hasTagTotals ? Object.keys(tagTotals) : ['Study', 'Screen', 'Workout'];
-    const breakdownValues = hasTagTotals ? Object.values(tagTotals) : [displayFocus, displayScreen, displayWorkout];
-    const breakdownColors = hasTagTotals ? ['#D4E157', '#03A9F4', '#FF9800', '#9C27B0', '#F44336', '#4CAF50'] : ['#b4d455', '#ff5a5f', '#1da1f2'];
+    if (totalTaggedHours === 0) {
+      if (chartContainer) chartContainer.style.display = 'none';
+      if (noDataMsg) noDataMsg.style.display = 'block';
+    } else {
+      if (chartContainer) chartContainer.style.display = 'block';
+      if (noDataMsg) noDataMsg.style.display = 'none';
 
-    const fallbackLabels = ['1 Jul', '2 Jul', '3 Jul', '4 Jul', '5 Jul', '6 Jul', '7 Jul'];
-    const fallbackStudyData = [2, 0, 0, 0, 0.02, 0.18, 0];
-    const fallbackScreenData = [2.5, 0, 0, 0, 0.11, 0.40, 0];
+      const ctxDoughnut = document.getElementById('studyTagChart');
+      if (ctxDoughnut) {
+        const labels = Object.keys(tagTotals);
+        const data = Object.values(tagTotals);
+        const colors = ['#D4E157', '#03A9F4', '#FF9800', '#9C27B0', '#F44336', '#4CAF50'];
 
-    const chartLabels = past7DaysLabels.some(label => label) ? past7DaysLabels : fallbackLabels;
-    const chartStudyData = studyData.some(value => value !== 0) ? studyData : fallbackStudyData;
-    const chartScreenData = screenData.some(value => value !== 0) ? screenData : fallbackScreenData;
-
-    if (studyTagChartInstance) studyTagChartInstance.destroy();
-    if (trendBarChartInstance) trendBarChartInstance.destroy();
-
-    studyTagChartInstance = new Chart(breakdownCtx, {
-      type: 'doughnut',
-      data: {
-        labels: breakdownLabels,
-        datasets: [{
-          data: breakdownValues,
-          backgroundColor: breakdownColors.slice(0, breakdownLabels.length),
-          borderWidth: 0,
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '75%',
-        plugins: { legend: { display: false } }
-      }
-    });
-
-    trendBarChartInstance = new Chart(trendsCtx, {
-      type: 'bar',
-      data: {
-        labels: chartLabels,
-        datasets: [
-          { label: 'Study', data: chartStudyData, backgroundColor: '#b4d455', borderRadius: 6, barPercentage: 0.6 },
-          { label: 'Screen', data: chartScreenData, backgroundColor: '#ff5a5f', borderRadius: 6, barPercentage: 0.6 }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888' } },
-          x: { grid: { display: false }, ticks: { color: '#888' } }
-        },
-        plugins: { legend: { display: false } }
-      }
-    });
-  }
-
-  function renderAnalyticsCharts() {
-    const breakdownCtx = document.getElementById('studyBreakdownChart');
-    const trendsCtx = document.getElementById('trendsChart');
-    const studyEl = document.getElementById('study-hours-display');
-    const screenEl = document.getElementById('screen-time-display');
-
-    if (!breakdownCtx || !trendsCtx) return;
-
-    if (window.studyBreakdownChart) window.studyBreakdownChart.destroy();
-    if (window.trendsChart) window.trendsChart.destroy();
-
-    let focusData = [];
-    try {
-      focusData = JSON.parse(localStorage.getItem('focus_sessions')) || [];
-    } catch (e) {
-      focusData = [];
-    }
-
-    let categoryTotals = {};
-    focusData.forEach(session => {
-      const hours = (parseFloat(session.duration) || 0) / 60;
-      const cat = session.category || 'Uncategorized';
-      categoryTotals[cat] = (categoryTotals[cat] || 0) + hours;
-    });
-
-    let breakdownLabels = Object.keys(categoryTotals);
-    let breakdownValues = Object.values(categoryTotals);
-    if (breakdownLabels.length === 0) {
-      breakdownLabels = ['No Data Yet'];
-      breakdownValues = [1];
-    }
-
-    let lifestyleLogs = [];
-    try {
-      lifestyleLogs = JSON.parse(localStorage.getItem('lifestyle_logs')) || [];
-    } catch (e) {
-      lifestyleLogs = [];
-    }
-
-    const last7Dates = [];
-    const displayLabels = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const dateString = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      last7Dates.push(dateString);
-      displayLabels.push(`${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`);
-    }
-
-    const dailyStudy = [];
-    const dailyScreen = [];
-    let totalStudyWeek = 0;
-    let totalScreenWeek = 0;
-
-    last7Dates.forEach(dateStr => {
-      const log = lifestyleLogs.find(l => l.date === dateStr) || {};
-      const studyHrs = parseFloat(log.studyHours || 0) || 0;
-      const screenHrs = parseFloat(log.screenHours || 0) || 0;
-      dailyStudy.push(studyHrs);
-      dailyScreen.push(screenHrs);
-      totalStudyWeek += studyHrs;
-      totalScreenWeek += screenHrs;
-    });
-
-    if (studyEl) studyEl.innerText = `${totalStudyWeek.toFixed(1)}h`;
-    if (screenEl) screenEl.innerText = `${totalScreenWeek.toFixed(1)}h`;
-
-    window.studyBreakdownChart = new Chart(breakdownCtx, {
-      type: 'doughnut',
-      data: {
-        labels: breakdownLabels,
-        datasets: [{
-          data: breakdownValues,
-          backgroundColor: ['#c8f069', '#1da1f2', '#CF6679', '#f0c069', '#bb86fc'],
-          borderWidth: 0,
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '75%',
-        plugins: { legend: { display: false } }
-      }
-    });
-
-    window.trendsChart = new Chart(trendsCtx, {
-      type: 'bar',
-      data: {
-        labels: displayLabels,
-        datasets: [
-          {
-            label: 'Study Hours',
-            data: dailyStudy,
-            backgroundColor: '#c8f069',
-            borderRadius: 6,
-            barPercentage: 0.6
+        if (studyTagChartInstance) studyTagChartInstance.destroy();
+        studyTagChartInstance = new Chart(ctxDoughnut, {
+          type: 'doughnut',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: data,
+              backgroundColor: colors.slice(0, labels.length),
+              borderWidth: 0,
+              hoverOffset: 6
+            }]
           },
-          {
-            label: 'Screen Time',
-            data: dailyScreen,
-            backgroundColor: '#CF6679',
-            borderRadius: 6,
-            barPercentage: 0.6
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-on-background').trim() || '#000' , padding: 20 } }
+            },
+            cutout: '70%'
           }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            ticks: { color: '#888' }
-          },
-          x: {
-            grid: { display: false },
-            ticks: { color: '#888' }
-          }
-        },
-        plugins: { legend: { display: false } }
+        });
       }
-    });
+    }
+
+    const ctxBar = document.getElementById('trendBarChart');
+    if (ctxBar) {
+      if (trendBarChartInstance) trendBarChartInstance.destroy();
+      trendBarChartInstance = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: past7DaysLabels,
+          datasets: [
+            { label: 'Study', data: studyData, backgroundColor: '#D4E157', borderRadius: 6 },
+            { label: 'Screen', data: screenData, backgroundColor: '#F44336', borderRadius: 6 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { stacked: false, grid: { display: false }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-on-background').trim() || '#000' } },
+            y: { stacked: false, border: { display: false }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-on-background').trim() || '#000' } }
+          },
+          plugins: {
+            legend: { position: 'top', labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--md-sys-color-on-background').trim() || '#000' } }
+          }
+        }
+      });
+    }
   }
 
   function openSubPage(pageId, title) {
@@ -2639,9 +1295,6 @@
     if(pageId === 'attendance') renderAttendance();
     if(pageId === 'foundation') renderGovExam();
     if(pageId === 'fees') renderCollegeFeesList();
-    if(targetPage) animatePageEntrance(targetPage);
-    // Ensure any segmented sliders inside sub-pages initialize
-    setTimeout(initializeAllSliders, 50);
   }
   function openSideNav() {
     document.getElementById('sideNav').classList.add('open');
@@ -2704,42 +1357,16 @@
 
   // Segment Switchers
   function switchAttSegment(seg, btn) {
-    const labelMap = {
-      today: document.getElementById('label-today'),
-      timetable: document.getElementById('label-timetable'),
-      stats: document.getElementById('label-att-stats')
-    };
-    const activeBtn = btn || labelMap[seg];
-
-    document.querySelectorAll('#page-attendance .segment-btn, #page-attendance .liquid-slider-label').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#page-attendance .segment-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('#page-attendance .segment-content').forEach(c => c.classList.remove('active'));
-    if (activeBtn) activeBtn.classList.add('active');
-    const target = document.getElementById('att-seg-' + seg);
-    if (target) target.classList.add('active');
-    // Animate the attendance pill with JS physics
-    const pill = document.getElementById('attendancePill');
-    if (activeBtn && pill && typeof animateLiquidSlider === 'function') {
-      animateLiquidSlider(activeBtn, pill);
-    }
+    btn.classList.add('active');
+    document.getElementById('att-seg-' + seg).classList.add('active');
   }
   function switchGovSegment(seg, btn) {
-    const labelMap = {
-      daily: document.getElementById('label-daily'),
-      subjects: document.getElementById('label-subjects'),
-      notes: document.getElementById('label-notes')
-    };
-    const activeBtn = btn || labelMap[seg];
-
-    document.querySelectorAll('#page-foundation .segment-btn, #page-foundation .liquid-slider-label').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#page-foundation .segment-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('#page-foundation .segment-content').forEach(c => c.classList.remove('active'));
-    if (activeBtn) activeBtn.classList.add('active');
-    const target = document.getElementById('gov-seg-' + seg);
-    if (target) target.classList.add('active');
-    // Animate the foundation pill with JS physics
-    const pill = document.getElementById('foundationPill');
-    if (activeBtn && pill && typeof animateLiquidSlider === 'function') {
-      animateLiquidSlider(activeBtn, pill);
-    }
+    btn.classList.add('active');
+    document.getElementById('gov-seg-' + seg).classList.add('active');
   }
 
   // --- TRANSACTIONS ---
@@ -2930,7 +1557,7 @@
       const btnTxt = completed ? 'Completed 🎉' : todayDone ? 'Undo Today' : 'Mark Today Complete';
       const btnCls = completed ? 'btn-secondary' : todayDone ? 'btn-secondary' : 'btn-primary';
       return `
-        <div class="streak-card">
+        <div class="streak-card glass-panel">
           <div class="streak-header">
             <div>
               <div class="streak-title">${escapeHtml(s.name)}</div>
@@ -3127,15 +1754,15 @@
       const rec = recs.find(r => r.date === dateStr && r.slotKey === item.slotKeys[0]);
       const status = rec ? rec.status : null;
       html += `
-        <div class="card">
+        <div class="card glass-inner">
           <div style="display:flex; justify-content:space-between">
             <span style="font-size:18px; font-weight:600;">${item.subject}</span>
             <span style="font-size:12px; color:var(--md-sys-color-on-surface-variant);">${item.start} - ${item.end}</span>
           </div>
           <div class="att-btn-row">
-            <button class="att-btn ${status==='present'?'active-present':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'present')">Present</button>
-            <button class="att-btn ${status==='absent'?'active-absent':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'absent')">Absent</button>
-            <button class="att-btn ${status==='cancelled'?'active-other':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'cancelled')">Cancelled</button>
+            <button class="att-btn ${status==='present'?'active-present':''} glass-btn" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'present')">Present</button>
+            <button class="att-btn ${status==='absent'?'active-absent':''} glass-btn" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'absent')">Absent</button>
+            <button class="att-btn ${status==='cancelled'?'active-other':''} glass-btn" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'cancelled')">Cancelled</button>
           </div>
         </div>
       `;
@@ -3168,7 +1795,7 @@
             ${ATTENDANCE_SLOTS.map(slot => {
               const subj = timetable[day+'_'+slot.key] || '';
               return `
-                <div class="slot-item" ${slot.editable ? `onclick="openAttEditSlot('${day}','${slot.key}','${escapeHtml(subj)}', '${slot.label}')"` : ''}>
+                <div class="slot-item glass-inner" ${slot.editable ? `onclick="openAttEditSlot('${day}','${slot.key}','${escapeHtml(subj)}', '${slot.label}')"` : ''}>
                   <span style="color:var(--md-sys-color-on-surface-variant)">${slot.label}</span>
                   <span style="font-weight:600; ${!slot.editable ? 'opacity:0.5' : ''}">
                     ${!slot.editable ? 'Lunch Break' : (subj || '<span style="opacity:0.3; font-weight:normal">Empty</span>')}
@@ -3217,7 +1844,7 @@
       const req = elig ? Math.max(0, Math.ceil(3*a - p)) : 1;
       let cl = pct >= 75 ? 'var(--md-sys-color-success)' : pct > 60 ? 'var(--md-sys-color-warning)' : 'var(--md-sys-color-error)';
       html += `
-        <div class="card" style="margin-bottom:8px; padding:12px 16px;">
+        <div class="card glass-inner" style="margin-bottom:8px; padding:12px 16px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <div style="font-weight:600; font-size:16px">${sub}</div>
             <div style="font-size:20px; font-weight:700; color:${cl}">${pct}%</div>
@@ -3261,7 +1888,7 @@
       const data = ld(key, {readArticle:false, readNews:false});
       const dayLabel = i===0 ? 'Today' : i===1 ? 'Yesterday' : `${DAYS[d.getDay()]} ${d.getDate()}`;
       html += `
-        <div class="gov-check-row">
+        <div class="gov-check-row glass-inner">
           <div style="font-size:14px; width:80px">${dayLabel}</div>
           <div style="display:flex; gap:8px;">
             <div class="checkbox-pill ${data.readArticle?'checked':''}" onclick="toggleGovDaily('${key}', 'readArticle')">Article</div>
@@ -3285,15 +1912,15 @@
     const data = ld(key, {puzzlesTarget:5, puzzlesCompleted:0, quantTarget:5, quantCompleted:0, socialTarget:1, socialCompleted:false});
     document.getElementById('govWeeklyList').innerHTML = `
       <div style="margin-bottom:12px;">
-        <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px">
+          <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px">
           <span>Puzzles (Target: ${data.puzzlesTarget})</span>
-          <input type="number" id="govW_p" value="${data.puzzlesCompleted}" class="liquid-input" style="max-width:60px;">
+          <input type="number" id="govW_p" class="glass-input" value="${data.puzzlesCompleted}" style="width:60px; text-align:center;">
         </div>
       </div>
       <div style="margin-bottom:12px;">
         <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:8px">
           <span>Quant (Target: ${data.quantTarget})</span>
-          <input type="number" id="govW_q" value="${data.quantCompleted}" class="liquid-input" style="max-width:60px;">
+          <input type="number" id="govW_q" class="glass-input" value="${data.quantCompleted}" style="width:60px; text-align:center;">
         </div>
       </div>
       <div style="display:flex; justify-content:space-between; font-size:14px; align-items:center;">
@@ -3331,9 +1958,9 @@
           <div style="display:flex; justify-content:space-between; margin-top:16px; align-items:center;">
             <div style="font-size:12px; color:var(--md-sys-color-on-surface-variant)">Completed / Total</div>
             <div style="display:flex; gap:8px; align-items:center;">
-              <input type="number" value="${s.completedChapters}" onchange="updateGovSubj(${idx}, 'completedChapters', this.value)" class="liquid-input" style="max-width:50px; padding:4px;">
+              <input type="number" value="${s.completedChapters}" onchange="updateGovSubj(${idx}, 'completedChapters', this.value)" class="glass-input" style="width:50px; border:none; padding:4px; text-align:center; border-radius:4px;">
               <span>/</span>
-              <input type="number" value="${s.totalChapters}" onchange="updateGovSubj(${idx}, 'totalChapters', this.value)" class="liquid-input" style="max-width:50px; padding:4px;">
+              <input type="number" value="${s.totalChapters}" onchange="updateGovSubj(${idx}, 'totalChapters', this.value)" class="glass-input" style="width:50px; border:none; padding:4px; text-align:center; border-radius:4px;">
             </div>
           </div>
         </div>
@@ -3743,7 +2370,7 @@
     }
     if (events !== '') {
       html += `
-        <div style="margin-top: 12px; padding: 12px; background: rgba(207, 102, 121, 0.1); border-left: 4px solid var(--md-sys-color-error); border-radius: 4px;">
+        <div class="glass-inner" style="margin-top: 12px; padding: 12px; border-left: 4px solid var(--md-sys-color-error);">
           <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--md-sys-color-error); font-weight: 600; margin-bottom: 6px;">
             <div style="width: 8px; height: 8px; background-color: var(--md-sys-color-error); border-radius: 50%;"></div>
             Notes & Events
@@ -3836,57 +2463,18 @@
   function updateFocusNavIndicator() {
     const navItem = document.getElementById('nav-focus');
     if (!navItem) return;
-
-    const trackerActive = ld('tracker_active', false);
-    const pomoActive = ld('pomo_active', false);
-    const isTrackerActive = trackerActive === true || String(trackerActive) === 'true';
-    const isPomoActive = pomoActive === true || String(pomoActive) === 'true';
-
-    if (isTrackerActive || isPomoActive) {
+    if (ld('tracker_active', false) || ld('pomo_active', false)) {
       navItem.classList.add('timer-live');
     } else {
       navItem.classList.remove('timer-live');
     }
   }
 
-  function moveLiquidPill(clickedLabel, pillId, originalCallback) {
-    const pill = document.getElementById(pillId);
-    if (!pill) return;
-
-    const track = clickedLabel.parentElement;
-    const labels = track.querySelectorAll('.liquid-slider-label');
-
-    labels.forEach(label => label.classList.remove('active'));
-    clickedLabel.classList.add('active');
-    // Call optional callback (changing content/views)
-    if (typeof originalCallback === 'function') originalCallback();
-
-    // Animate the pill with the generalized physics engine
-    if (typeof animateLiquidSlider === 'function') {
-      animateLiquidSlider(clickedLabel, pill);
-    } else {
-      // Fallback: snap instantly if engine not available
-      pill.style.left = clickedLabel.offsetLeft + 'px';
-      pill.style.width = clickedLabel.offsetWidth + 'px';
-    }
-  }
-
-  function switchFocusMode(mode, labelEl) {
-    const isPomodoro = mode === 'pomodoro';
-    const targetLabel = labelEl || document.getElementById(isPomodoro ? 'label-pomodoro' : 'label-auto');
-
-    document.querySelectorAll('#page-focus .liquid-slider-label').forEach(label => label.classList.remove('active'));
-    if (targetLabel) targetLabel.classList.add('active');
-
-    document.querySelectorAll('#page-focus .segment-content').forEach(content => content.classList.remove('active'));
-    const target = document.getElementById(isPomodoro ? 'focus-seg-pomodoro' : 'focus-seg-tracker');
-    if (target) target.classList.add('active');
-  }
-
   function switchFocusSegment(seg, btn) {
-    const mode = seg === 'pomodoro' ? 'pomodoro' : 'auto';
-    const label = document.getElementById(mode === 'pomodoro' ? 'label-pomodoro' : 'label-auto');
-    switchFocusMode(mode, label || btn);
+    document.querySelectorAll('#page-focus .segment-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#page-focus .segment-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('focus-seg-' + seg).classList.add('active');
   }
 
   function formatTime(secs, includeHours=true) {
@@ -3907,42 +2495,27 @@
   }
 
   function toggleTracker() {
-    const timerCircle = document.getElementById('focusTimerCircle');
-    const startBtn = document.getElementById('trackerBtn');
-
     if (!ld('tracker_active', false)) {
       sv('tracker_active', true);
       sv('tracker_start', Date.now());
       sv('tracker_cat', trackerCat);
       sv('tracker_tag', document.getElementById('studyTagSelect').value);
-      document.getElementById('trackerBtn').textContent = "STOP & SAVE";
-      document.getElementById('trackerBtn').style.backgroundColor = "var(--md-sys-color-error)";
+      const tBtn = document.getElementById('trackerBtn');
+      tBtn.textContent = "STOP & SAVE";
+      tBtn.classList.remove('primary','danger','warning');
+      tBtn.classList.add('danger');
       trackerInterval = setInterval(tickTracker, 1000);
-
-      if (timerCircle) timerCircle.classList.add('liquid-timer-active');
-      if (startBtn) {
-        startBtn.innerText = 'STOP';
-        startBtn.classList.add('liquid-btn-stop');
-        startBtn.style.transform = 'scale(0.9)';
-        setTimeout(() => { startBtn.style.transform = ''; }, 150);
-      }
     } else {
       clearInterval(trackerInterval);
       sv('tracker_active', false);
       const start = ld('tracker_start', Date.now());
       const hours = ((Date.now() - start) / 3600000).toFixed(2);
       
-      document.getElementById('trackerBtn').textContent = "START";
-      document.getElementById('trackerBtn').style.backgroundColor = "var(--md-sys-color-primary)";
+      const tBtn = document.getElementById('trackerBtn');
+      tBtn.textContent = "START";
+      tBtn.classList.remove('primary','danger','warning');
+      tBtn.classList.add('primary');
       document.getElementById('trackerDisplay').textContent = "00:00:00";
-
-      if (timerCircle) timerCircle.classList.remove('liquid-timer-active');
-      if (startBtn) {
-        startBtn.innerText = 'START';
-        startBtn.classList.remove('liquid-btn-stop');
-        startBtn.style.transform = 'scale(0.9)';
-        setTimeout(() => { startBtn.style.transform = ''; }, 150);
-      }
       
       if (hours > 0.01) {
         saveToLifestyle(ld('tracker_cat', 'study'), parseFloat(hours));
@@ -4010,8 +2583,10 @@
           clearInterval(pomoInterval);
           sv('pomo_active', false);
           
-          document.getElementById('pomoBtn').textContent = "START";
-          document.getElementById('pomoBtn').style.backgroundColor = "var(--md-sys-color-warning)";
+          const pBtn = document.getElementById('pomoBtn');
+          pBtn.textContent = "START";
+          pBtn.classList.remove('primary','danger','warning');
+          pBtn.classList.add('warning');
           document.getElementById('pomoDisplay').textContent = "FAILED";
           
           // Log the distraction
@@ -4030,32 +2605,25 @@
   });
 
   function togglePomo() {
-    const timerCircle = document.getElementById('focusTimerCircle');
-    const startBtn = document.getElementById('pomoBtn');
-
     if (!ld('pomo_active', false)) {
       if (Notification.permission !== "granted" && Notification.permission !== "denied") Notification.requestPermission();
       sv('pomo_active', true);
       sv('pomo_strict', document.getElementById('strictModeToggle').checked);
       sv('pomo_start', Date.now());
       sv('pomo_dur', pomoDur);
-      if (startBtn) {
-        startBtn.textContent = "STOP";
-        startBtn.classList.add('liquid-btn-stop');
-      }
-      if (timerCircle) timerCircle.classList.add('liquid-timer-active');
+      const pBtn = document.getElementById('pomoBtn');
+      pBtn.textContent = "CANCEL";
+      pBtn.classList.remove('primary','danger','warning');
+      pBtn.classList.add('danger');
       pomoInterval = setInterval(tickPomo, 1000);
-
     } else {
       clearInterval(pomoInterval);
       sv('pomo_active', false);
-      if (startBtn) {
-        startBtn.textContent = "START";
-        startBtn.classList.remove('liquid-btn-stop');
-      }
+      const pBtn = document.getElementById('pomoBtn');
+      pBtn.textContent = "START";
+      pBtn.classList.remove('primary','danger','warning');
+      pBtn.classList.add('warning');
       document.getElementById('pomoDisplay').textContent = formatTime(pomoDur * 60, false);
-
-      if (timerCircle) timerCircle.classList.remove('liquid-timer-active');
     }
     updateFocusNavIndicator();
   }
@@ -4069,8 +2637,10 @@
     if (remaining <= 0) {
       clearInterval(pomoInterval);
       sv('pomo_active', false);
-      document.getElementById('pomoBtn').textContent = "START";
-      document.getElementById('pomoBtn').style.backgroundColor = "var(--md-sys-color-warning)";
+      const pBtn = document.getElementById('pomoBtn');
+      pBtn.textContent = "START";
+      pBtn.classList.remove('primary','danger','warning');
+      pBtn.classList.add('warning');
       document.getElementById('pomoDisplay').textContent = formatTime(ld('pomo_dur', 25) * 60, false);
       updateFocusNavIndicator();
       
@@ -4089,53 +2659,27 @@
     
     // 1. Recover Auto-Tracker
     if (ld('tracker_active', false)) {
-      // Restore Category UI & active-liquid-tag
+      // Restore Category UI
       trackerCat = ld('tracker_cat', 'study');
-      document.querySelectorAll('#trackerCats button').forEach(b => b.classList.remove('active', 'active-liquid-tag'));
-      const activeCatBtn = Array.from(document.querySelectorAll('#trackerCats button')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(trackerCat));
-      if (activeCatBtn) activeCatBtn.classList.add('active-liquid-tag');
+      document.querySelectorAll('#trackerCats .focus-cat-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('#trackerCats .focus-cat-btn')).find(b => b.getAttribute('onclick').includes(trackerCat));
+      if (activeBtn) activeBtn.classList.add('active');
 
-      // Restore Sub-tag Dropdown visibility
-      const tagContainer = document.getElementById('studyTagContainer');
-      if (tagContainer) {
-        tagContainer.style.display = (trackerCat === 'study') ? 'block' : 'none';
-        const savedTag = ld('tracker_tag', '');
-        const tagSelect = document.getElementById('studyTagSelect') || document.getElementById('focusTag');
-        if (savedTag && tagSelect) tagSelect.value = savedTag;
-      }
-
-      // Restore Liquid Glass Timer UI & Loop
-      const startBtn = document.getElementById('trackerBtn') || document.getElementById('focusStartBtn');
-      const timerCircle = document.getElementById('focusTimerCircle');
-      if (startBtn) {
-        startBtn.innerText = 'STOP';
-        startBtn.classList.add('liquid-btn-stop');
-      }
-      if (timerCircle) {
-        timerCircle.classList.add('liquid-timer-active');
-      }
+      // Restore Timer UI & Loop
+      const tBtn = document.getElementById('trackerBtn');
+      tBtn.textContent = "STOP & SAVE";
+      tBtn.classList.remove('primary','danger','warning');
+      tBtn.classList.add('danger');
       trackerInterval = setInterval(tickTracker, 1000);
       tickTracker();
     }
     
     // 2. Recover Pomodoro
     if (ld('pomo_active', false)) {
-      // Restore Duration UI & active-liquid-tag
-      pomoDur = ld('pomo_dur', 25);
-      document.querySelectorAll('#pomoDurs button').forEach(b => b.classList.remove('active', 'active-liquid-tag'));
-      const activePomoBtn = Array.from(document.querySelectorAll('#pomoDurs button')).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(pomoDur));
-      if (activePomoBtn) activePomoBtn.classList.add('active-liquid-tag');
-
-      // Restore Liquid Glass Timer UI & Loop
-      const pomoBtn = document.getElementById('pomoBtn');
-      const pomoCircle = document.getElementById('pomoDisplay').parentElement;
-      if (pomoBtn) {
-        pomoBtn.innerText = 'CANCEL';
-        pomoBtn.classList.add('liquid-btn-stop');
-      }
-      if (pomoCircle) {
-        pomoCircle.classList.add('liquid-timer-active');
-      }
+      const pBtn = document.getElementById('pomoBtn');
+      pBtn.textContent = "CANCEL";
+      pBtn.classList.remove('primary','danger','warning');
+      pBtn.classList.add('danger');
       pomoInterval = setInterval(tickPomo, 1000);
       tickPomo();
     }
@@ -4143,6 +2687,11 @@
     // 3. Update Bottom Nav Indicator
     if (typeof updateFocusNavIndicator === 'function') {
       updateFocusNavIndicator();
+    }
+    
+    // 4. Update Sleep Button UI
+    if (typeof updateSleepBtnUI === 'function') {
+      updateSleepBtnUI();
     }
   });
 
@@ -4167,7 +2716,7 @@
     
     if(daysLogged > 0) {
       html += `
-        <div class="card liquid-panel" style="border-color: rgba(200,240,105,0.3);">
+        <div class="card" style="background: linear-gradient(135deg, rgba(200,240,105,0.05) 0%, rgba(200,240,105,0.01) 100%); border-color: rgba(200,240,105,0.3);">
           <div class="card-title" style="font-size: 14px; margin-bottom: 12px;">7-Day Rolling Averages</div>
           <div style="display: flex; justify-content: space-between; text-align: center;">
             <div>
@@ -4202,7 +2751,7 @@
       const subtitle = summary.length ? summary.join(' • ') : 'No data logged';
       
       html += `
-        <div class="daily-card liquid-panel" ${isToday ? 'id="ls-today-card"' : ''} onclick="openLifestyleSheet('${key}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
+        <div class="daily-card glass-panel" ${isToday ? 'id="ls-today-card"' : ''} onclick="openLifestyleSheet('${key}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
           <div class="daily-info">
             <h3 style="${isToday ? 'color: var(--md-sys-color-primary)' : ''}">
               ${d} ${MONTHS[lsMonth].substring(0,3)} ${isToday ? '(Today)' : ''}
@@ -4229,14 +2778,12 @@
     
     if (isSleeping) {
       btn.innerHTML = "☀️ Wake Up";
-      // Use the theme's native error/warning colors for high contrast
-      btn.style.backgroundColor = "var(--md-sys-color-error, #B3261E)"; 
-      btn.style.color = "var(--md-sys-color-on-error, #FFFFFF)"; 
+      btn.classList.add('sleep-active');
+      btn.classList.remove('primary','danger','warning');
     } else {
       btn.innerHTML = "🛏️ Go to Sleep";
-      // Use the theme's native primary accent color
-      btn.style.backgroundColor = "var(--md-sys-color-primary, #D4E157)"; 
-      btn.style.color = "var(--md-sys-color-on-primary, #000000)"; 
+      btn.classList.remove('sleep-active','danger','warning');
+      btn.classList.add('primary');
     }
     
     // Maintain FAB shape and shadow
@@ -4246,62 +2793,6 @@
   }
 
   // 1-Click Sleep Tracker Logic
-  function toggleGlassDropdown() {
-    const menu = document.getElementById('glassDropdownMenu');
-    const icon = document.getElementById('glassDropdownIcon');
-
-    if (menu.style.display === 'none' || menu.style.display === '') {
-      menu.style.display = 'flex';
-      if (icon) icon.style.transform = 'rotate(180deg)';
-      setTimeout(() => {
-        menu.style.opacity = '1';
-        menu.style.transform = 'translateY(0)';
-      }, 10);
-    } else {
-      menu.style.opacity = '0';
-      menu.style.transform = 'translateY(-10px)';
-      if (icon) icon.style.transform = 'rotate(0deg)';
-      setTimeout(() => {
-        menu.style.display = 'none';
-      }, 300);
-    }
-  }
-
-  function selectGlassTag(tagName, icon) {
-    document.getElementById('glassDropdownText').innerText = `${icon} ${tagName}`;
-    const nativeSelect = document.getElementById('studyTagSelect');
-    if (nativeSelect) {
-      const map = {
-        'University Exams': 'University',
-        'LeetCode / DSA': 'LeetCode',
-        'Hackathon / Projects': 'Hackathon',
-        'Gov Exam Prep': 'GovPrep'
-      };
-      nativeSelect.value = map[tagName] || 'University';
-    }
-    toggleGlassDropdown();
-  }
-
-  document.addEventListener('click', function(event) {
-    const wrapper = document.getElementById('glassDropdownWrapper');
-    const menu = document.getElementById('glassDropdownMenu');
-    const icon = document.getElementById('glassDropdownIcon');
-
-    if (wrapper && menu && !wrapper.contains(event.target) && menu.style.display === 'flex') {
-      menu.style.opacity = '0';
-      menu.style.transform = 'translateY(-10px)';
-      if (icon) icon.style.transform = 'rotate(0deg)';
-      setTimeout(() => { menu.style.display = 'none'; }, 300);
-    }
-  });
-
-  // Liquid Tag Selection Logic
-  function selectLiquidTag(element, groupClassName) {
-    const group = document.querySelectorAll('.' + groupClassName);
-    group.forEach(btn => btn.classList.remove('active-liquid-tag'));
-    element.classList.add('active-liquid-tag');
-  }
-
   function toggleSleepState() {
     let rawState = ld('is_sleeping', false);
     const isSleeping = (rawState === true || rawState === 'true');
@@ -4390,13 +2881,13 @@
     const totalCats = cats.length;
     let html = '';
     
-    let monthTotal = 0; 
-    let monthDone = 0;
+    let monthTotal = 0; let monthDone = 0;
     
     for(let d=1; d<=days; d++) {
       const isToday = d===today.getDate() && dietMonth===today.getMonth() && dietYear===today.getFullYear();
       let dayDone = 0;
       
+      // Determine if this day is in the past or today
       const iterDate = new Date(dietYear, dietMonth, d);
       const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
       const isPastOrToday = iterDate <= todayDate;
@@ -4404,35 +2895,33 @@
       cats.forEach((_, ci) => {
         const key = `diet_${dietYear}_${dietMonth+1}_${d}_${ci}`;
         const v = ld(key, null);
-        if (isPastOrToday) monthTotal++;
-        if (v === true || v === 'true') { dayDone++; monthDone++; }
+        
+        // Only add to the month's total targets if the day has actually occurred
+        if (isPastOrToday) {
+          monthTotal++;
+        }
+        
+        if(v === true || v === 'true') { dayDone++; monthDone++; }
       });
       
       const pct = totalCats ? Math.round((dayDone / totalCats) * 100) : 0;
-      const ringGradient = `conic-gradient(rgba(74, 222, 128, 0.85) 0% ${pct}%, rgba(255, 255, 255, 0.15) ${pct}% 100%)`;
       
       html += `
-        <div class="liquid-panel" ${isToday ? 'id="diet-today-card"' : ''} onclick="openDietSheet('${dietYear}_${dietMonth+1}_${d}')" style="padding: 16px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; ${isToday ? 'border: 1px solid var(--md-sys-color-primary);' : ''}">
-          <div>
-            <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700; ${isToday ? 'color: var(--md-sys-color-primary);' : 'color: var(--md-sys-color-on-surface);'}">
+        <div class="daily-card glass-panel" ${isToday ? 'id="diet-today-card"' : ''} onclick="openDietSheet('${dietYear}_${dietMonth+1}_${d}')" style="${isToday ? 'border-color: var(--md-sys-color-primary)' : ''}">
+          <div class="daily-info">
+            <h3 style="${isToday ? 'color: var(--md-sys-color-primary)' : ''}">
               ${d} ${MONTHS[dietMonth].substring(0,3)} ${isToday ? '(Today)' : ''}
-            </h4>
-            <p style="margin: 0; font-size: 13px; color: var(--md-sys-color-on-surface-variant);">${dayDone} of ${totalCats} targets met</p>
+            </h3>
+            <p>${dayDone} of ${totalCats} targets met</p>
           </div>
-          <div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
-             <div style="position: absolute; inset: 0; border-radius: 50%; background: ${ringGradient}; -webkit-mask: radial-gradient(circle, transparent 60%, black 61%); mask: radial-gradient(circle, transparent 60%, black 61%);"></div>
-             <span style="font-size: 15px; font-weight: 700; z-index: 1; color: var(--md-sys-color-on-surface);">${dayDone}</span>
-          </div>
+          <div class="progress-ring" style="--p: ${pct}%"><span>${dayDone}</span></div>
         </div>
       `;
     }
     document.getElementById('dietList').innerHTML = html;
     
-    const monthPct = monthTotal ? Math.round((monthDone / monthTotal) * 100) : 0;
-    const bigRing = document.getElementById('dynamicDietRing');
-    if (bigRing) {
-      bigRing.style.background = `conic-gradient(rgba(74, 222, 128, 0.85) 0% ${monthPct}%, rgba(255, 255, 255, 0.15) ${monthPct}% 100%)`;
-    }
+    // Draw Chart
+    renderDietChart(monthDone, monthTotal - monthDone);
   }
   function dietPrev(){ dietMonth--; if(dietMonth<0){dietMonth=11; dietYear--;} renderDiet(); }
   function dietNext(){ dietMonth++; if(dietMonth>11){dietMonth=0; dietYear++;} renderDiet(); }
@@ -4454,68 +2943,29 @@
       const key = `diet_${dateString}_${ci}`;
       const v = ld(key, null);
       const isChecked = (v === true || v === 'true');
-      const activeBg = isChecked ? 'background: rgba(74, 222, 128, 0.15) !important; border-color: rgba(74, 222, 128, 0.4) !important;' : '';
       
       html += `
-        <label class="liquid-inner diet-item-card ${isChecked ? 'checked' : ''}" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-radius: 16px; margin-bottom: 8px; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.3s ease; ${activeBg}">
-          <span style="font-size: 16px; font-weight: 600; color: var(--md-sys-color-on-surface);">${escapeHtml(cat)}</span>
-          <span class="liquid-toggle">
-            <input type="checkbox" id="cb_${key}" ${isChecked ? 'checked' : ''} onchange="syncDietState(this)" />
-            <div class="toggle-track"></div>
-          </span>
-        </label>
+        <div class="checklist-item" onclick="toggleDietMobile('${key}')">
+          <div class="checklist-label">${escapeHtml(cat)}</div>
+          <div class="custom-checkbox ${isChecked ? 'checked' : ''}" id="cb_${key}"></div>
+        </div>
       `;
     });
     document.getElementById('dietChecklist').innerHTML = html;
-    
-    // Visually sync the custom UI with the loaded data state
-    setTimeout(() => {
-      document.querySelectorAll('.diet-item-card input[type="checkbox"]').forEach(checkbox => {
-        const card = checkbox.closest('.diet-item-card');
-        if (card) {
-          if (checkbox.checked) {
-            card.classList.add('checked'); // Forces the green frosted glass on saved items
-          } else {
-            card.classList.remove('checked'); // Forces the grey frosted glass on unsaved items
-          }
-        }
-      });
-    }, 10);
   }
 
-  function syncDietState(checkbox) {
-    if (!checkbox) return;
-    const card = checkbox.closest('.diet-item-card');
-    if (card) {
-      if (checkbox.checked) {
-        card.classList.add('checked');
-      } else {
-        card.classList.remove('checked');
-      }
-    }
-    // Persist the changed state immediately
-    try {
-      const cbId = checkbox.id || '';
-      const key = cbId.startsWith('cb_') ? cbId.slice(3) : cbId;
-      if (typeof sv === 'function') sv(key, checkbox.checked);
-
-      // Refresh month/day UI summaries
-      if (typeof renderDiet === 'function') renderDiet();
-
-      // Update the diet pie/chart for the open date if present
-      const dateStringEl = document.getElementById('dietDateKey');
-      if (dateStringEl && typeof renderDietChart === 'function') {
-        const dateString = dateStringEl.value;
-        const cats = getDietCats();
-        let done = 0, missed = 0;
-        cats.forEach((_, ci) => {
-          const k = `diet_${dateString}_${ci}`;
-          const v = ld(k, null);
-          if (v === true || v === 'true') done++; else missed++;
-        });
-        renderDietChart(done, missed);
-      }
-    } catch (e) { console.warn('Failed to persist diet state', e); }
+  function toggleDietMobile(key) {
+    const current = ld(key, false);
+    const next = !(current === true || current === 'true');
+    sv(key, next);
+    
+    // Visually update immediately
+    const cb = document.getElementById('cb_' + key);
+    if(next) cb.classList.add('checked');
+    else cb.classList.remove('checked');
+    
+    // Re-render list behind the sheet to update stats/rings
+    renderDiet();
   }
 
   function renderDietChart(done = 0, missed = 0) {
@@ -4853,56 +3303,7 @@ document.addEventListener('click', function(e) {
         .then(() => console.log('Service Worker Registered successfully'))
         .catch(err => console.log('Service Worker Registration Failed:', err));
     }
-    if (typeof updateFocusNavIndicator === 'function') {
-      updateFocusNavIndicator();
-    }
-    setTimeout(() => {
-      const activeNav = document.querySelector('.bottom-nav .nav-item.active');
-      if (activeNav) moveBottomNavPill(activeNav);
-    }, 100);
-
-    // Initialize all top segmented sliders so their pills snap into the correct place on load
-    setTimeout(initializeAllSliders, 120);
-    initializeStatsChartRenderer();
   });
-
-  function initializeStatsChartRenderer() {
-    const statsPage = document.getElementById('page-stats');
-    const breakdownCtx = document.getElementById('studyBreakdownChart');
-    const trendsCtx = document.getElementById('trendsChart');
-    if (!statsPage || !breakdownCtx || !trendsCtx) return;
-
-    const tryRenderCharts = () => {
-      if (!statsPage.classList.contains('active')) return;
-      if (breakdownCtx.offsetWidth > 0 && breakdownCtx.offsetHeight > 0 && trendsCtx.offsetWidth > 0 && trendsCtx.offsetHeight > 0) {
-        renderAnalyticsCharts();
-        return;
-      }
-      setTimeout(tryRenderCharts, 100);
-    };
-
-    const mutationObserver = new MutationObserver(mutations => {
-      mutations.forEach(m => {
-        if (m.attributeName === 'class' && statsPage.classList.contains('active')) {
-          tryRenderCharts();
-        }
-      });
-    });
-    mutationObserver.observe(statsPage, { attributes: true });
-
-    const resizeObserver = new ResizeObserver(() => {
-      if (statsPage.classList.contains('active')) {
-        tryRenderCharts();
-      }
-    });
-    resizeObserver.observe(statsPage);
-
-    window.addEventListener('resize', () => {
-      if (statsPage.classList.contains('active')) {
-        tryRenderCharts();
-      }
-    });
-  }
 </script>
 </body>
 </html>

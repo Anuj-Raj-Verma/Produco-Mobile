@@ -1363,13 +1363,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
     border: 1px solid rgba(255, 255, 255, 0.03) !important;
   }
-
-  /* Highly specific override to remove top highlight on the app header in dark mode */
-  body.dark-mode .app-bar.liquid-panel,
-  [data-theme="dark"] .app-bar.liquid-panel {
-    border-top: none !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-  }
 </style>
 </head>
 <body>
@@ -4467,20 +4460,6 @@
       `;
     });
     document.getElementById('dietChecklist').innerHTML = html;
-    
-    // Visually sync the custom UI with the loaded data state
-    setTimeout(() => {
-      document.querySelectorAll('.diet-item-card input[type="checkbox"]').forEach(checkbox => {
-        const card = checkbox.closest('.diet-item-card');
-        if (card) {
-          if (checkbox.checked) {
-            card.classList.add('checked'); // Forces the green frosted glass on saved items
-          } else {
-            card.classList.remove('checked'); // Forces the grey frosted glass on unsaved items
-          }
-        }
-      });
-    }, 10);
   }
 
   function syncDietState(checkbox) {
@@ -4493,29 +4472,6 @@
         card.classList.remove('checked');
       }
     }
-    // Persist the changed state immediately
-    try {
-      const cbId = checkbox.id || '';
-      const key = cbId.startsWith('cb_') ? cbId.slice(3) : cbId;
-      if (typeof sv === 'function') sv(key, checkbox.checked);
-
-      // Refresh month/day UI summaries
-      if (typeof renderDiet === 'function') renderDiet();
-
-      // Update the diet pie/chart for the open date if present
-      const dateStringEl = document.getElementById('dietDateKey');
-      if (dateStringEl && typeof renderDietChart === 'function') {
-        const dateString = dateStringEl.value;
-        const cats = getDietCats();
-        let done = 0, missed = 0;
-        cats.forEach((_, ci) => {
-          const k = `diet_${dateString}_${ci}`;
-          const v = ld(k, null);
-          if (v === true || v === 'true') done++; else missed++;
-        });
-        renderDietChart(done, missed);
-      }
-    } catch (e) { console.warn('Failed to persist diet state', e); }
   }
 
   function renderDietChart(done = 0, missed = 0) {

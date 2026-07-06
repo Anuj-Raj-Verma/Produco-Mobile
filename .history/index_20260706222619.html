@@ -339,7 +339,7 @@
     border-radius: 999px !important;
     padding: 0 8px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     background: rgba(255, 255, 255, 0.4) !important;
     backdrop-filter: blur(32px) saturate(150%) !important;
@@ -1324,52 +1324,6 @@
   .liquid-toggle input:checked + .toggle-track::before {
     transform: translateX(20px); /* Perfect mathematical distance for symmetry */
   }
-  
-  /* Dark-mode header and liquid-glass fixes: remove harsh white top highlight */
-  body.dark-mode header,
-  [data-theme="dark"] header,
-  body.dark-mode .app-bar,
-  [data-theme="dark"] .app-bar,
-  body.dark-mode .top-bar {
-    border-top: none !important;
-    box-shadow: none !important;
-  }
-
-  /* Soften/remove inset highlights on liquid surfaces in dark mode */
-  body.dark-mode .liquid-panel,
-  [data-theme="dark"] .liquid-panel,
-  body.dark-mode .liquid-card,
-  [data-theme="dark"] .liquid-card,
-  body.dark-mode .liquid-sub-card,
-  [data-theme="dark"] .liquid-sub-card,
-  body.dark-mode .liquid-inner,
-  [data-theme="dark"] .liquid-inner {
-    /* Keep dark glass look but remove white inset highlight */
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.03) !important;
-  }
-
-  /* Bottom nav and pill: remove inset white sheen in dark mode */
-  body.dark-mode .nav-liquid-pill,
-  [data-theme="dark"] .nav-liquid-pill,
-  body.dark-mode .bottom-nav,
-  [data-theme="dark"] .bottom-nav {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.03) !important;
-  }
-
-  body.dark-mode .liquid-btn,
-  [data-theme="dark"] .liquid-btn {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.03) !important;
-  }
-
-  /* Highly specific override to remove top highlight on the app header in dark mode */
-  body.dark-mode .app-bar.liquid-panel,
-  [data-theme="dark"] .app-bar.liquid-panel {
-    border-top: none !important;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
-  }
 </style>
 </head>
 <body>
@@ -1637,7 +1591,10 @@
 
   <div style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 120px;">
     
-    <!-- Hub tile for Stats removed -->
+    <div class="liquid-panel hub-tile" onclick="openSubPage('stats', 'Stats & Analytics')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Stats & Analytics</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="3" width="4" height="18"></rect><rect x="10" y="8" width="4" height="13"></rect><rect x="2" y="13" width="4" height="8"></rect></svg>
+    </div>
 
     <div class="liquid-panel hub-tile" onclick="openSubPage('fees', 'College Fees')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
       <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">College Fees</span>
@@ -4467,20 +4424,6 @@
       `;
     });
     document.getElementById('dietChecklist').innerHTML = html;
-    
-    // Visually sync the custom UI with the loaded data state
-    setTimeout(() => {
-      document.querySelectorAll('.diet-item-card input[type="checkbox"]').forEach(checkbox => {
-        const card = checkbox.closest('.diet-item-card');
-        if (card) {
-          if (checkbox.checked) {
-            card.classList.add('checked'); // Forces the green frosted glass on saved items
-          } else {
-            card.classList.remove('checked'); // Forces the grey frosted glass on unsaved items
-          }
-        }
-      });
-    }, 10);
   }
 
   function syncDietState(checkbox) {
@@ -4493,29 +4436,6 @@
         card.classList.remove('checked');
       }
     }
-    // Persist the changed state immediately
-    try {
-      const cbId = checkbox.id || '';
-      const key = cbId.startsWith('cb_') ? cbId.slice(3) : cbId;
-      if (typeof sv === 'function') sv(key, checkbox.checked);
-
-      // Refresh month/day UI summaries
-      if (typeof renderDiet === 'function') renderDiet();
-
-      // Update the diet pie/chart for the open date if present
-      const dateStringEl = document.getElementById('dietDateKey');
-      if (dateStringEl && typeof renderDietChart === 'function') {
-        const dateString = dateStringEl.value;
-        const cats = getDietCats();
-        let done = 0, missed = 0;
-        cats.forEach((_, ci) => {
-          const k = `diet_${dateString}_${ci}`;
-          const v = ld(k, null);
-          if (v === true || v === 'true') done++; else missed++;
-        });
-        renderDietChart(done, missed);
-      }
-    } catch (e) { console.warn('Failed to persist diet state', e); }
   }
 
   function renderDietChart(done = 0, missed = 0) {
