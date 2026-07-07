@@ -33,93 +33,6 @@
     } catch (e) { console.warn('Haptics blocked by browser.'); }
   }
 
-  function requestNotificationPermission() {
-    if (!('Notification' in window)) {
-      console.warn('Web notifications are not supported in this browser.');
-      return Promise.resolve('unsupported');
-    }
-
-    if (Notification.permission === 'granted' || Notification.permission === 'denied') {
-      return Promise.resolve(Notification.permission);
-    }
-
-    try {
-      return Notification.requestPermission();
-    } catch (error) {
-      console.warn('Notification permission request failed:', error);
-      return Promise.resolve('unsupported');
-    }
-  }
-
-  function showTimerNotification() {
-    if (!('Notification' in window)) return;
-
-    const show = () => {
-      if (navigator.serviceWorker && navigator.serviceWorker.ready) {
-        navigator.serviceWorker.ready
-          .then((registration) => {
-            registration.showNotification('🚨 FOCUS MODE ACTIVE', {
-              body: 'The study timer is running. Do not scroll! Tap here to return to your work.',
-              tag: 'study-timer',
-              requireInteraction: true,
-              vibrate: [200, 100, 200],
-              icon: '/icon.png'
-            });
-          })
-          .catch((error) => {
-            console.warn('Unable to show timer notification:', error);
-            try {
-              new Notification('🚨 FOCUS MODE ACTIVE', {
-                body: 'The study timer is running. Do not scroll! Tap here to return to your work.',
-                tag: 'study-timer',
-                requireInteraction: true,
-                vibrate: [200, 100, 200],
-                icon: '/icon.png'
-              });
-            } catch (fallbackError) {
-              console.warn('Fallback notification failed:', fallbackError);
-            }
-          });
-      } else {
-        try {
-          new Notification('🚨 FOCUS MODE ACTIVE', {
-            body: 'The study timer is running. Do not scroll! Tap here to return to your work.',
-            tag: 'study-timer',
-            requireInteraction: true,
-            vibrate: [200, 100, 200],
-            icon: '/icon.png'
-          });
-        } catch (error) {
-          console.warn('Unable to show timer notification:', error);
-        }
-      }
-    };
-
-    if (Notification.permission === 'granted') {
-      show();
-      return;
-    }
-
-    requestNotificationPermission().then((permission) => {
-      if (permission === 'granted') show();
-    });
-  }
-
-  function clearTimerNotification() {
-    if (!('Notification' in window) || !navigator.serviceWorker || !navigator.serviceWorker.ready) return;
-
-    navigator.serviceWorker.ready
-      .then((registration) => {
-        if (!registration.getNotifications) return;
-        return registration.getNotifications({ tag: 'study-timer' }).then((notifications) => {
-          notifications.forEach((notification) => notification.close());
-        });
-      })
-      .catch((error) => {
-        console.warn('Unable to clear timer notification:', error);
-      });
-  }
-
   // Theme Logic
   function toggleTheme() { const isLight = document.body.classList.toggle('light'); sv('theme', isLight ? 'light' : 'dark'); renderDietChart(); }
   if(ld('theme','dark') === 'light') document.body.classList.add('light');
@@ -2137,7 +2050,6 @@
         startBtn.style.transform = 'scale(0.9)';
         setTimeout(() => { startBtn.style.transform = ''; }, 150);
       }
-      showTimerNotification();
       try { triggerHaptic('medium'); } catch(e){}
     } else {
       clearInterval(trackerInterval);
@@ -2156,7 +2068,6 @@
         startBtn.style.transform = 'scale(0.9)';
         setTimeout(() => { startBtn.style.transform = ''; }, 150);
       }
-      clearTimerNotification();
       
       if (hours > 0.01) {
         saveToLifestyle(ld('tracker_cat', 'study'), parseFloat(hours));
