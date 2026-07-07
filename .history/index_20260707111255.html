@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Produco Mobile</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel ="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#121212">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>if(window.jspdf && window.jspdf.jsPDF && !window.jsPDF){ window.jsPDF = window.jspdf.jsPDF; }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<style>
+  :root {
+    /* Material Design Dark Theme */
+    --md-sys-color-background: #121212;
+    --md-sys-color-surface: #1E1E1E;
+    --md-sys-color-surface-variant: #2D2D2D;
+    --md-sys-color-on-background: #E3E3E3;
+    --md-sys-color-on-surface: #C4C4C4;
+    --md-sys-color-on-surface-variant: #8E8E8E;
+    --md-sys-color-primary: #c8f069;
+    --md-sys-color-on-primary: #1a1a1a;
+    --md-sys-color-error: #CF6679;
+    --md-sys-color-warning: #f0c069;
+    --md-sys-color-info: #69b4f0;
+    --md-sys-color-outline: #424242;
+    --md-sys-color-success: #81c784;
+
+    /* Liquid Glass: Light Mode Canvas */
+    --mesh-bg-color: #f2f5f9;
+    --orb-1: radial-gradient(circle at 15% 15%, rgba(173, 216, 230, 0.7) 0%, transparent 45%);
+    --orb-2: radial-gradient(circle at 85% 20%, rgba(255, 182, 193, 0.6) 0%, transparent 50%);
+    --orb-3: radial-gradient(circle at 50% 85%, rgba(221, 160, 221, 0.5) 0%, transparent 55%);
+    --orb-4: radial-gradient(circle at 10% 90%, rgba(152, 251, 152, 0.5) 0%, transparent 40%);
+    
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --nav-height: 80px;
+  }
+
+  .light {
+
+    --md-sys-color-background: #F4F2ED;
+    --md-sys-color-surface: #FFFFFF;
+    --md-sys-color-surface-variant: #E8E5E1;
+    --md-sys-color-on-background: #1A1A1A;
+    --md-sys-color-on-surface: #4A4A4A;
+    --md-sys-color-on-surface-variant: #757575;
+    --md-sys-color-primary: #5a8a00;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-warning: #b87500;
+    --md-sys-color-info: #1e6fb8;
+    --md-sys-color-outline: #E0E0E0;
+    --md-sys-color-success: #388e3c;
+
+    --mesh-bg-color: #f2f5f9;
+    --orb-1: radial-gradient(circle at 15% 15%, rgba(173, 216, 230, 0.7) 0%, transparent 45%);
+    --orb-2: radial-gradient(circle at 85% 20%, rgba(255, 182, 193, 0.6) 0%, transparent 50%);
+    --orb-3: radial-gradient(circle at 50% 85%, rgba(221, 160, 221, 0.5) 0%, transparent 55%);
+    --orb-4: radial-gradient(circle at 10% 90%, rgba(152, 251, 152, 0.5) 0%, transparent 40%);
+  }
+
+  body.dark-mode, [data-theme="dark"], body:not(.light) {
+    /* Liquid Glass: Dark Mode Canvas & Text Fixes */
+    --mesh-bg-color: #000000;
+    --orb-1: radial-gradient(circle at 10% 10%, rgba(10, 132, 255, 0.35) 0%, transparent 55%);
+    --orb-2: radial-gradient(circle at 90% 20%, rgba(213, 120, 255, 0.3) 0%, transparent 60%);
+    --orb-3: radial-gradient(circle at 50% 85%, rgba(0, 250, 146, 0.2) 0%, transparent 65%);
+    --orb-4: radial-gradient(circle at 20% 90%, rgba(255, 69, 58, 0.25) 0%, transparent 50%);
+
+    --md-sys-color-on-background: #ffffff !important;
+    --md-sys-color-on-surface: #ffffff !important;
+    --md-sys-color-on-surface-variant: rgba(255, 255, 255, 0.75) !important;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px;
+    overscroll-behavior-y: none;
+    padding-bottom: var(--nav-height);
+  }
+
+  .mesh-background {
+    position: fixed;
+    inset: 0;
+    z-index: -999;
+    background-color: var(--mesh-bg-color);
+    background-image: var(--orb-1), var(--orb-2), var(--orb-3), var(--orb-4);
+    background-attachment: fixed;
+    transition: background-color 0.5s ease;
+    pointer-events: none;
+  }
+
+
+  .liquid-panel {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(32px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .liquid-inner {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  }
+
+  .liquid-card {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(24px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    border-radius: 24px !important;
+    padding: 20px;
+  }
+
+  body.dark-mode .liquid-card, [data-theme="dark"] .liquid-card {
+    background: rgba(30, 30, 30, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .liquid-sub-card {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(16px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  body.dark-mode .liquid-sub-card, [data-theme="dark"] .liquid-sub-card {
+    background: rgba(30, 30, 30, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .liquid-modal {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(32px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    border-radius: 28px !important;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  }
+
+  body.dark-mode .liquid-modal, [data-theme="dark"] .liquid-modal {
+    background: rgba(30, 30, 30, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .liquid-btn {
+    background: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(16px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    color: inherit !important;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.2s ease !important;
+    cursor: pointer;
+  }
+
+  .liquid-btn:active {
+    transform: scale(0.96) !important;
+    background: rgba(255, 255, 255, 0.45) !important;
+  }
+
+  .glass-icon-btn {
+    background: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface) !important;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+  }
+  .glass-icon-btn:active {
+    transform: scale(0.9) !important;
+    background: rgba(255, 255, 255, 0.5) !important;
+  }
+
+  .liquid-slider-track {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--slider-count, 2), minmax(0, 1fr));
+    align-items: center;
+    /* Lockdown: uniform inner padding so the pill has equal breathing room left/right */
+    padding: 4px !important;
+    box-sizing: border-box !important;
+    border-radius: 999px;
+    margin: 16px 0 24px;
+    min-height: 52px;
+    overflow: hidden;
+  }
+
+  .liquid-slider-pill {
+    position: absolute !important;
+    left: 0 !important;
+    top: 4px !important;
+    height: calc(100% - 8px) !important;
+    border-radius: 99px;
+    z-index: 1;
+    margin: 0 !important;
+    transform-origin: center;
+    will-change: transform, width;
+    transition: none !important;
+  }
+
+  .liquid-slider-label {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: color 0.4s ease;
+    margin: 0 !important;
+    cursor: pointer;
+  }
+
+  .liquid-slider-label.active {
+    color: var(--md-sys-color-on-background);
+  }
+
+  body.dark-mode .liquid-panel, [data-theme="dark"] .liquid-panel {
+    background: rgba(30, 30, 30, 0.4) !important;
+    backdrop-filter: blur(32px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(120%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  body.dark-mode .liquid-inner, [data-theme="dark"] .liquid-inner {
+    background: rgba(0, 0, 0, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  body.dark-mode .liquid-btn, [data-theme="dark"] .liquid-btn {
+    background: rgba(50, 50, 50, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  body.dark-mode .liquid-btn:active, [data-theme="dark"] .liquid-btn:active {
+    background: rgba(70, 70, 70, 0.5) !important;
+  }
+
+  /* App Bar & Nav */
+  .app-bar {
+    position: sticky; top: 0; z-index: 100; background: transparent !important;
+    padding: calc(16px + env(safe-area-inset-top)) 20px 16px 20px; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: none;
+  }
+  .app-bar-title { 
+    font-size: 24px; 
+    font-weight: 700; 
+    letter-spacing: -0.5px; 
+    color: var(--md-sys-color-on-background) !important; /* Forces Prod and co to be white in dark mode */
+  }
+  .app-bar-title span { 
+    color: var(--md-sys-color-primary) !important; /* Forces the u to be green */
+  }
+  .back-btn { display:none; background:none; border:none; color:var(--md-sys-color-on-background); font-size:24px; cursor:pointer; }
+  .back-btn.visible { display:block; }
+  .menu-btn {
+    background: none; border: none; color: var(--md-sys-color-on-background); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; padding: 4px;
+  }
+
+  .app-logo {
+    width: 28px; 
+    height: 28px; 
+    object-fit: contain; 
+    border-radius: 4px;
+  }
+
+  /* Sliding Side Navigation */
+  .side-nav-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .side-nav-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .side-nav {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 280px; max-width: 85vw;
+    background: transparent !important; z-index: 3001;
+    transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    display: flex; flex-direction: column; border-right: none; border: none; box-shadow: none;
+  }
+  .side-nav.open { transform: translateX(0); }
+
+  .side-nav-header {
+    padding: 32px 24px 24px 24px; border-bottom: 1px solid var(--md-sys-color-outline);
+  }
+  .side-nav-content {
+    flex: 1; overflow-y: auto; padding: 12px 0;
+  }
+  .side-nav-item {
+    padding: 14px 24px; font-size: 16px; font-weight: 500; color: var(--md-sys-color-on-background);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .side-nav-item:active, .side-nav-item:hover {
+    background: rgba(255,255,255,0.14);
+    color: var(--md-sys-color-primary);
+  }
+
+  /* --- 1. Floating Dynamic Liquid Dock --- */
+  .bottom-nav, #bottomNav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 32px);
+    max-width: 400px;
+    height: 64px;
+    border-radius: 999px !important;
+    padding: 0 8px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(32px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(32px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    z-index: 1000;
+  }
+
+  body.dark-mode .bottom-nav, [data-theme="dark"] .bottom-nav,
+  body.dark-mode #bottomNav, [data-theme="dark"] #bottomNav {
+    background: rgba(30, 30, 30, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* --- 2. Horizontal Nav Items --- */
+  .bottom-nav .nav-item, #bottomNav .nav-item {
+    flex-direction: row !important;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    height: 48px;
+    border-radius: 999px;
+    z-index: 2;
+    background: transparent !important;
+  }
+
+  /* Fix SVG margins for horizontal layout */
+  .bottom-nav .nav-item svg, #bottomNav .nav-item svg { margin-bottom: 0 !important; flex-shrink: 0; }
+
+  /* --- 3. The Expanding Text Magic --- */
+  .bottom-nav .nav-item span, #bottomNav .nav-item span {
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-left: -4px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: max-width 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.5s ease,
+                margin-left 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+  }
+
+  .bottom-nav .nav-item.active span, #bottomNav .nav-item.active span {
+    max-width: 100px;
+    opacity: 1;
+    margin-left: 0;
+  }
+
+  /* --- 4. The Perfect Glass Pill --- */
+  /* --- Phase 1: GPU-Accelerated Physics Pill --- */
+  .nav-liquid-pill {
+    position: absolute;
+    left: 0;
+    height: 48px;
+    top: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+    z-index: 1;
+    transform-origin: center;
+    will-change: transform, width;
+  }
+
+  body.dark-mode .nav-liquid-pill, [data-theme="dark"] .nav-liquid-pill {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  }
+
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--md-sys-color-on-surface-variant); font-size: 12px; font-weight: 500;
+    padding: 8px 12px; border-radius: var(--radius-md); transition: all 0.2s ease; cursor: pointer;
+  }
+  .nav-item.active { color: var(--md-sys-color-primary) !important; }
+  .nav-item.active .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
+  }
+
+  .glass-dock {
+    background: rgba(255, 255, 255, 0.35) !important;
+    backdrop-filter: blur(28px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.7) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.6) !important;
+  }
+
+  body.dark-mode .glass-dock,
+  [data-theme="dark"] .glass-dock {
+    background: rgba(20, 20, 20, 0.45) !important;
+    backdrop-filter: blur(28px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+  }
+
+  /* Hub Tile Squish Physics */
+  .hub-tile:active {
+    transform: scale(0.96) !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+  }
+  body.dark-mode .hub-tile:active, [data-theme="dark"] .hub-tile:active {
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Layout & Cards */
+  html { scroll-behavior: smooth; }
+  * { -ms-overflow-style: none; scrollbar-width: none; }
+  *::-webkit-scrollbar { width: 0; height: 0; }
+
+  .page { display: none; padding: 20px; }
+  .page.active { display: block; }
+  .page-enter { animation: pageEnter 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes pageEnter { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: rgba(255, 255, 255, 0.24);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+  body.dark-mode .card, [data-theme="dark"] .card {
+    background: rgba(30, 30, 30, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .card-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--md-sys-color-on-background); }
+
+  .tx-box,
+  .cf-box,
+  .cf-card,
+  .streak-card,
+  .daily-card,
+  .list-tile,
+  .agenda-item,
+  .agenda-event,
+  .day-accordion,
+  .segment-nav,
+  .note-card {
+    background: rgba(255, 255, 255, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+  body.dark-mode .tx-box,
+  body.dark-mode .cf-box,
+  body.dark-mode .cf-card,
+  body.dark-mode .streak-card,
+  body.dark-mode .daily-card,
+  body.dark-mode .list-tile,
+  body.dark-mode .agenda-item,
+  body.dark-mode .agenda-event,
+  body.dark-mode .day-accordion,
+  body.dark-mode .segment-nav,
+  body.dark-mode .note-card,
+  [data-theme="dark"] .tx-box,
+  [data-theme="dark"] .cf-box,
+  [data-theme="dark"] .cf-card,
+  [data-theme="dark"] .streak-card,
+  [data-theme="dark"] .daily-card,
+  [data-theme="dark"] .list-tile,
+  [data-theme="dark"] .agenda-item,
+  [data-theme="dark"] .agenda-event,
+  [data-theme="dark"] .day-accordion,
+  [data-theme="dark"] .segment-nav,
+  [data-theme="dark"] .note-card {
+    background: rgba(30, 30, 30, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Reusable Header */
+  .module-header, .month-navigation-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .module-month, .current-month-display { font-size: 20px; font-weight: 600; text-align: center; flex: 1; }
+  .glass-icon-btn, .icon-btn {
+    background: var(--md-sys-color-surface-variant); border: none; color: var(--md-sys-color-on-background);
+    width: 40px; height: 40px; border-radius: 50%; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .glass-icon-btn { min-width: 40px; }
+
+  /* Smart Insights Cards */
+  .insight-card { display: flex; gap: 12px; padding: 14px; border-radius: var(--radius-md); align-items: flex-start; border: 1px solid transparent; }
+  .insight-card.critical { background: rgba(207, 102, 121, 0.1); border-color: rgba(207, 102, 121, 0.3); }
+  .insight-card.warning { background: rgba(240, 192, 105, 0.1); border-color: rgba(240, 192, 105, 0.3); }
+  .insight-card.info { background: rgba(105, 180, 240, 0.1); border-color: rgba(105, 180, 240, 0.3); }
+  .insight-card.success { background: rgba(129, 199, 132, 0.1); border-color: rgba(129, 199, 132, 0.3); }
+
+  .insight-icon { font-size: 18px; margin-top: 2px; }
+  .insight-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--md-sys-color-on-background); }
+  .insight-desc { font-size: 13px; color: var(--md-sys-color-on-surface-variant); line-height: 1.4; }
+
+  /* Calendar */
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+  .cal-dow { text-align: center; font-size: 12px; color: var(--md-sys-color-on-surface-variant); font-weight: 600; margin-bottom: 8px; }
+  .cal-day {
+    aspect-ratio: 1;
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 500; position: relative;
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+  }
+  body.dark-mode .cal-day, [data-theme="dark"] .cal-day {
+    background: rgba(24,24,24,0.28);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .cal-day.today { border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
+  .cal-day.other-month { opacity: 0.3; }
+  .cal-day.has-data::after { content: ''; position: absolute; bottom: 4px; width: 6px; height: 6px; background: var(--md-sys-color-primary); border-radius: 50%; }
+
+  /* Daily List Cards (Lifestyle & Diet) */
+  .daily-card {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.06);
+  }
+  body.dark-mode .daily-card, [data-theme="dark"] .daily-card {
+    background: rgba(24,24,24,0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .daily-card:active { background: rgba(255,255,255,0.12); }
+  .daily-info h3 { font-size: 16px; margin-bottom: 4px; }
+  .daily-info p { font-size: 13px; color: var(--md-sys-color-on-surface-variant); }
+  
+  /* Progress Ring */
+  .progress-ring {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: conic-gradient(var(--md-sys-color-primary) var(--p), rgba(255,255,255,0.16) 0);
+    display: flex; align-items: center; justify-content: center; position: relative;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.24);
+  }
+  .progress-ring::before { content: ""; width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+  .progress-ring span { position: absolute; font-size: 11px; font-weight: 700; color: var(--md-sys-color-on-background); }
+
+  /* --- Solid Theme Highlight for Active Timer --- */
+  .bottom-nav .nav-item.timer-live svg,
+  .bottom-nav .nav-item.timer-live span,
+  #nav-focus.timer-live svg,
+  #nav-focus.timer-live span {
+    color: var(--md-sys-color-primary) !important;
+    font-weight: 700 !important;
+  }
+
+  /* Focus Engine */
+  .focus-cat-btn {
+    background: transparent; border: 1px solid var(--md-sys-color-outline);
+    color: var(--md-sys-color-on-surface); padding: 8px 16px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  }
+  .focus-cat-btn.active {
+    background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);
+    border-color: var(--md-sys-color-primary);
+  }
+
+  /* --- Liquid Glass Active Selected State --- */
+  .liquid-btn.active-liquid-tag {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 1) !important;
+    color: var(--md-sys-color-primary) !important;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 1) !important;
+    transform: scale(1.02);
+  }
+
+  body.dark-mode .liquid-btn.active-liquid-tag, [data-theme="dark"] .liquid-btn.active-liquid-tag {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+  }
+
+  /* Bottom Sheets */
+  .bottom-sheet-overlay {
+    position: fixed; inset: 0; background: rgba(8, 12, 28, 0.64); z-index: 2000;
+    display: none; align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .bottom-sheet-overlay.open { display: flex; }
+  .bottom-sheet {
+    background: rgba(255, 255, 255, 0.66);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    width: 100%; max-width: 600px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    animation: slideUp 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  body.dark-mode .bottom-sheet, [data-theme="dark"] .bottom-sheet {
+    background: rgba(20, 20, 20, 0.64);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  
+  .sheet-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+  
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;}
+  .mobile-input, .mobile-select {
+    width: 100%; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-sm); color: var(--md-sys-color-on-background); padding: 14px;
+    font-family: inherit; font-size: 16px; min-height: 48px;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    appearance: none; -webkit-appearance: none;
+  }
+  .mobile-input:focus, .mobile-select:focus { outline: none; border-color: var(--md-sys-color-primary); background: rgba(255,255,255,0.2); box-shadow: 0 0 0 4px rgba(200,240,105,0.12); }
+  .mobile-select {
+    background-image: linear-gradient(45deg, transparent 50%, var(--md-sys-color-on-surface-variant) 50%), linear-gradient(135deg, var(--md-sys-color-on-surface-variant) 50%, transparent 50%);
+    background-position: calc(100% - 16px) center, calc(100% - 12px) center;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+  }
+  .liquid-select { width: 100%; appearance: none; border-radius: var(--radius-sm); padding: 14px; }
+  
+  /* Diet Checklist */
+  .diet-item-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0; border-bottom: 1px solid var(--md-sys-color-outline);
+    transition: background-color 0.3s ease, border-color 0.3s ease !important;
+  }
+  .diet-item-card.checked {
+    background: rgba(74, 222, 128, 0.2) !important;
+    border: 1px solid rgba(74, 222, 128, 0.5) !important;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .checklist-label { font-size: 16px; font-weight: 500; }
+  .custom-checkbox {
+    width: 28px; height: 28px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
+    background: transparent; display: flex; align-items: center; justify-content: center; transition: all 0.2s; cursor: pointer;
+  }
+  .custom-checkbox.checked { background: var(--md-sys-color-primary); border-color: var(--md-sys-color-primary); }
+  .custom-checkbox.checked::after { content: "✓"; color: var(--md-sys-color-on-primary); font-weight: bold; font-size: 18px; }
+
+  /* Buttons */
+  .btn-primary, .btn-secondary {
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  .btn-primary { background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); border: none; width: 100%; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; margin-top: 16px; cursor: pointer; }
+  .btn-secondary { background: transparent; color: var(--md-sys-color-on-background); border: 1px solid var(--md-sys-color-outline); width: 100%; padding: 16px; border-radius: var(--radius-md); font-size: 16px; font-weight: 600; margin-top: 8px; cursor: pointer; }
+  .btn-primary:active, .btn-secondary:active { transform: scale(0.98); box-shadow: 0 10px 22px rgba(0,0,0,0.08); }
+
+  /* Charts */
+  .chart-container { position: relative; height: 200px; width: 100%; margin-bottom: 20px; }
+
+  #page-stats .view-section,
+  #page-stats header {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* --- Liquid Glass Doughnut Chart --- */
+  .liquid-doughnut-chart {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    /* The mask hollows out the center of the circle to create a perfect ring */
+    -webkit-mask: radial-gradient(circle, transparent 55%, black 56%);
+    mask: radial-gradient(circle, transparent 55%, black 56%);
+    box-shadow: inset 0 4px 12px rgba(255,255,255,0.4);
+  }
+
+  .liquid-legend-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+  }
+
+  /* More / Transactions / Mood / Streaks */
+  .cal-day.mood-good { background: rgba(200,240,105,0.2); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
+  .cal-day.mood-normal { background: rgba(240,192,105,0.2); border-color: var(--md-sys-color-warning); color: var(--md-sys-color-warning); }
+  .cal-day.mood-bad { background: rgba(207,102,121,0.2); border-color: var(--md-sys-color-error); color: var(--md-sys-color-error); }
+  .list-tile {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 16px;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.06);
+  }
+  body.dark-mode .list-tile, [data-theme="dark"] .list-tile {
+    background: rgba(22, 22, 22, 0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.24);
+  }
+  .list-tile svg { color: var(--md-sys-color-primary); }
+  .tx-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .tx-box {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 12px 30px rgba(0,0,0,0.06);
+  }
+  body.dark-mode .tx-box, [data-theme="dark"] .tx-box {
+    background: rgba(24, 24, 24, 0.32);
+    border: 1px solid rgba(255,255,255,0.14);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 30px rgba(0,0,0,0.22);
+  }
+  .tx-box h4 { font-size: 12px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
+  .agenda-card { margin-top: 16px; }
+  .agenda-list { display: flex; flex-direction: column; gap: 10px; }
+  .agenda-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: var(--radius-sm);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+  body.dark-mode .agenda-item, [data-theme="dark"] .agenda-item {
+    background: rgba(24, 24, 24, 0.3);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .agenda-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--md-sys-color-primary); margin-top: 2px; flex-shrink: 0; }
+  .agenda-item.done .agenda-text { color: var(--md-sys-color-on-surface-variant); text-decoration: line-through; opacity: 0.7; }
+  .agenda-empty { padding: 18px 8px; text-align: center; color: var(--md-sys-color-on-surface-variant); font-size: 14px; }
+  .agenda-event {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    color: var(--md-sys-color-on-background);
+    white-space: pre-wrap;
+    line-height: 1.5;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+  body.dark-mode .agenda-event, [data-theme="dark"] .agenda-event {
+    background: rgba(24, 24, 24, 0.3);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .tx-box .val { font-size: 20px; font-weight: 600; font-family: monospace; }
+  .val.green { color: var(--md-sys-color-success); }
+  .val.red { color: var(--md-sys-color-error); }
+  .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
+  body.dark-mode .tx-item, [data-theme="dark"] .tx-item { border-bottom-color: rgba(255,255,255,0.1); }
+  .tx-item:last-child { border-bottom: none; }
+  .tx-item-left { display: flex; flex-direction: column; gap: 4px; }
+  .tx-title { font-size: 16px; font-weight: 500; }
+  .tx-type { font-size: 12px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.18); width: fit-content; }
+  body.dark-mode .tx-type, [data-theme="dark"] .tx-type { background: rgba(255,255,255,0.08); }
+  .tx-amt { font-family: monospace; font-size: 16px; font-weight: 600; }
+  .tx-del { background:none; border:none; color: var(--md-sys-color-error); font-size: 20px; padding: 4px 8px; cursor: pointer; }
+  .streak-card { background: rgba(255, 255, 255, 0.24); border: 1px solid rgba(255, 255, 255, 0.55); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+  body.dark-mode .streak-card, [data-theme="dark"] .streak-card { background: rgba(30, 30, 30, 0.28); border: 1px solid rgba(255, 255, 255, 0.16); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  .streak-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+  .streak-title { font-size: 18px; font-weight: 600; }
+  .streak-meta { font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px; }
+  .streak-bar-bg { height: 8px; background: rgba(255, 255, 255, 0.18); border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+  body.dark-mode .streak-bar-bg, [data-theme="dark"] .streak-bar-bg { background: rgba(255,255,255,0.08); }
+  .streak-bar-fill { height: 100%; background: var(--md-sys-color-primary); transition: width 0.3s; }
+  .note-card {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
+  }
+  body.dark-mode .note-card, [data-theme="dark"] .note-card {
+    background: rgba(24, 24, 24, 0.28);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .note-chip { font-size: 10px; padding: 4px 8px; background: rgba(255,255,255,0.12); border-radius: 4px; margin-top: 8px; display: inline-block; }
+  .cf-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .cf-box {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
+  }
+  body.dark-mode .cf-box, [data-theme="dark"] .cf-box {
+    background: rgba(24, 24, 24, 0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .cf-box h4 { font-size: 11px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
+  .cf-box .val { font-size: 18px; font-weight: 600; font-family: monospace; }
+  .cf-filter-sel {
+    background: rgba(255,255,255,0.16);
+    color: var(--md-sys-color-on-background);
+    border: 1px solid rgba(255,255,255,0.28);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    outline: none;
+  }
+  body.dark-mode .cf-filter-sel, [data-theme="dark"] .cf-filter-sel {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.18);
+  }
+  .cf-card {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
+  }
+  body.dark-mode .cf-card, [data-theme="dark"] .cf-card {
+    background: rgba(24,24,24,0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .cf-card.paid { border-color: var(--md-sys-color-success); background: rgba(129, 199, 132, 0.1); }
+  .cf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .cf-title { font-size: 16px; font-weight: 600; color: var(--md-sys-color-on-background); }
+  .cf-amt { font-family: monospace; font-size: 18px; font-weight: 600; }
+  .cf-meta { font-size: 12px; color: var(--md-sys-color-on-surface-variant); line-height: 1.4; margin-top: 4px; }
+
+  .status-chip { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-top: 8px; }
+  .status-chip.pending { background: rgba(207, 102, 121, 0.18); color: var(--md-sys-color-error); }
+  .status-chip.paid { background: rgba(129, 199, 132, 0.18); color: var(--md-sys-color-success); }
+
+  .cf-month-picker { position: relative; width: 100%; }
+  .cf-month-dropdown {
+    position: absolute; bottom: 100%; left: 0; right: 0;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.32);
+    border-radius: var(--radius-sm);
+    z-index: 3000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    padding: 8px 0;
+    box-shadow: 0 -4px 18px rgba(0,0,0,0.15);
+  }
+  body.dark-mode .cf-month-dropdown, [data-theme="dark"] .cf-month-dropdown {
+    background: rgba(24,24,24,0.28);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 -4px 18px rgba(0,0,0,0.22);
+  }
+  .cf-month-option { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; color: var(--md-sys-color-on-background); cursor: pointer; }
+
+  .liquid-fab, .fab, .add-btn, .plus-btn {
+    position: fixed;
+    bottom: calc(var(--nav-height) + 20px);
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    color: var(--md-sys-color-primary) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.3), rgba(74, 222, 128, 0.05)) !important;
+    backdrop-filter: blur(20px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+    box-shadow:
+      0 12px 32px 0 rgba(0, 0, 0, 0.12),
+      inset 0 4px 6px rgba(255, 255, 255, 0.7),
+      inset 0 -4px 6px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    z-index: 900;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease !important;
+  }
+  .liquid-fab:active, .fab:active, .add-btn:active, .plus-btn:active {
+    transform: scale(0.92) !important;
+    box-shadow:
+      0 4px 12px 0 rgba(0, 0, 0, 0.1),
+      inset 0 2px 4px rgba(255, 255, 255, 0.5),
+      inset 0 -2px 4px rgba(0, 0, 0, 0.05) !important;
+  }
+  body.dark-mode .liquid-fab, [data-theme="dark"] .liquid-fab,
+  body.dark-mode .fab, [data-theme="dark"] .fab,
+  body.dark-mode .add-btn, [data-theme="dark"] .add-btn,
+  body.dark-mode .plus-btn, [data-theme="dark"] .plus-btn {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.02)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow:
+      0 12px 32px 0 rgba(0, 0, 0, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Attendance / Foundation */
+  .segment-nav {
+    display: flex;
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.38);
+    border-radius: var(--radius-sm);
+    margin: 20px;
+    padding: 4px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  body.dark-mode .segment-nav, [data-theme="dark"] .segment-nav {
+    background: rgba(24,24,24,0.3);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .segment-btn {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: 6px;
+    transition: 0.2s;
+    cursor: pointer;
+  }
+  .segment-btn.active {
+    background: rgba(255,255,255,0.34);
+    color: var(--md-sys-color-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  body.dark-mode .segment-btn.active, [data-theme="dark"] .segment-btn.active {
+    background: rgba(255,255,255,0.16);
+  }
+  .segment-content { display: none; padding: 0 20px; animation: fadeIn 0.3s; }
+  .segment-content.active { display: block; }
+  .att-btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .att-btn {
+    flex: 1 1 calc(33% - 8px);
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.18);
+    color: var(--md-sys-color-on-background);
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  body.dark-mode .att-btn, [data-theme="dark"] .att-btn {
+    background: rgba(24,24,24,0.28);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .att-btn.active-present { background: rgba(129, 199, 132, 0.2); border-color: var(--md-sys-color-success); color: var(--md-sys-color-success); }
+  .att-btn.active-absent { background: rgba(207, 102, 121, 0.2); border-color: var(--md-sys-color-error); color: var(--md-sys-color-error); }
+  .att-btn.active-other { background: rgba(105, 180, 240, 0.2); border-color: var(--md-sys-color-info); color: var(--md-sys-color-info); }
+  .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
+  body.dark-mode .stat-row, [data-theme="dark"] .stat-row { border-bottom-color: rgba(255,255,255,0.1); }
+  .stat-row:last-child { border-bottom: none; }
+  .day-accordion {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.06);
+  }
+  body.dark-mode .day-accordion, [data-theme="dark"] .day-accordion {
+    background: rgba(24,24,24,0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .day-header {
+    padding: 16px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.24);
+  }
+  body.dark-mode .day-header, [data-theme="dark"] .day-header {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .day-slots { display: none; padding: 12px; }
+  .day-accordion.open .day-slots { display: block; }
+  .slot-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,0.18); font-size: 14px; cursor: pointer; }
+  .slot-item:last-child { border-bottom: none; }
+  .gov-check-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
+  .gov-check-row:last-child { border-bottom: none; }
+  .checkbox-pill {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.14);
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid rgba(255,255,255,0.22);
+  }
+  body.dark-mode .checkbox-pill, [data-theme="dark"] .checkbox-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255,255,255,0.14);
+  }
+  .checkbox-pill.checked { background: rgba(200, 240, 105, 0.2); border-color: var(--md-sys-color-primary); color: var(--md-sys-color-primary); }
+  .prog-bar-bg { height: 6px; background: rgba(150, 150, 150, 0.2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+
+  .glass-dropdown-item {
+    padding: 14px 20px;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface);
+    font-weight: 500;
+    transition: background 0.2s ease;
+  }
+  .glass-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  body.dark-mode .glass-dropdown-item:hover, [data-theme="dark"] .glass-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .prog-bar-fill { height: 100%; background: var(--md-sys-color-primary); transition: width 0.3s; }
+
+  /* --- Liquid Swirl Internal Animation --- */
+  @keyframes liquidSwirl {
+    0% { transform: rotate(0deg) scale(1.5); }
+    100% { transform: rotate(360deg) scale(1.5); }
+  }
+
+  .liquid-timer-active::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(74, 222, 128, 0.15) 25%, rgba(10, 132, 255, 0.15) 50%, rgba(213, 120, 255, 0.15) 75%, transparent 100%);
+    filter: blur(24px);
+    animation: liquidSwirl 8s linear infinite;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .liquid-timer-active::before {
+    opacity: 1;
+  }
+
+  body.dark-mode .liquid-timer-active::before, [data-theme="dark"] .liquid-timer-active::before {
+    background: conic-gradient(from 0deg, transparent 0%, rgba(74, 222, 128, 0.3) 25%, rgba(10, 132, 255, 0.3) 50%, rgba(213, 120, 255, 0.3) 75%, transparent 100%);
+  }
+
+  /* --- Liquid Glass Active Breathing --- */
+  @keyframes liquidPulseLight {
+    0% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); }
+    50% { transform: scale(1.02); box-shadow: 0 20px 60px rgba(74, 222, 128, 0.2), inset 0 2px 4px rgba(255,255,255,0.9); }
+    100% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); }
+  }
+
+  @keyframes liquidPulseDark {
+    0% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
+    50% { transform: scale(1.02); box-shadow: 0 20px 60px rgba(74, 222, 128, 0.15), inset 0 2px 4px rgba(255,255,255,0.25); }
+    100% { transform: scale(1); box-shadow: 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1); }
+  }
+
+  .liquid-timer-active {
+    animation: liquidPulseLight 4s ease-in-out infinite !important;
+    border: 1px solid rgba(74, 222, 128, 0.6) !important;
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  body.dark-mode .liquid-timer-active, [data-theme="dark"] .liquid-timer-active {
+    animation: liquidPulseDark 4s ease-in-out infinite !important;
+    border: 1px solid rgba(74, 222, 128, 0.4) !important;
+  }
+
+  /* Red Stop Button Morph State */
+  .liquid-btn-stop {
+    background: rgba(255, 69, 58, 0.25) !important;
+    border-color: rgba(255, 69, 58, 0.5) !important;
+    color: #ff453a !important;
+  }
+  .liquid-input {
+    width: 100%;
+    max-width: 120px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.32);
+    color: var(--md-sys-color-on-background);
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  body.dark-mode .liquid-input, [data-theme="dark"] .liquid-input {
+    background: rgba(24,24,24,0.32);
+    border-color: rgba(255,255,255,0.14);
+  }
+
+  .note-card {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
+  }
+  body.dark-mode .note-card, [data-theme="dark"] .note-card {
+    background: rgba(24, 24, 24, 0.28);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .note-chip { font-size: 10px; padding: 4px 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 8px; display: inline-block; }
+
+  /* Phase 5: College Fees UI */
+  .cf-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .cf-box {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.4);
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
+  }
+  body.dark-mode .cf-box, [data-theme="dark"] .cf-box {
+    background: rgba(24, 24, 24, 0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .cf-box h4 { font-size: 11px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; margin-bottom: 6px; }
+  .cf-box .val { font-size: 18px; font-weight: 600; font-family: monospace; }
+  .val.green { color: var(--md-sys-color-success); }
+  .val.red { color: var(--md-sys-color-error); }
+
+  .cf-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; scrollbar-width: none; }
+  .cf-filters::-webkit-scrollbar { display: none; }
+  .cf-filter-sel {
+    background: rgba(255,255,255,0.16);
+    color: var(--md-sys-color-on-background);
+    border: 1px solid rgba(255,255,255,0.28);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    outline: none;
+  }
+  body.dark-mode .cf-filter-sel, [data-theme="dark"] .cf-filter-sel {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.18);
+  }
+
+  .cf-card {
+    background: rgba(255, 255, 255, 0.18);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.35), 0 10px 24px rgba(0,0,0,0.05);
+  }
+  body.dark-mode .cf-card, [data-theme="dark"] .cf-card {
+    background: rgba(24,24,24,0.32);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 24px rgba(0,0,0,0.18);
+  }
+  .cf-card.paid { border-color: var(--md-sys-color-success); background: rgba(129, 199, 132, 0.1); }
+  .cf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+  .cf-title { font-size: 16px; font-weight: 600; color: var(--md-sys-color-on-background); }
+  .cf-amt { font-family: monospace; font-size: 18px; font-weight: 600; }
+  .cf-meta { font-size: 12px; color: var(--md-sys-color-on-surface-variant); line-height: 1.4; margin-top: 4px; }
+
+  .status-chip { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-top: 8px; }
+  .status-chip.pending { background: rgba(207, 102, 121, 0.2); color: var(--md-sys-color-error); }
+  .status-chip.paid { background: rgba(129, 199, 132, 0.2); color: var(--md-sys-color-success); }
+
+  .cf-month-picker { position: relative; width: 100%; }
+  .cf-month-dropdown {
+    position: absolute; bottom: 100%; left: 0; right: 0;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.32);
+    border-radius: var(--radius-sm);
+    z-index: 3000;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    padding: 8px 0;
+    box-shadow: 0 -4px 18px rgba(0,0,0,0.15);
+  }
+  body.dark-mode .cf-month-dropdown, [data-theme="dark"] .cf-month-dropdown {
+    background: rgba(24,24,24,0.28);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 -4px 18px rgba(0,0,0,0.22);
+  }
+  .cf-month-option { display: flex; align-items: center; gap: 12px; padding: 10px 16px; font-size: 14px; color: var(--md-sys-color-on-background); cursor: pointer; }
+
+  /* --- Liquid Glass Checkbox & Diet Rows --- */
+  .liquid-checkbox {
+    width: 28px; height: 28px; border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .liquid-checkbox.checked {
+    background: rgba(74, 222, 128, 0.8) !important;
+    border-color: rgba(74, 222, 128, 1) !important;
+    transform: scale(1.1);
+  }
+  .liquid-checkbox.checked::after {
+    content: "✓";
+    color: #1a1a1a;
+    font-weight: 800;
+    font-size: 16px;
+  }
+  body.dark-mode .liquid-checkbox, [data-theme="dark"] .liquid-checkbox {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  /* --- THE BULLETPROOF LIQUID TOGGLE --- */
+  .liquid-toggle {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 32px;
+    flex-shrink: 0; /* Prevents squishing */
+  }
+
+  /* Hide default checkbox */
+  .liquid-toggle input {
+    display: none;
+  }
+
+  /* The Track */
+  .liquid-toggle .toggle-track {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 34px;
+    transition: background-color 0.4s ease, border-color 0.4s ease;
+  }
+
+  /* The Glass Ball (Generated purely by CSS, cannot disappear) */
+  .liquid-toggle .toggle-track::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px; /* Perfect 2px gap on left */
+    bottom: 2px; /* Perfect 2px gap on bottom */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 1);
+    transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Checked State: Track goes green */
+  .liquid-toggle input:checked + .toggle-track {
+    background-color: rgba(74, 222, 128, 0.5);
+    border-color: rgba(74, 222, 128, 0.8);
+  }
+
+  /* Checked State: Ball moves right */
+  .liquid-toggle input:checked + .toggle-track::before {
+    transform: translateX(20px); /* Perfect mathematical distance for symmetry */
+  }
+  
+  /* Dark-mode header and liquid-glass fixes: remove harsh white top highlight */
+  /* --- VISCERAL MICRO-INTERACTIONS --- */
+  /* Smooth Color & Background Fades + Native Squish */
+  button, .nav-item, .liquid-btn, .liquid-toggle .toggle-track, .diet-item-card, .fab-button {
+    transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+                transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+
+  button:active, .nav-item:active, .liquid-btn:active, .fab-button:active {
+    transform: scale(0.94) !important;
+    opacity: 0.9;
+  }
+
+  /* Ensure bottom nav icons compress from bottom center */
+  .bottom-nav .nav-item { transform-origin: center bottom; }
+
+  body.dark-mode header,
+  [data-theme="dark"] header,
+  body.dark-mode .app-bar,
+  [data-theme="dark"] .app-bar,
+  body.dark-mode .top-bar {
+    border-top: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Soften/remove inset highlights on liquid surfaces in dark mode */
+  body.dark-mode .liquid-panel,
+  [data-theme="dark"] .liquid-panel,
+  body.dark-mode .liquid-card,
+  [data-theme="dark"] .liquid-card,
+  body.dark-mode .liquid-sub-card,
+  [data-theme="dark"] .liquid-sub-card,
+  body.dark-mode .liquid-inner,
+  [data-theme="dark"] .liquid-inner {
+    /* Keep dark glass look but remove white inset highlight */
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+  }
+
+  /* Bottom nav and pill: remove inset white sheen in dark mode */
+  body.dark-mode .nav-liquid-pill,
+  [data-theme="dark"] .nav-liquid-pill,
+  body.dark-mode .bottom-nav,
+  [data-theme="dark"] .bottom-nav {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+  }
+
+  body.dark-mode .liquid-btn,
+  [data-theme="dark"] .liquid-btn {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+  }
+
+  /* Highly specific override to remove top highlight on the app header in dark mode */
+  body.dark-mode .app-bar.liquid-panel,
+  [data-theme="dark"] .app-bar.liquid-panel {
+    border-top: none !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+  }
+</style>
+</head>
+<body>
+<div class="mesh-background"></div>
+
+<header class="app-bar liquid-panel" style="padding: calc(16px + env(safe-area-inset-top)) 20px 16px 20px; border-radius: 0 0 24px 24px;">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <button class="back-btn" id="backBtn" onclick="goBackToMore()">←</button>
+    <button id="menuBtn" onclick="openSideNav()" style="background:none; border:none; cursor:pointer; display:flex; align-items:center; padding: 0;" aria-label="Open navigation menu" type="button">
+      <img src="icon.png" alt="Menu" class="app-logo">
+    </button>
+    <div class="app-bar-title" id="appTitle" style="color: var(--md-sys-color-on-background) !important;">
+      Prod<span style="color: var(--md-sys-color-primary) !important;">u</span>co
+    </div>
+    <span id="moduleTitle" style="display:none;"></span>
+  </div>
+  <svg id="themeToggle" onclick="toggleTheme()" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+</header>
+
+<div class="side-nav-overlay" id="sideNavOverlay" onclick="closeSideNav()"></div>
+<div class="side-nav liquid-panel" id="sideNav" style="border-radius: 0 24px 24px 0; overflow: hidden;">
+  <div class="side-nav-header">
+    <div class="app-bar-title" style="font-size: 28px; color: var(--md-sys-color-on-background) !important;">
+      Prod<span style="color: var(--md-sys-color-primary) !important;">u</span>co
+    </div>
+    <div style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">Your Personal Dashboard</div>
+  </div>
+  <div class="side-nav-content">
+    <div class="side-nav-item" onclick="switchTab('home'); closeSideNav();">Home</div>
+    <div class="side-nav-item" onclick="switchTab('calendar'); closeSideNav();">Calendar</div>
+    <div class="side-nav-item" onclick="switchTab('health'); closeSideNav();">Health</div>
+    <!-- Stats & Analytics removed -->
+    <div style="height: 1px; background: var(--md-sys-color-outline); margin: 12px 0;"></div>
+    <div class="side-nav-item" onclick="openSubPage('transactions', 'Transactions'); closeSideNav();">Transactions</div>
+    <div class="side-nav-item" onclick="openSubPage('mood', 'Mood Tracker'); closeSideNav();">Mood Tracker</div>
+    <div class="side-nav-item" onclick="openSubPage('streak', 'Streaks'); closeSideNav();">Streaks</div>
+    <div class="side-nav-item" onclick="openSubPage('attendance', 'Attendance Tracker'); closeSideNav();">Attendance</div>
+    <div class="side-nav-item" onclick="openSubPage('foundation', 'Foundation (Gov)'); closeSideNav();">Foundation</div>
+    <div class="side-nav-item" onclick="openSubPage('fees', 'College Fees'); closeSideNav();">College Fees</div>
+
+    <div style="height: 1px; background: var(--md-sys-color-outline); margin: 12px 0;"></div>
+    <div style="padding: 12px 24px; font-size: 12px; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">Data & Settings</div>
+
+    <div class="side-nav-item" onclick="exportData()">
+      <span style="display:flex; align-items:center; gap:12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Backup Data
+      </span>
+    </div>
+
+    <div class="side-nav-item" onclick="document.getElementById('restoreInput').click()">
+      <span style="display:flex; align-items:center; gap:12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        Restore Data
+      </span>
+    </div>
+
+    <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</div>
+
+<main id="content">
+  <section id="page-dashboard" class="page active">
+    <div class="card liquid-panel" style="border-color: rgba(200,240,105,0.2);">
+      <div class="card-title" id="dash-greeting" style="font-size: 22px; margin-bottom: 8px;">Good morning, Anuj</div>
+      <div id="dash-summary" style="font-size: 14px; color: var(--md-sys-color-on-surface-variant);">Loading...</div>
+    </div>
+
+    <div style="font-size: 16px; font-weight: 600; margin: 24px 0 12px 0;">Smart Insights</div>
+    <div id="smart-insights-feed" style="display: flex; flex-direction: column; gap: 12px;"></div>
+  </section>
+
+  <section id="page-calendar" class="page">
+    <div class="card liquid-panel">
+      <div class="module-header">
+        <button class="icon-btn liquid-btn" onclick="calPrev()">←</button>
+        <div class="module-month" id="calMonthLabel"></div>
+        <button class="icon-btn liquid-btn" onclick="calNext()">→</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <div class="card liquid-panel" style="margin-top: 16px;">
+      <div class="card-title" id="agendaTitle" style="margin-bottom: 12px;">Today's Agenda</div>
+      <div id="calAgendaContent"></div>
+    </div>
+  </section>
+
+  <section id="page-focus" class="page">
+    <div class="module-header" style="margin-bottom: 0;">
+      <h2>Focus Engine</h2>
+    </div>
+    
+    <div class="liquid-slider-track liquid-inner" id="focusSliderTrack" style="--slider-count: 2;">
+      <div class="liquid-slider-pill liquid-btn" id="focusSliderPill" style="width: calc(50% - 4px); left: 4px;"></div>
+      
+      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'focusSliderPill', () => switchFocusMode('auto'))" id="label-auto">
+        Auto-Tracker
+      </div>
+      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'focusSliderPill', () => switchFocusMode('pomodoro'))" id="label-pomodoro">
+        Pomodoro
+      </div>
+    </div>
+
+    <div id="focus-seg-tracker" class="segment-content active" style="text-align: center;">
+      <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Counts up. Automatically logs decimal hours to Lifestyle when stopped.</p>
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;" id="trackerCats">
+        <button class="focus-cat-btn focus-category-btn active liquid-btn active-liquid-tag" onclick="selectLiquidTag(this, 'focus-category-btn'); setTrackerCat('study', this)">📚 Study</button>
+        <button class="focus-cat-btn focus-category-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-category-btn'); setTrackerCat('workout', this)">🏋️ Workout</button>
+        <button class="focus-cat-btn focus-category-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-category-btn'); setTrackerCat('screen', this)">📱 Screen</button>
+      </div>
+      <div id="studyTagContainer" style="margin-bottom: 24px; transition: all 0.3s;">
+        <select id="studyTagSelect" class="mobile-select liquid-btn" style="display: none; width: 200px; padding: 8px; font-size: 13px;">
+          <option value="University">🏛️ University Exams</option>
+          <option value="LeetCode">💻 LeetCode / DSA</option>
+          <option value="Hackathon">🚀 Hackathon / Projects</option>
+          <option value="GovPrep">📚 Gov Exam Prep</option>
+        </select>
+
+        <div id="glassDropdownWrapper" style="position: relative; width: 100%; max-width: 250px; margin: 0 auto 24px auto;">
+          <div id="glassDropdownSelected" class="liquid-btn" style="padding: 12px 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;" onclick="toggleGlassDropdown()">
+            <span id="glassDropdownText">🏛️ University Exams</span>
+            <span class="material-symbols-outlined" style="font-size: 20px; transition: transform 0.3s ease;" id="glassDropdownIcon">expand_more</span>
+          </div>
+
+          <div id="glassDropdownMenu" class="liquid-panel" style="display: none; position: absolute; top: calc(100% + 8px); left: 0; width: 100%; border-radius: 20px; z-index: 200; flex-direction: column; overflow: hidden; opacity: 0; transform: translateY(-10px); transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);">
+            <div class="glass-dropdown-item" onclick="selectGlassTag('University Exams', '🏛️')">🏛️ University Exams</div>
+            <div class="glass-dropdown-item" onclick="selectGlassTag('LeetCode / DSA', '💻')">💻 LeetCode / DSA</div>
+            <div class="glass-dropdown-item" onclick="selectGlassTag('Hackathon / Projects', '🚀')">🚀 Hackathon / Projects</div>
+            <div class="glass-dropdown-item" onclick="selectGlassTag('Gov Exam Prep', '📚')">📚 Gov Exam Prep</div>
+          </div>
+        </div>
+      </div>
+      <div id="focusTimerCircle" class="liquid-panel" style="width: 240px; height: 240px; border-radius: 50%; border: 8px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto; position: relative; overflow: hidden; z-index: 1;">
+        <div id="trackerDisplay" style="font-size: 48px; font-weight: 700; font-family: monospace; position: relative; z-index: 2;">00:00:00</div>
+      </div>
+      <button class="btn-primary liquid-btn" id="trackerBtn" onclick="toggleTracker()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
+    </div>
+
+    <div id="focus-seg-pomodoro" class="segment-content" style="text-align: center;">
+      <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Counts down. Alerts you when finished.</p>
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;" id="pomoDurs">
+        <button class="focus-cat-btn focus-time-btn active liquid-btn active-liquid-tag" onclick="selectLiquidTag(this, 'focus-time-btn'); setPomoDur(25, this)">25m</button>
+        <button class="focus-cat-btn focus-time-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-time-btn'); setPomoDur(30, this)">30m</button>
+        <button class="focus-cat-btn focus-time-btn liquid-btn" onclick="selectLiquidTag(this, 'focus-time-btn'); setPomoDur(60, this)">60m</button>
+      </div>
+      <div class="liquid-panel" style="width: 240px; height: 240px; border-radius: 50%; border: 8px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+        <div id="pomoDisplay" style="font-size: 56px; font-weight: 700; font-family: monospace;">25:00</div>
+      </div>
+      <div style="margin-bottom: 24px;">
+        <label style="font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
+          <input type="checkbox" id="strictModeToggle" style="width: 18px; height: 18px; accent-color: var(--md-sys-color-error);">
+          <span style="font-weight: 600; color: var(--md-sys-color-error);">Enable Strict Mode</span>
+        </label>
+        <div style="font-size: 11px; color: var(--md-sys-color-on-surface-variant); margin-top: 4px;">If you leave the app for >15s, the timer will fail.</div>
+      </div>
+      <button class="btn-primary liquid-btn" id="pomoBtn" onclick="togglePomo()" style="width: 140px; font-size: 18px; margin: 0 auto;">START</button>
+    </div>
+  </section>
+
+  <section id="page-health" class="page" style="padding-bottom: 140px;">
+    <div class="month-navigation-header">
+      <button class="glass-icon-btn liquid-btn prev-month-btn" onclick="changeMonth(-1)">←</button>
+      <div class="current-month-display" id="lsMonthLabel"></div>
+      <button class="glass-icon-btn liquid-btn next-month-btn" onclick="changeMonth(1)">→</button>
+    </div>
+    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--md-sys-color-on-background);">Health & Wellness</h2>
+
+    <div class="liquid-slider-track liquid-inner" id="healthSliderTrack" style="margin: 0 20px 24px 20px; --slider-count: 2;">
+      <div class="liquid-slider-pill liquid-btn" id="healthSliderPill" style="width: calc(50% - 4px); left: 4px;"></div>
+      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'healthSliderPill', () => toggleHealthView('lifestyle'))">Lifestyle</div>
+      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'healthSliderPill', () => toggleHealthView('diet'))">Diet</div>
+    </div>
+
+    <div id="health-lifestyle-content">
+      <div id="lsList"></div>
+      <div class="card liquid-panel" style="margin-top: 24px;">
+        <div class="card-title" style="text-align:center; font-size: 14px;">Monthly Consistency</div>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 32px; padding-bottom: 12px;">
+          <div class="liquid-doughnut-chart" style="background: conic-gradient(rgba(74, 222, 128, 0.85) 0% 70%, rgba(255, 255, 255, 0.15) 70% 100%); border: 1px solid rgba(255,255,255,0.2);"></div>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="liquid-legend-box" style="background: rgba(74, 222, 128, 0.85); box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);"></div>
+              <span style="font-weight: 600; font-size: 14px;">Completed</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="liquid-legend-box" style="background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);"></div>
+              <span style="font-weight: 600; font-size: 14px;">Missed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="health-diet-content" style="display: none; padding-bottom: 140px; animation: fadeIn 0.3s ease;">
+    <div class="liquid-panel" style="margin: 0 20px 24px 20px; padding: 24px; border-radius: 24px;">
+      <h3 style="text-align: center; margin-top: 0; margin-bottom: 20px; font-weight: 600;">Monthly Consistency</h3>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 32px;">
+        
+        <div id="dynamicDietRing" style="width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(rgba(74, 222, 128, 0.85) 0% 0%, rgba(255, 255, 255, 0.15) 0% 100%); -webkit-mask: radial-gradient(circle, transparent 55%, black 56%); mask: radial-gradient(circle, transparent 55%, black 56%); border: 1px solid rgba(255,255,255,0.2); transition: background 0.5s ease;"></div>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+           <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 16px; height: 16px; border-radius: 4px; background: rgba(74, 222, 128, 0.85); box-shadow: 0 2px 8px rgba(74, 222, 128, 0.3);"></div>
+              <span style="font-weight: 600; font-size: 14px; color: var(--md-sys-color-on-surface);">Completed</span>
+           </div>
+           <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 16px; height: 16px; border-radius: 4px; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.4);"></div>
+              <span style="font-weight: 600; font-size: 14px; color: var(--md-sys-color-on-surface);">Missed</span>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dietList" style="display: flex; flex-direction: column; gap: 12px; padding: 0 20px;"></div>
+  </div>
+
+    <!-- 1-Click Sleep Tracker FAB -->
+    <button id="sleepToggleBtn" class="liquid-btn" onclick="toggleSleepState()" style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; padding: 16px 24px; font-size: 15px; font-weight: bold; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; border: none; cursor: pointer;">
+      🛏️ Go to Sleep
+    </button>
+  </section>
+
+  <!-- Stats & Analytics page removed -->
+
+  <section id="page-hub" class="page">
+    <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 16px; color: var(--md-sys-color-on-background);">Control Hub</h2>
+    <!-- Control Hub: Stats tile removed -->
+    <div class="list-tile liquid-panel" onclick="openSubPage('fees', 'College Fees')">
+      <span>College Fees</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+    </div>
+    <div class="list-tile liquid-panel" onclick="openSubPage('transactions', 'Transactions')">
+      <span>Transactions</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+    </div>
+    <div class="list-tile liquid-panel" onclick="openSubPage('mood', 'Mood Tracker')">
+      <span>Mood Tracker</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+    </div>
+    <div class="list-tile liquid-panel" onclick="openSubPage('streak', 'Streaks')">
+      <span>Streaks</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <div class="list-tile liquid-panel" onclick="openSubPage('attendance', 'Attendance Tracker')">
+      <span>Attendance Tracker</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    </div>
+    <div class="list-tile liquid-panel" onclick="openSubPage('foundation', 'Foundation (Gov)')">
+      <span>Foundation (Gov)</span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    </div>
+  </section>
+
+  <section id="page-more" class="page">
+  <div style="padding: 10px 0 24px 8px;">
+    <h2 style="margin: 0; font-size: 28px; font-weight: 700; color: var(--md-sys-color-on-surface);">Control Hub</h2>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 120px;">
+    
+    <!-- Hub tile for Stats removed -->
+
+    <div class="liquid-panel hub-tile" onclick="openSubPage('fees', 'College Fees')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">College Fees</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+    </div>
+
+    <div class="liquid-panel hub-tile" onclick="openSubPage('transactions', 'Transactions')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Transactions</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+    </div>
+
+    <div class="liquid-panel hub-tile" onclick="openSubPage('mood', 'Mood Tracker')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Mood Tracker</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+    </div>
+
+    <div class="liquid-panel hub-tile" onclick="openSubPage('streak', 'Streaks')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Streaks</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+
+    <div class="liquid-panel hub-tile" onclick="openSubPage('attendance', 'Attendance Tracker')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Attendance Tracker</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+    </div>
+
+    <div class="liquid-panel hub-tile" onclick="openSubPage('foundation', 'Foundation (Gov)')" style="padding: 18px 20px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);">
+      <span style="font-weight: 600; font-size: 16px; color: var(--md-sys-color-on-surface);">Foundation (Gov)</span>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--md-sys-color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    </div>
+
+  </div>
+
+  </section>
+
+  <section id="page-transactions" class="page">
+    <div class="module-header">
+      <button class="icon-btn liquid-btn" onclick="txPrev()">←</button>
+      <div class="module-month" id="txMonthLabel"></div>
+      <button class="icon-btn liquid-btn" onclick="txNext()">→</button>
+    </div>
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 12px; margin-top: -8px;">
+      <button class="btn-secondary" style="margin: 0; padding: 6px 12px; width: auto; font-size: 12px;" onclick="exportTxPdf()">Export PDF</button>
+    </div>
+    <div class="tx-summary">
+      <div class="tx-box"><h4>Income</h4><div class="val green" id="txTotCredit">₹0</div></div>
+      <div class="tx-box"><h4>Expense</h4><div class="val red" id="txTotDebit">₹0</div></div>
+    </div>
+    <div class="tx-box" style="margin-bottom: 20px; text-align: center;">
+      <h4>Balance</h4><div class="val" id="txTotBal">₹0</div>
+    </div>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div id="txList" style="padding: 0 16px;"></div>
+    </div>
+    <button class="fab liquid-fab" onclick="openTxSheet()">+</button>
+  </section>
+
+  <section id="page-fees" class="page">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div style="font-size: 18px; font-weight: 600;">Fee Summary</div>
+    <button class="btn-secondary" style="margin:0; padding:8px 12px; width:auto; font-size:13px;" onclick="exportCollegeFeesPdf()">Export PDF</button>
+  </div>
+  
+  <div class="cf-summary">
+    <div class="cf-box"><h4>Academic Paid</h4><div class="val green" id="cfAcadPaid">₹0</div></div>
+    <div class="cf-box"><h4>Mess Paid</h4><div class="val green" id="cfMessPaid">₹0</div></div>
+    <div class="cf-box"><h4>Academic Pending</h4><div class="val red" id="cfAcadPending">₹0</div></div>
+    <div class="cf-box"><h4>Mess Pending</h4><div class="val red" id="cfMessPending">₹0</div></div>
+  </div>
+  
+  <div class="cf-box" style="margin-bottom: 16px; text-align: center; background: linear-gradient(135deg, rgba(200,240,105,0.1) 0%, rgba(200,240,105,0.02) 100%); border: 1px solid var(--md-sys-color-primary);">
+    <h4 style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);">Total Paid Overall</h4>
+    <div class="val" id="cfTotalPaid" style="font-size: 28px; color: var(--md-sys-color-primary);">₹0</div>
+  </div>
+  
+  <div class="cf-filters">
+    <select class="cf-filter-sel" id="cfFilterCategory" onchange="renderCollegeFeesList()">
+      <option value="">All Categories</option>
+      <option value="academic">Academic Fees</option>
+      <option value="mess">Mess Fees</option>
+    </select>
+    <select class="cf-filter-sel" id="cfFilterSemester" onchange="renderCollegeFeesList()"></select>
+    <select class="cf-filter-sel" id="cfFilterYear" onchange="renderCollegeFeesList()"></select>
+    <select class="cf-filter-sel" id="cfFilterMonth" onchange="renderCollegeFeesList()">
+      <option value="">All Months</option>
+      <option>January</option><option>February</option><option>March</option><option>April</option>
+      <option>May</option><option>June</option><option>July</option><option>August</option>
+      <option>September</option><option>October</option><option>November</option><option>December</option>
+    </select>
+    <input type="text" class="cf-filter-sel" id="cfFilterSearch" placeholder="Search Title or Notes..." oninput="renderCollegeFeesList()" style="width:160px;">
+  </div>
+
+  <div id="cfList"></div>
+  <button class="fab liquid-fab" onclick="openFeeSheet()">+</button>
+</section>
+
+  <section id="page-mood" class="page">
+    <div class="module-header">
+      <button class="icon-btn liquid-btn glass-icon-btn" onclick="moodPrev()">←</button>
+      <div class="module-month" id="moodMonthLabel"></div>
+      <button class="icon-btn liquid-btn glass-icon-btn" onclick="moodNext()">→</button>
+    </div>
+    <div class="card liquid-card">
+      <div class="card-title" style="text-align:center; font-size: 14px;">Monthly Overview</div>
+      <div style="position:relative; height:180px; width:100%; margin-bottom:20px;"><canvas id="moodPieChart"></canvas></div>
+    </div>
+    <div class="card liquid-card">
+      <div class="cal-grid" id="moodGrid"></div>
+      <div style="display:flex; justify-content:center; gap:16px; margin-top:20px; font-size:12px; color:var(--md-sys-color-on-surface-variant);">
+        <span style="color:var(--md-sys-color-primary)">● Good</span>
+        <span style="color:var(--md-sys-color-warning)">● Normal</span>
+        <span style="color:var(--md-sys-color-error)">● Bad</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-streak" class="page">
+    <div id="streakList"></div>
+    <button class="fab liquid-fab" onclick="openStreakSheet()">+</button>
+  </section>
+
+  <section id="page-attendance" class="page">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <select id="attSemesterSelect" class="mobile-select" style="width: auto; padding: 8px 12px; font-weight: 600;" onchange="changeAttendanceSemester()"></select>
+      <button class="btn-secondary" style="margin: 0; padding: 8px 12px; width: auto; font-size: 13px;" onclick="createNewSemester()">+ New Sem</button>
+    </div>
+    
+    <div class="liquid-slider-track liquid-inner" id="attendanceSliderTrack" style="--slider-count: 3; margin: 0 20px 24px 20px;">
+      <div class="liquid-slider-pill liquid-btn" id="attendancePill" style="width: calc(33.33% - 4px); left: 4px;"></div>
+      
+      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'attendancePill', () => switchAttSegment('today'))" id="label-today">
+        Today
+      </div>
+      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'attendancePill', () => switchAttSegment('timetable'))" id="label-timetable">
+        Timetable
+      </div>
+      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'attendancePill', () => switchAttSegment('stats'))" id="label-att-stats">
+        Stats
+      </div>
+    </div>
+    <div id="att-seg-today" class="segment-content active">
+      <div style="font-size: 14px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;" id="attTodayDate"></div>
+      <div id="attTodayList"></div>
+    </div>
+    <div id="att-seg-timetable" class="segment-content">
+      <p style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 16px;">Tap a day to expand, tap a slot to edit.</p>
+      <div id="attTimetableList"></div>
+    </div>
+    <div id="att-seg-stats" class="segment-content">
+      <div class="card" id="attOverallCard"></div>
+      <h3 style="font-size: 16px; margin: 20px 0 12px;">Subject Breakdown</h3>
+      <div id="attSubjectStats"></div>
+    </div>
+  </section>
+
+  <section id="page-foundation" class="page">
+    <div class="liquid-slider-track liquid-inner" id="foundationSliderTrack" style="--slider-count: 3; margin: 0 20px 24px 20px;">
+      <div class="liquid-slider-pill liquid-btn" id="foundationPill" style="width: calc(33.33% - 4px); left: 4px;"></div>
+      
+      <div class="liquid-slider-label active" onclick="moveLiquidPill(this, 'foundationPill', () => switchGovSegment('daily'))" id="label-daily">
+        Daily/Week
+      </div>
+      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'foundationPill', () => switchGovSegment('subjects'))" id="label-subjects">
+        Subjects
+      </div>
+      <div class="liquid-slider-label" onclick="moveLiquidPill(this, 'foundationPill', () => switchGovSegment('notes'))" id="label-notes">
+        Notes
+      </div>
+    </div>
+    <div id="gov-seg-daily" class="segment-content active">
+      <div class="card">
+        <div class="card-title">Last 7 Days Consistency</div>
+        <div id="govDailyList"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" style="display:flex; justify-content:space-between">Weekly Goals <span id="govWeekLabel" style="font-size:12px; color:var(--md-sys-color-primary)"></span></div>
+        <div id="govWeeklyList"></div>
+        <button class="btn-secondary" style="margin-top:16px" onclick="saveGovWeeklyMobile()">Save Progress</button>
+      </div>
+    </div>
+    <div id="gov-seg-subjects" class="segment-content">
+      <div id="govSubjectList"></div>
+    </div>
+    <div id="gov-seg-notes" class="segment-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size: 16px;">Knowledge Vault</h3>
+        <button class="btn-secondary" style="margin:0; padding:8px 12px; width:auto; font-size:13px;" onclick="exportGovNotesPdf()">Export PDF</button>
+      </div>
+      <div id="govNotesList"></div>
+      <div id="govNotesViewAllBtn" style="display:none; text-align:center; margin-top:12px;">
+        <button class="btn-secondary" onclick="openAllGovNotesSheet()">View All Notes</button>
+      </div>
+      <button class="fab liquid-fab" onclick="openGovNoteSheet()">+</button>
+    </div>
+  </section>
+
+  <section id="page-diet" class="page">
+    <!-- Date Navigation Header -->
+    <div class="month-navigation-header">
+      <button class="glass-icon-btn liquid-btn prev-month-btn" onclick="changeMonth(-1)">←</button>
+      <div class="current-month-display" id="dietMonthLabel"></div>
+      <button class="glass-icon-btn liquid-btn next-month-btn" onclick="changeMonth(1)">→</button>
+    </div>
+
+    <!-- Monthly Consistency Card (Uses Chart.js Canvas) -->
+    <div class="liquid-panel" style="margin-bottom: 24px; padding: 24px; border-radius: 24px;">
+      <h3 style="text-align: center; margin-top: 0; margin-bottom: 20px; font-weight: 600; font-size: 16px;">Monthly Consistency</h3>
+      <div class="chart-container" style="position:relative; height:180px; width:100%;"><canvas id="dietPieChart"></canvas></div>
+    </div>
+
+    <!-- The Dynamic List Container -->
+    <div id="dietList" style="display: flex; flex-direction: column; gap: 12px; padding-bottom: 40px;"></div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <div class="nav-liquid-pill" id="bottomNavPill"></div>
+
+  <div class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    <span>Home</span>
+  </div>
+  
+  
+  
+  <div class="nav-item" onclick="switchTab('calendar')" id="nav-calendar">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+      <line x1="16" y1="2" x2="16" y2="6"></line>
+      <line x1="8" y1="2" x2="8" y2="6"></line>
+      <line x1="3" y1="10" x2="21" y2="10"></line>
+    </svg>
+    <span>Calendar</span>
+  </div>
+
+  <div class="nav-item" onclick="switchTab('focus')" id="nav-focus">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"></circle><polyline points="12 9 12 13 14 15"></polyline><line x1="12" y1="2" x2="12" y2="4"></line></svg>
+    <span>Focus</span>
+  </div>
+  
+  <div class="nav-item" onclick="switchTab('more')" id="nav-more">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    <span>Menu</span>
+</div>
+
+</nav>
+
+<div class="bottom-sheet-overlay" id="taskSheet" onclick="if(event.target===this) closeSheet('taskSheet')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="sheetDate"></div>
+    <div id="sheetTasks"></div>
+    <div style="margin-top: 20px;">
+      <div class="form-label">Notes & Events</div>
+      <textarea id="sheetNotes" class="mobile-input" rows="3" placeholder="Add events or notes..."></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveMobileTasks()">Save Tasks</button>
+    <button class="btn-secondary" onclick="closeSheet('taskSheet')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="lsSheet" onclick="if(event.target===this) closeSheet('lsSheet')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="lsSheetTitle">Lifestyle Entry</div>
+    <input type="hidden" id="lsDateKey">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="form-group">
+        <label class="form-label">Wake Time</label>
+        <input type="time" class="mobile-input" id="lsWake">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sleep Time</label>
+        <input type="time" class="mobile-input" id="lsSleep">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Study (Hours)</label>
+      <input type="number" step="0.5" class="mobile-input" id="lsStudy" placeholder="e.g. 4.5">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Screen Time (Hours)</label>
+      <input type="number" step="0.5" class="mobile-input" id="lsScreen" placeholder="e.g. 3">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Workout (Hours)</label>
+      <input type="number" step="0.25" class="mobile-input" id="lsWorkout" placeholder="e.g. 1.5">
+    </div>
+    <button class="btn-primary" onclick="saveLifestyleMobile()">Save Entry</button>
+    <button class="btn-secondary" onclick="closeSheet('lsSheet')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="dietSheet" onclick="if(event.target===this) closeSheet('dietSheet')">
+  <div class="bottom-sheet liquid-panel" style="background: rgba(255, 255, 255, 0.2) !important; border-top: 1px solid rgba(255,255,255,0.5) !important;">
+    <div class="sheet-title" id="dietSheetTitle" style="color: var(--md-sys-color-on-surface);">Diet Checklist</div>
+    <input type="hidden" id="dietDateKey">
+    <div id="dietChecklist" style="margin-bottom: 24px;"></div>
+    <button class="liquid-btn" style="width: 100%; padding: 16px; border-radius: 16px; font-weight: 700; font-size: 16px; text-align: center;" onclick="closeSheet('dietSheet')">Done</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="txSheet" onclick="if(event.target===this) closeSheet('txSheet')">
+  <div class="bottom-sheet">
+    <div class="sheet-title">Add Transaction</div>
+    <div class="form-group">
+      <label class="form-label">Type</label>
+      <select id="txType" class="mobile-select">
+        <option value="debit">Expense (-)</option>
+        <option value="credit">Income (+)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Amount (₹)</label>
+      <input type="number" step="1" class="mobile-input" id="txAmt" placeholder="0.00">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category / Source</label>
+      <input type="text" class="mobile-input" id="txLabel" placeholder="e.g. Food, Salary">
+    </div>
+    <button class="btn-primary" onclick="saveTx()">Save</button>
+    <button class="btn-secondary" onclick="closeSheet('txSheet')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="moodSheet" onclick="if(event.target===this) closeSheet('moodSheet')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="moodSheetTitle">Log Mood</div>
+    <input type="hidden" id="moodDateKey">
+    <button class="btn-secondary" style="border-color:var(--md-sys-color-primary); color:var(--md-sys-color-primary)" onclick="saveMood('good')">Good</button>
+    <button class="btn-secondary" style="border-color:var(--md-sys-color-warning); color:var(--md-sys-color-warning)" onclick="saveMood('normal')">Normal</button>
+    <button class="btn-secondary" style="border-color:var(--md-sys-color-error); color:var(--md-sys-color-error)" onclick="saveMood('bad')">Bad</button>
+    <button class="btn-secondary" style="margin-top:24px; border-style:dashed;" onclick="saveMood(null)">Clear Entry</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="streakSheet" onclick="if(event.target===this) closeSheet('streakSheet')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="streakSheetTitle">Add Streak</div>
+    <input type="hidden" id="streakIdKey">
+    <div class="form-group">
+      <label class="form-label">Streak Name</label>
+      <input type="text" class="mobile-input" id="strkName" placeholder="e.g. Read 10 pages">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Target Days</label>
+      <input type="number" class="mobile-input" id="strkTarget" placeholder="e.g. 30" value="30">
+    </div>
+    <button class="btn-primary" onclick="saveStreak()">Save Streak</button>
+    <button class="btn-secondary" onclick="closeSheet('streakSheet')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="sheetAttSlot" onclick="if(event.target===this) closeSheet('sheetAttSlot')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="attSlotTitle">Edit Slot</div>
+    <input type="hidden" id="attEditDay">
+    <input type="hidden" id="attEditSlot">
+    <div class="form-group">
+      <label class="form-label">Subject Name</label>
+      <input type="text" class="mobile-input" id="attEditSubjName" placeholder="Leave empty for free period">
+    </div>
+    <button class="btn-primary" onclick="saveAttSlotMobile()">Save Slot</button>
+    <button class="btn-secondary" onclick="closeSheet('sheetAttSlot')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="sheetGovNote" onclick="if(event.target===this) closeSheet('sheetGovNote')">
+  <div class="bottom-sheet">
+    <div class="sheet-title">Knowledge Vault Note</div>
+    <input type="hidden" id="govNoteId">
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input type="text" class="mobile-input" id="govNoteTitle">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category</label>
+      <select id="govNoteCat" class="mobile-select"></select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea id="govNoteText" class="mobile-input" rows="5"></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveGovNoteMobile()">Save Note</button>
+    <button class="btn-secondary" onclick="closeSheet('sheetGovNote')">Cancel</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="sheetAllGovNotes" onclick="if(event.target===this) closeSheet('sheetAllGovNotes')">
+  <div class="bottom-sheet">
+    <div class="sheet-title">All Notes</div>
+    <div id="allGovNotesContent" style="max-height: 60vh; overflow-y: auto; padding-right: 8px;"></div>
+    <button class="btn-secondary" onclick="closeSheet('sheetAllGovNotes')">Close</button>
+  </div>
+</div>
+
+<div class="bottom-sheet-overlay" id="sheetFee" onclick="if(event.target===this) closeSheet('sheetFee')">
+  <div class="bottom-sheet">
+    <div class="sheet-title" id="feeSheetTitle">Add Fee Record</div>
+    <form id="cfForm" onsubmit="saveFeeMobile(event)">
+      <input type="hidden" id="feeId">
+      
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select id="feeCategory" class="mobile-select" onchange="toggleFeeCat()">
+          <option value="academic">Academic Fees</option>
+          <option value="mess">Mess Fees</option>
+        </select>
+      </div>
+      
+      <div class="form-group" id="fAcadWrap">
+        <label class="form-label">Semester</label>
+        <input type="text" class="mobile-input" id="feeSem" placeholder="e.g. Semester 4">
+      </div>
+      
+      <div class="form-group" id="fMessWrap" style="display:none;">
+        <label class="form-label">Covered Months</label>
+        <div class="cf-month-picker">
+          <div class="mobile-input" style="display:flex; justify-content:space-between; align-items:center;" onclick="document.getElementById('cfDrop').style.display = document.getElementById('cfDrop').style.display === 'block' ? 'none' : 'block'">
+            <span id="cfMonthLbl">Select Months</span><span>▾</span>
+          </div>
+          <div class="cf-month-dropdown" id="cfDrop">
+            </div>
+        </div>
+        <label class="form-label" style="margin-top:12px">Year</label>
+        <input type="number" class="mobile-input" id="feeYear" placeholder="2026">
+      </div>
+      
+      <div class="form-group"><label class="form-label">Fee Title</label><input type="text" class="mobile-input" id="feeTitle" required></div>
+      <div class="form-group"><label class="form-label">Amount (₹)</label><input type="number" step="0.01" class="mobile-input" id="feeAmt" required></div>
+      <div class="form-group"><label class="form-label">Payment Date</label><input type="date" class="mobile-input" id="feeDate" required></div>
+      
+      <div class="form-group">
+        <label class="form-label">Payment Mode & TXN ID</label>
+        <div style="display:flex; gap:8px;">
+          <select id="feeMode" class="mobile-select" style="flex:1;">
+            <option value="UPI">UPI</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cash">Cash</option>
+            <option value="Card">Card</option>
+            <option value="Cheque">Cheque</option>
+          </select>
+          <input type="text" class="mobile-input" id="feeTxn" placeholder="TXN ID" style="flex:1;">
+        </div>
+      </div>
+      
+      <div class="form-group"><label class="form-label">Status</label>
+        <select id="feeStatus" class="mobile-select"><option value="pending">Pending</option><option value="paid">Paid</option></select>
+      </div>
+      
+      <div class="form-group"><label class="form-label">Receipt (Image/PDF)</label><input type="file" id="feeReceipt" class="mobile-input" accept="image/*,.pdf" style="padding:10px;"></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea id="feeNotes" class="mobile-input" rows="2"></textarea></div>
+      
+      <button class="btn-primary" type="submit">Save Record</button>
+      <button type="button" class="btn-secondary" id="btnDeleteFee" style="display:none; color:var(--md-sys-color-error); border-color:var(--md-sys-color-error);" onclick="deleteFeeMobile()">Delete Record</button>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+  
+</script>
+</body>
+</html>
