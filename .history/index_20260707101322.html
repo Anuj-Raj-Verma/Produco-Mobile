@@ -3601,51 +3601,6 @@
   // --- 2. EXISTING 7-DAY INSIGHTS ---
   // (Agent: Keep whatever existing code generates the other insights here, and append it to the 'html' variable)
 
-  // --- THE WEEKLY REALITY CHECK (7-Day Brutal Summary) ---
-  let weekStudy = 0, weekScreen = 0, weekWorkout = 0, daysLogged = 0;
-  
-  for(let i = 0; i < 7; i++) {
-    let d = new Date();
-    d.setDate(d.getDate() - i);
-    let ls = ld(`ls_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`, null);
-    
-    if(ls) {
-      daysLogged++;
-      weekStudy += parseFloat(ls.study) || 0;
-      weekScreen += parseFloat(ls.screen) || 0;
-      if(parseFloat(ls.workout) > 0) weekWorkout++;
-    }
-  }
-
-  if (daysLogged >= 3) {
-    let realityText = "";
-    let realityColor = "var(--md-sys-color-primary)"; // Default positive
-    let realityIcon = "insights";
-
-    if (weekScreen > weekStudy * 1.5) {
-      realityColor = "var(--md-sys-color-error)";
-      realityIcon = "warning";
-      realityText = `This week, you traded your potential for your phone. You spent ${weekScreen.toFixed(1)} hours on screens and only ${weekStudy.toFixed(1)} hours studying. Your digital consumption is destroying your output. `;
-      if (weekWorkout < 2) realityText += `Compounding this, you only worked out ${weekWorkout} times, leading to a stagnant baseline. Next week requires an immediate digital detox.`;
-    } else if (weekStudy > weekScreen && weekWorkout >= 3) {
-      realityColor = "var(--md-sys-color-success)";
-      realityIcon = "verified";
-      realityText = `An elite week. You logged ${weekStudy.toFixed(1)} hours of deep work, kept screen time under control (${weekScreen.toFixed(1)} hrs), and hit the gym ${weekWorkout} times. You are actively building momentum. Protect this baseline next week.`;
-    } else {
-      realityColor = "var(--md-sys-color-warning)";
-      realityIcon = "balance";
-      realityText = `A completely average week. ${weekStudy.toFixed(1)} hours studied, ${weekScreen.toFixed(1)} hours on screens, and ${weekWorkout} workouts. You are maintaining, but not growing. Decide if you want to push harder next week or stay comfortable.`;
-    }
-
-    html += `
-      <div class="insight-card liquid-inner" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.15); padding: 20px; border-radius: 16px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
-        <h4 style="color: ${realityColor}; margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; font-size: 16px;">
-          <span class="material-symbols-outlined" style="font-size: 22px;">${realityIcon}</span> 7-Day Reality Check
-        </h4>
-        <p style="margin:0; font-size: 14.5px; color: var(--md-sys-color-on-surface); line-height: 1.6;">${realityText}</p>
-      </div>`;
-  }
-
     let insights = '';
     let daysAnalyzed = 0;
     let lowSleepScreenTotal = 0, lowSleepDays = 0, normalSleepScreenTotal = 0, normalSleepDays = 0;
@@ -3777,33 +3732,10 @@
     const tasksFilled = t.filter(x => x.text).length;
     const tasksDone = t.filter(x => x.text && x.done).length;
     const summaryEl = document.getElementById('dash-summary');
-    if(summaryEl) {
-      const lifeScore = calculateLifeScore();
-      let scoreColor = 'var(--md-sys-color-success)'; // Green
-      let scoreText = 'Optimal';
-      
-      if (lifeScore < 50) {
-        scoreColor = 'var(--md-sys-color-error)'; // Red
-        scoreText = 'Degrading';
-      } else if (lifeScore < 75) {
-        scoreColor = 'var(--md-sys-color-warning)'; // Yellow
-        scoreText = 'Maintenance';
-      }
-
-      summaryEl.innerHTML = `
-        <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.05); padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div>
-            <div style="font-size: 12px; color: var(--md-sys-color-on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Today's Life Score</div>
-            <div style="font-size: 14px; font-weight: 500; color: ${scoreColor};">${scoreText}</div>
-          </div>
-          <div style="font-size: 32px; font-weight: 700; color: ${scoreColor}; font-family: monospace;">
-            ${lifeScore}<span style="font-size: 16px; opacity: 0.5;">/100</span>
-          </div>
-        </div>
-        <div style="margin-top: 16px; color: var(--md-sys-color-primary); font-weight: 500;">${MONTHS[m-1]} ${d}, ${y}</div>
-        <div>Tasks Today: ${tasksDone} / ${tasksFilled} completed</div>
-      `;
-    }
+    if(summaryEl) summaryEl.innerHTML = `
+      <div style="margin-bottom: 4px; color: var(--md-sys-color-primary); font-weight: 500;">${MONTHS[m-1]} ${d}, ${y}</div>
+      <div>Tasks Today: ${tasksDone} / ${tasksFilled} completed</div>
+    `;
 
     const insightsFeed = document.getElementById('smart-insights-feed');
     if (!insightsFeed) return;
@@ -5108,26 +5040,6 @@ document.addEventListener('click', function(e) {
   }
 });
 
-  window.injectMockData = function() {
-    const today = new Date();
-    for (let i = 0; i < 7; i++) {
-      let d = new Date(today);
-      d.setDate(today.getDate() - i);
-      
-      // Simulating a bad trajectory: High screen time, low sleep, dropping study time
-      let mockData = {
-        study: (Math.max(0, 4 - i)).toFixed(1), // Drops from 4 to 0
-        screen: (3 + i).toFixed(1), // Rises from 3 to 9
-        workout: i > 4 ? "1" : "0", // Stopped working out recently
-        wake: "08:00",
-        sleep: i < 3 ? "03:00" : "23:00", // Late nights recently (5 hrs sleep)
-        tags: {}
-      };
-      localStorage.setItem(`ls_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`, JSON.stringify(mockData));
-    }
-    alert("Mock data injected! Refreshing dashboard...");
-    renderDashboard();
-  };
 
   // --- INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {

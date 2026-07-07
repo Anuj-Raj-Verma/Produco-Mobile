@@ -5108,26 +5108,6 @@ document.addEventListener('click', function(e) {
   }
 });
 
-  window.injectMockData = function() {
-    const today = new Date();
-    for (let i = 0; i < 7; i++) {
-      let d = new Date(today);
-      d.setDate(today.getDate() - i);
-      
-      // Simulating a bad trajectory: High screen time, low sleep, dropping study time
-      let mockData = {
-        study: (Math.max(0, 4 - i)).toFixed(1), // Drops from 4 to 0
-        screen: (3 + i).toFixed(1), // Rises from 3 to 9
-        workout: i > 4 ? "1" : "0", // Stopped working out recently
-        wake: "08:00",
-        sleep: i < 3 ? "03:00" : "23:00", // Late nights recently (5 hrs sleep)
-        tags: {}
-      };
-      localStorage.setItem(`ls_${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`, JSON.stringify(mockData));
-    }
-    alert("Mock data injected! Refreshing dashboard...");
-    renderDashboard();
-  };
 
   // --- INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {
