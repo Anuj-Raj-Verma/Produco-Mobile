@@ -763,19 +763,19 @@
     doc.text(`Balance: Rs. ${bal.toFixed(0)}`, 130, 36);
     
     const rows = [];
-    data.credit.forEach((r, i) => rows.push([i+1, 'Income', r.label || 'Unnamed', `+ Rs. ${parseFloat(r.amount).toFixed(0)}`]));
-    data.debit.forEach((r, i) => rows.push([data.credit.length + i + 1, 'Expense', r.label || 'Unnamed', `- Rs. ${parseFloat(r.amount).toFixed(0)}`]));
+    data.credit.forEach((r, i) => rows.push([i+1, r.date || '', 'Income', r.label || 'Unnamed', `+ Rs. ${parseFloat(r.amount).toFixed(0)}`]));
+    data.debit.forEach((r, i) => rows.push([data.credit.length + i + 1, r.date || '', 'Expense', r.label || 'Unnamed', `- Rs. ${parseFloat(r.amount).toFixed(0)}`]));
     
     doc.autoTable({
       startY: 42,
-      head: [['#', 'Type', 'Category / Source', 'Amount']],
+      head: [['#', 'Date', 'Type', 'Category / Source', 'Amount']],
       body: rows,
       styles: { fontSize: 10 },
       headStyles: { fillColor: [200, 240, 105], textColor: [26, 26, 26] },
       didParseCell: function(data) {
-        if (data.section === 'body' && data.column.index === 3) {
-          if (data.row.raw[1] === 'Income') data.cell.styles.textColor = [56, 142, 60]; // Green
-          if (data.row.raw[1] === 'Expense') data.cell.styles.textColor = [207, 102, 121]; // Red
+        if (data.section === 'body' && data.column.index === 4) {
+          if (data.row.raw[2] === 'Income') data.cell.styles.textColor = [56, 142, 60]; // Green
+          if (data.row.raw[2] === 'Expense') data.cell.styles.textColor = [207, 102, 121]; // Red
         }
       }
     });
