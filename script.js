@@ -1170,8 +1170,189 @@
 
   function getAttTime(){ return ld('attendance_timetable_'+getAttSem(), {}); }
   function getAttRecs(){ return ld('attendance_records_'+getAttSem(), []); }
+
+  function getAttendanceSemesterMeta(semId = getAttSem()) {
+    const meta = ld('attendance_semester_meta_' + semId, {});
+    return {
+      startDate: meta.startDate || null,
+      endDate: meta.endDate || null
+    };
+  }
+
+  function saveAttendanceSemesterMeta(semId = getAttSem(), patch = {}) {
+    const current = getAttendanceSemesterMeta(semId);
+    const next = { ...current, ...patch };
+    if (next.startDate) next.startDate = String(next.startDate).slice(0, 10);
+    if (next.endDate) next.endDate = String(next.endDate).slice(0, 10);
+    sv('attendance_semester_meta_' + semId, next);
+    return next;
+  }
+
+  function resolveAttendanceSemesterStartDate(semId = getAttSem()) {
+    const meta = getAttendanceSemesterMeta(semId);
+    if (meta.startDate) {
+      const parsed = parseAttendanceDateValue(meta.startDate);
+      if (parsed) return parsed.iso;
+    }
+
+    const records = ld('attendance_records_' + semId, []);
+    const parsedDates = records
+      .filter(r => r && r.date)
+      .map(r => parseAttendanceDateValue(r.date))
+      .filter(Boolean)
+      .sort((a, b) => a.value - b.value);
+
+    if (parsedDates.length) {
+      const startDate = parsedDates[0].iso;
+      saveAttendanceSemesterMeta(semId, { startDate });
+      return startDate;
+    }
+
+    const today = new Date();
+    const fallback = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    saveAttendanceSemesterMeta(semId, { startDate: fallback });
+    return fallback;
+  }
+
+  function getAttendanceDateKey(dateObj) {
+    return `${dateObj.getFullYear()}-${dateObj.getMonth()+1}-${dateObj.getDate()}`;
+  }
+
+  function getAttendanceSemesterDateWindow() {
+    const semId = getAttSem();
+    const startDateIso = resolveAttendanceSemesterStartDate(semId);
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const start = new Date(startDateIso + 'T00:00:00');
+    return { start: new Date(start), end: new Date(todayStart) };
+  }
+
+  function getAttendanceOccurrenceEndMinutes(slotLabel) {
+    if (!slotLabel) return null;
+    const parts = slotLabel.split('-');
+    const endToken = parts[1] || parts[0];
+    const match = endToken.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+    if (!match) return null;
+    let hour = parseInt(match[1], 10);
+    let minute = parseInt(match[2], 10);
+    const meridiem = (match[3] || '').toUpperCase();
+    if (meridiem === 'PM' && hour !== 12) hour += 12;
+    if (meridiem === 'AM' && hour === 12) hour = 0;
+    return hour * 60 + minute;
+  }
+
+  function isAttendanceOccurrencePast(dateKey, slotKey) {
+    const slotLabel = ATTENDANCE_SLOTS.find(s => s.key === slotKey)?.label || '';
+    const endMinutes = getAttendanceOccurrenceEndMinutes(slotLabel);
+    const now = new Date();
+    const todayKey = getAttendanceDateKey(now);
+    const selectedDate = new Date(dateKey + 'T00:00:00');
+    const todayDate = new Date(todayKey + 'T00:00:00');
+
+    if (selectedDate.getTime() < todayDate.getTime()) return true;
+    if (selectedDate.getTime() > todayDate.getTime()) return false;
+    if (endMinutes === null) return true;
+
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    return currentMinutes >= endMinutes;
+  }
+
+  function getAttendanceOccurrenceKey(date, subject, slotKeys) {
+    const keys = Array.isArray(slotKeys) ? slotKeys.filter(Boolean) : [slotKeys].filter(Boolean);
+    const normalized = [...new Set(keys)].sort();
+    return `${date}|${String(subject || '').trim()}|${normalized.join(',')}`;
+  }
+
+  function getAttendanceOccurrenceStatus(dateKey, block, records = getAttRecs()) {
+    const slotKeys = block.slotKeys || [];
+    const matches = records.filter(r => r && r.date === dateKey && slotKeys.includes(r.slotKey));
+    if (!matches.length) return null;
+    return matches[matches.length - 1].status;
+  }
+
+  function getAttendanceOccurrenceBlocksForDate(dateKey, fullDay) {
+    const mergedSchedule = getMergedSchedule(fullDay).filter(g => g.subject && g.editable);
+    return mergedSchedule.map(item => ({
+      date: dateKey,
+      day: fullDay,
+      subject: item.subject,
+      slotKeys: item.slotKeys || [],
+      slotKey: (item.slotKeys || []).join(','),
+      start: item.start,
+      end: item.end,
+      slotLabel: `${item.start} - ${item.end}`,
+      occurrenceKey: getAttendanceOccurrenceKey(dateKey, item.subject, item.slotKeys || [])
+    }));
+  }
+
+  function getUnmarkedAttendanceQueue() {
+    const records = getAttRecs();
+    const dateWindow = getAttendanceSemesterDateWindow();
+    const startDate = new Date(dateWindow.start.getFullYear(), dateWindow.start.getMonth(), dateWindow.start.getDate());
+    const endDate = new Date(dateWindow.end.getFullYear(), dateWindow.end.getMonth(), dateWindow.end.getDate());
+    const unmarked = [];
+
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dateKey = getAttendanceDateKey(d);
+      const dayName = DAYS[d.getDay()];
+      const fullDay = {'Sun':'Sunday','Mon':'Monday','Tue':'Tuesday','Wed':'Wednesday','Thu':'Thursday','Fri':'Friday','Sat':'Saturday'}[dayName];
+      if (!ATTENDANCE_DAYS.includes(fullDay)) continue;
+
+      getAttendanceOccurrenceBlocksForDate(dateKey, fullDay).forEach(block => {
+        const occurrenceKey = block.occurrenceKey;
+        const hasRecord = records.some(r => r && r.date === dateKey && block.slotKeys.includes(r.slotKey));
+        if (hasRecord) return;
+        if (!isAttendanceOccurrencePast(dateKey, block.slotKeys[0])) return;
+        unmarked.push({
+          date: dateKey,
+          day: fullDay,
+          slotKey: block.slotKey,
+          slotKeys: block.slotKeys,
+          subject: block.subject,
+          status: 'unmarked',
+          slotLabel: block.slotLabel,
+          occurrenceKey
+        });
+      });
+    }
+
+    return unmarked.sort((a, b) => new Date(a.date) - new Date(b.date) || a.slotKey.localeCompare(b.slotKey));
+  }
+
+  function syncUnmarkedAttendanceRecords() {
+    const records = getAttRecs();
+    const queue = getUnmarkedAttendanceQueue();
+    const currentMap = new Map(records.filter(r => r && r.date && r.slotKey).map(r => [`${r.date}|${r.slotKey}`, r]));
+    const prepared = [...records];
+
+    queue.forEach(item => {
+      const slotKeys = item.slotKeys || [item.slotKey];
+      slotKeys.forEach(slotKey => {
+        const key = `${item.date}|${slotKey}`;
+        if (!currentMap.has(key)) {
+          const record = {
+            date: item.date,
+            day: item.day,
+            slotKey,
+            subject: item.subject,
+            status: item.status,
+            slotLabel: item.slotLabel || '',
+            occurrenceKey: item.occurrenceKey || getAttendanceOccurrenceKey(item.date, item.subject, slotKeys)
+          };
+          prepared.push(record);
+          currentMap.set(key, record);
+        }
+      });
+    });
+
+    const sanitized = prepared.filter(r => r && r.date && r.slotKey && r.subject && r.status);
+    sv('attendance_records_'+getAttSem(), sanitized);
+    return sanitized;
+  }
+
   function renderAttendance() {
     initAttendanceSemesters();
+    syncUnmarkedAttendanceRecords();
     renderAttToday();
     renderAttTimetable();
     renderAttStats();
@@ -1197,6 +1378,44 @@
     if(current) groups.push(current);
     return groups;
   }
+  function openMissingAttendanceSheet() {
+    const sheet = document.getElementById('sheetMissingAttendance');
+    if (!sheet) return;
+    const queue = getUnmarkedAttendanceQueue();
+    const list = document.getElementById('missingAttendanceList');
+    if (!queue.length) {
+      list.innerHTML = '<div style="padding: 20px 0; color: var(--md-sys-color-on-surface-variant); text-align: center;">No missing attendance records.</div>';
+      sheet.classList.add('open');
+      return;
+    }
+
+    list.innerHTML = queue.map(item => `
+      <div class="card" style="margin-bottom: 12px; padding: 14px;">
+        <div style="font-size: 12px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 4px;">${item.date}</div>
+        <div style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${escapeHtml(item.subject)}</div>
+        <div style="font-size: 13px; color: var(--md-sys-color-on-surface-variant); margin-bottom: 12px;">${item.slotLabel}</div>
+        <div class="att-btn-row" style="justify-content: flex-start; gap: 8px; flex-wrap: wrap;">
+          <button class="att-btn" onclick="markAtt('${item.date}','${item.day}', '${(item.slotKeys || [item.slotKey]).join(',')}', '${escapeHtml(item.subject)}', 'present')">Present</button>
+          <button class="att-btn" onclick="markAtt('${item.date}','${item.day}', '${(item.slotKeys || [item.slotKey]).join(',')}', '${escapeHtml(item.subject)}', 'absent')">Absent</button>
+          <button class="att-btn" onclick="markAtt('${item.date}','${item.day}', '${(item.slotKeys || [item.slotKey]).join(',')}', '${escapeHtml(item.subject)}', 'unmarked')">Keep Unmarked</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('missingAttendanceBulkActions').innerHTML = `
+      <button class="btn-secondary" style="margin: 0; padding: 10px 12px; width: auto;" onclick="bulkMarkMissingAttendance('present')">Mark All Present</button>
+      <button class="btn-secondary" style="margin: 0; padding: 10px 12px; width: auto;" onclick="bulkMarkMissingAttendance('absent')">Mark All Absent</button>
+    `;
+    sheet.classList.add('open');
+  }
+
+  function bulkMarkMissingAttendance(status) {
+    const queue = getUnmarkedAttendanceQueue();
+    if (!queue.length) return;
+    queue.forEach(item => markAtt(item.date, item.day, item.slotKey, item.subject, status));
+    closeSheet('sheetMissingAttendance');
+  }
+
   function renderAttToday() {
     const weekday = DAYS[today.getDay()];
     const fullDayMap = {'Sun':'Sunday','Mon':'Monday','Tue':'Tuesday','Wed':'Wednesday','Thu':'Thursday','Fri':'Friday','Sat':'Saturday'};
@@ -1214,10 +1433,19 @@
     }
     const dateStr = fd(today);
     let html = '';
+    const missingCount = getUnmarkedAttendanceQueue().filter(item => item.date === dateStr).length;
+    if (missingCount > 0) {
+      html += `
+        <div class="card" style="margin-bottom: 14px; border-color: rgba(240, 192, 105, 0.6); background: rgba(240, 192, 105, 0.06);">
+          <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--md-sys-color-warning); font-weight: 700; margin-bottom: 6px;">Attendance Needs Attention</div>
+          <div style="font-size: 17px; font-weight: 700; margin-bottom: 8px;">${missingCount} ${missingCount === 1 ? 'class is' : 'classes are'} unmarked</div>
+          <button class="btn-secondary" style="margin: 0; width: auto; padding: 8px 12px; font-size: 13px;" onclick="openMissingAttendanceSheet()">Review Missing Attendance</button>
+        </div>
+      `;
+    }
     schedule.forEach(item => {
       const recs = getAttRecs();
-      const rec = recs.find(r => r.date === dateStr && r.slotKey === item.slotKeys[0]);
-      const status = rec ? rec.status : null;
+      const status = getAttendanceOccurrenceStatus(dateStr, item, recs);
       html += `
         <div class="card">
           <div style="display:flex; justify-content:space-between">
@@ -1228,6 +1456,7 @@
             <button class="att-btn ${status==='present'?'active-present':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'present')">Present</button>
             <button class="att-btn ${status==='absent'?'active-absent':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'absent')">Absent</button>
             <button class="att-btn ${status==='cancelled'?'active-other':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'cancelled')">Cancelled</button>
+            <button class="att-btn ${status==='unmarked'?'active-other':''}" onclick="markAtt('${dateStr}','${fDay}', '${item.slotKeys.join(',')}', '${escapeHtml(item.subject)}', 'unmarked')">Unmarked</button>
           </div>
         </div>
       `;
@@ -1236,11 +1465,12 @@
   }
   function markAtt(date, day, slotKeysStr, subject, status) {
     const records = getAttRecs();
-    const slotKeys = slotKeysStr.split(',');
+    const slotKeys = slotKeysStr.split(',').filter(Boolean);
+    const occurrenceKey = getAttendanceOccurrenceKey(date, subject, slotKeys);
     slotKeys.forEach(sk => {
-      const idx = records.findIndex(r => r.date === date && r.slotKey === sk);
+      const idx = records.findIndex(r => r.date === date && r.slotKey === sk && r.subject === subject);
       const slotLabel = ATTENDANCE_SLOTS.find(s=>s.key===sk)?.label||'';
-      const record = {date, day, slotKey: sk, subject, status, slotLabel};
+      const record = {date, day, slotKey: sk, subject, status, slotLabel, occurrenceKey};
       if(idx >= 0) records[idx] = record; else records.push(record);
     });
     sv('attendance_records_'+getAttSem(), records);
@@ -1293,44 +1523,284 @@
     closeSheet('sheetAttSlot'); renderAttendance();
     try { triggerHaptic('medium'); } catch(e){}
   }
-  function renderAttStats() {
+  function parseAttendanceDateValue(dateValue) {
+    if (!dateValue) return null;
+    const value = String(dateValue).trim();
+    const iso = /^\d{4}-\d{1,2}-\d{1,2}$/.exec(value);
+    if (iso) {
+      const [_, year, month, day] = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      const dt = new Date(Number(year), Number(month)-1, Number(day));
+      if (!isNaN(dt.getTime())) return { iso: `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`, value: dt };
+    }
+
+    const dmy = /^(\d{1,2})-(\d{1,2})-(\d{4})$/.exec(value);
+    if (dmy) {
+      const [, day, month, year] = dmy;
+      const dt = new Date(Number(year), Number(month)-1, Number(day));
+      if (!isNaN(dt.getTime())) return { iso: `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`, value: dt };
+    }
+
+    return null;
+  }
+
+  function getAttendanceSemesterLabel() {
+    const semId = getAttSem();
+    const sems = getAttendanceSemesters();
+    const sem = sems.find(s => s.id === semId);
+    return sem ? sem.name : 'Semester';
+  }
+
+  function getAttendanceAbsenceExportRows() {
+    const semId = getAttSem();
+    const semName = getAttendanceSemesterLabel();
+    const startDateIso = resolveAttendanceSemesterStartDate(semId);
+    const startValue = parseAttendanceDateValue(startDateIso);
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    return getAttendanceOccurrenceEvents()
+      .filter(event => event.status === 'absent')
+      .map(event => {
+        const parsed = parseAttendanceDateValue(event.date);
+        if (!parsed) return null;
+        return { ...event, dateIso: parsed.iso, dateValue: parsed.value };
+      })
+      .filter(Boolean)
+      .filter(item => {
+        if (startValue && item.dateValue < startValue.value) return false;
+        if (item.dateValue > todayStart) return false;
+        return true;
+      })
+      .sort((a, b) => a.dateValue - b.dateValue)
+      .map(item => {
+        const fullDay = {'Sun':'Sunday','Mon':'Monday','Tue':'Tuesday','Wed':'Wednesday','Thu':'Thursday','Fri':'Friday','Sat':'Saturday'}[DAYS[item.dateValue.getDay()]] || DAYS[item.dateValue.getDay()];
+        return {
+          date: item.dateIso.replace(/^(\d{4})-(\d{1,2})-(\d{1,2})$/, '$3-$2-$1'),
+          day: fullDay,
+          subject: item.subject || 'Unknown Subject',
+          time: `${item.start} - ${item.end}`,
+          semester: semName
+        };
+      });
+  }
+
+  function exportAttendanceAbsences() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      alert('PDF export library is still loading. Please wait a moment.');
+      return;
+    }
+
+    const rows = getAttendanceAbsenceExportRows();
+    if (!rows.length) {
+      alert('No absences recorded for this semester.');
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const semName = getAttendanceSemesterLabel();
+    const semFileName = semName.replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'Semester';
+    const year = new Date().getFullYear();
+
+    doc.setFontSize(18);
+    doc.text('Attendance Absence Record', 14, 20);
+    doc.setFontSize(10);
+    doc.text(`${semName} • ${year}`, 14, 28);
+
+    const tableRows = rows.map(row => [row.date, row.day, row.subject, row.time, row.semester]);
+    doc.autoTable({
+      startY: 36,
+      head: [['Date', 'Day', 'Subject', 'Time', 'Semester']],
+      body: tableRows,
+      styles: { fontSize: 9, cellPadding: 3 },
+      headStyles: { fillColor: [200, 240, 105], textColor: [26, 26, 26] },
+      alternateRowStyles: { fillColor: [250, 250, 250] }
+    });
+
+    const attendanceStats = getAttendanceStatsSummary();
+    let statsStartY = (doc.lastAutoTable && doc.lastAutoTable.finalY ? doc.lastAutoTable.finalY : 36) + 14;
+    const pageHeight = doc.internal.pageSize.getHeight();
+    if (statsStartY > pageHeight - 24) {
+      doc.addPage();
+      statsStartY = 20;
+    }
+    doc.setFontSize(14);
+    doc.text('Attendance Statistics & Detailed Breakdown', 14, statsStartY);
+    const detailedRows = attendanceStats.subjects.map(subjectStat => {
+      const lengthLines = Object.keys(subjectStat.durationCounts)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(hours => `${hours}-hour sessions: ${subjectStat.durationCounts[hours]}`);
+      const details = [
+        `Attendance: ${subjectStat.attendancePct}%`,
+        `Present: ${subjectStat.presentSessions} sessions (${subjectStat.presentHours} class-hours)`,
+        `Absent: ${subjectStat.absentSessions} sessions (${subjectStat.absentHours} class-hours)`,
+        `Unmarked sessions: ${subjectStat.unmarkedSessions}`,
+        `Cancelled sessions: ${subjectStat.cancelledSessions}`,
+        'Scheduled session lengths:',
+        ...(lengthLines.length ? lengthLines : ['No sessions']),
+        subjectStat.exactAttendancePct >= 75
+          ? `Safe absence capacity: ${subjectStat.safeHours} class-hours`
+          : `Need ${subjectStat.requiredHours} more class-hours to reach 75%.`,
+        ...(subjectStat.exactAttendancePct < 75
+          ? [`Equivalent: ${subjectStat.equivalentLines.join(' or ')}; any mix totaling ${subjectStat.requiredHours} class-hours works.`]
+          : [])
+      ];
+      return [subjectStat.subject, details.join('\n')];
+    });
+    doc.autoTable({
+      startY: statsStartY + 6,
+      head: [['Subject', 'Statistics']],
+      body: detailedRows,
+      styles: { fontSize: 8, cellPadding: 3, overflow: 'linebreak', valign: 'top' },
+      columnStyles: { 0: { cellWidth: 42 }, 1: { cellWidth: 'auto' } },
+      headStyles: { fillColor: [200, 240, 105], textColor: [26, 26, 26] },
+      alternateRowStyles: { fillColor: [250, 250, 250] }
+    });
+
+    doc.save(`Attendance_Absences_${semFileName}_${year}.pdf`);
+  }
+
+  function getAttendanceOccurrenceEvents() {
+    const records = getAttRecs();
+    const startDateIso = resolveAttendanceSemesterStartDate();
+    const startDate = parseAttendanceDateValue(startDateIso)?.value || new Date();
+    const today = new Date();
+    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const events = [];
+
+    for (let d = new Date(startDate); d <= todayStart; d.setDate(d.getDate() + 1)) {
+      const dateKey = getAttendanceDateKey(d);
+      const dayName = DAYS[d.getDay()];
+      const fullDay = {'Sun':'Sunday','Mon':'Monday','Tue':'Tuesday','Wed':'Wednesday','Thu':'Thursday','Fri':'Friday','Sat':'Saturday'}[dayName];
+      if (!ATTENDANCE_DAYS.includes(fullDay)) continue;
+
+      getAttendanceOccurrenceBlocksForDate(dateKey, fullDay).forEach(block => {
+        const status = getAttendanceOccurrenceStatus(dateKey, block, records);
+        events.push({ ...block, status: status || 'unmarked' });
+      });
+    }
+
+    return events;
+  }
+
+  function getAttendanceStatsSummary(events = getAttendanceOccurrenceEvents()) {
     const subjects = new Set();
     const timetable = getAttTime();
     Object.values(timetable).forEach(s => { if(s && s.trim()) subjects.add(s.trim()); });
-    const records = getAttRecs();
-    let totP=0, totA=0;
+    const unmarkedCount = events.filter(e => e.status === 'unmarked').length;
+    const totals = { presentHours: 0, absentHours: 0, presentSessions: 0, absentSessions: 0 };
+    const subjectStats = [...subjects].sort().map(sub => {
+      const allSubjectEvents = events.filter(e => e.subject === sub);
+      const subjectEvents = allSubjectEvents.filter(e => e.status === 'present' || e.status === 'absent');
+      const presentEvents = subjectEvents.filter(e => e.status === 'present');
+      const absentEvents = subjectEvents.filter(e => e.status === 'absent');
+      const presentSessions = presentEvents.length;
+      const absentSessions = absentEvents.length;
+      const presentHours = presentEvents.reduce((sum, event) => sum + (event.slotKeys || []).length, 0);
+      const absentHours = absentEvents.reduce((sum, event) => sum + (event.slotKeys || []).length, 0);
+      const u = allSubjectEvents.filter(e => e.status === 'unmarked').length;
+      const c = allSubjectEvents.filter(e => e.status === 'cancelled').length;
+      totals.presentHours += presentHours;
+      totals.absentHours += absentHours;
+      totals.presentSessions += presentSessions;
+      totals.absentSessions += absentSessions;
+      const eligibleHours = presentHours + absentHours;
+      const exactAttendancePct = eligibleHours ? presentHours / eligibleHours * 100 : 0;
+      const pct = eligibleHours ? Math.round(exactAttendancePct) : 0;
+      const safeHours = eligibleHours ? Math.max(0, Math.floor((presentHours - 3*absentHours)/3)) : 0;
+      const requiredHours = eligibleHours ? Math.max(0, Math.ceil(3*absentHours - presentHours)) : 1;
+      const durationCounts = {};
+      allSubjectEvents.forEach(event => {
+        const durationHours = (event.slotKeys || []).length;
+        if (durationHours > 0) durationCounts[durationHours] = (durationCounts[durationHours] || 0) + 1;
+      });
+      const durationSummary = Object.keys(durationCounts)
+        .map(Number)
+        .sort((a, b) => a - b)
+        .map(hours => `${hours}-hour sessions: ${durationCounts[hours]}`)
+        .join(' • ');
+      const equivalentLines = [`${requiredHours} × 1-hour sessions`];
+      if (requiredHours > 1 && requiredHours % 2 === 1) {
+        equivalentLines.push(`${Math.floor(requiredHours / 2)} × 2-hour sessions and 1 × 1-hour session`);
+      } else if (requiredHours > 0 && requiredHours % 2 === 0) {
+        equivalentLines.push(`${requiredHours / 2} × 2-hour sessions`);
+      }
+      return {
+        subject: sub,
+        attendancePct: pct,
+        exactAttendancePct,
+        presentSessions,
+        presentHours,
+        absentSessions,
+        absentHours,
+        unmarkedSessions: u,
+        cancelledSessions: c,
+        durationCounts,
+        durationSummary,
+        requiredHours,
+        safeHours,
+        equivalentLines
+      };
+    });
+    return { subjects: subjectStats, totals, unmarkedCount };
+  }
+
+  function renderAttStats() {
+    const stats = getAttendanceStatsSummary();
+    const { totals, unmarkedCount } = stats;
     let html = '';
-    [...subjects].sort().forEach(sub => {
-      const recs = records.filter(r => r.subject === sub);
-      const p = recs.filter(r => r.status === 'present').length;
-      const a = recs.filter(r => r.status === 'absent').length;
-      totP += p; totA += a;
-      const elig = p + a;
-      const pct = elig ? Math.round(p/elig*100) : 0;
-      const safe = elig ? Math.max(0, Math.floor((p - 3*a)/3)) : 0;
-      const req = elig ? Math.max(0, Math.ceil(3*a - p)) : 1;
-      let cl = pct >= 75 ? 'var(--md-sys-color-success)' : pct > 60 ? 'var(--md-sys-color-warning)' : 'var(--md-sys-color-error)';
+    stats.subjects.forEach(subjectStat => {
+      const { subject, attendancePct, exactAttendancePct, presentSessions, absentSessions, requiredHours, safeHours } = subjectStat;
+      const cl = exactAttendancePct >= 75 ? 'var(--md-sys-color-success)' : exactAttendancePct > 60 ? 'var(--md-sys-color-warning)' : 'var(--md-sys-color-error)';
       html += `
         <div class="card" style="margin-bottom:8px; padding:12px 16px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="font-weight:600; font-size:16px">${sub}</div>
-            <div style="font-size:20px; font-weight:700; color:${cl}">${pct}%</div>
+            <div style="font-weight:600; font-size:16px">${subject}</div>
+            <div style="font-size:20px; font-weight:700; color:${cl}">${attendancePct}%</div>
           </div>
-          <div style="display:flex; gap:16px; margin-top:8px; font-size:12px; color:var(--md-sys-color-on-surface-variant)">
-            <span>Present: ${p}</span> <span>Absent: ${a}</span>
+          <div style="display:flex; flex-wrap:wrap; gap:6px 16px; margin-top:8px; font-size:12px; color:var(--md-sys-color-on-surface-variant)">
+            <span>Present: ${presentSessions} sessions</span>
+            <span>Absent: ${absentSessions} sessions</span>
           </div>
           <div style="margin-top:8px; font-size:12px;">
-            ${pct >= 75 ? `<span style="color:var(--md-sys-color-success)">${safe} safe bunks available</span>` : `<span style="color:var(--md-sys-color-error)">Need ${req} more to reach 75%</span>`}
+            ${exactAttendancePct >= 75
+              ? `<span style="color:var(--md-sys-color-success)">Safe absence capacity: ${safeHours} class-hours</span>`
+              : `<span style="color:var(--md-sys-color-error)">Need ${requiredHours} more class-hours to reach 75%</span>`}
           </div>
         </div>
       `;
     });
-    document.getElementById('attSubjectStats').innerHTML = html || '<div style="color:var(--md-sys-color-on-surface-variant)">No subjects added to timetable.</div>';
-    const overallPct = (totP+totA) ? Math.round(totP/(totP+totA)*100) : 0;
+
+    const alertHtml = unmarkedCount > 0 ? `
+      <div class="card" style="margin-bottom: 12px; border-color: rgba(240, 192, 105, 0.6); background: rgba(240, 192, 105, 0.06); padding: 14px;">
+        <div style="font-size: 12px; color: var(--md-sys-color-warning); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 6px;">Attendance Needs Attention</div>
+        <div style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">${unmarkedCount} unmarked ${unmarkedCount === 1 ? 'session' : 'sessions'}</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <button class="btn-secondary" style="margin: 0; width: auto; padding: 8px 12px; font-size: 13px;" onclick="openMissingAttendanceSheet()">Review Missing Attendance</button>
+          <button class="btn-secondary" style="margin: 0; width: auto; padding: 8px 12px; font-size: 13px;" onclick="exportAttendanceAbsences()">Export Attendance</button>
+        </div>
+      </div>
+    ` : `
+      <div class="card" style="margin-bottom: 12px; padding: 14px;">
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start;">
+          <button class="btn-secondary" style="margin: 0; width: auto; padding: 8px 12px; font-size: 13px;" onclick="exportAttendanceAbsences()">Export Attendance</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('attSubjectStats').innerHTML = `${alertHtml}${html || '<div style="color:var(--md-sys-color-on-surface-variant)">No subjects added to timetable.</div>'}`;
+
+    const overallPct = (totals.presentHours+totals.absentHours) ? Math.round(totals.presentHours/(totals.presentHours+totals.absentHours)*100) : 0;
     document.getElementById('attOverallCard').innerHTML = `
       <div style="text-align:center;">
-        <div style="font-size:14px; color:var(--md-sys-color-on-surface-variant); margin-bottom:4px;">Overall Attendance</div>
+        <div style="font-size:14px; color:var(--md-sys-color-on-surface-variant); margin-bottom:4px;">Recorded Attendance (class-hour weighted)</div>
         <div style="font-size:32px; font-weight:700; color:${overallPct>=75?'var(--md-sys-color-success)':'var(--md-sys-color-error)'}">${overallPct}%</div>
+        <div style="font-size:12px; color:var(--md-sys-color-on-surface-variant); margin-top:6px;">
+          Present: ${totals.presentSessions} sessions / ${totals.presentHours} class-hours
+          <span style="margin: 0 6px;">·</span>
+          Absent: ${totals.absentSessions} sessions / ${totals.absentHours} class-hours
+        </div>
+        <div style="font-size:13px; color:var(--md-sys-color-on-surface-variant); margin-top:6px;">Unmarked sessions: ${unmarkedCount}</div>
       </div>
     `;
   }
@@ -1971,7 +2441,8 @@
       }
     } catch(e) {}
 
-    if (insightsHtml === '') {
+    const unresolvedAttendance = getUnmarkedAttendanceQueue ? getUnmarkedAttendanceQueue().length : 0;
+    if (insightsHtml === '' && unresolvedAttendance === 0) {
       insightsHtml = `
         <div class="insight-card success">
           <div class="insight-icon">✨</div>
@@ -1980,6 +2451,17 @@
             <div class="insight-desc">Attendance is safe, no urgent tasks, and no pending alerts. Great job staying on top of things.</div>
           </div>
         </div>`;
+    }
+
+    if (unresolvedAttendance > 0) {
+      insightsHtml = `
+        <div class="insight-card warning" onclick="switchTab('attendance')">
+          <div class="insight-icon">⚠️</div>
+          <div>
+            <div class="insight-title">Attendance needs attention</div>
+            <div class="insight-desc">${unresolvedAttendance} past class${unresolvedAttendance === 1 ? '' : 'es'} is still left unmarked. Review and resolve them to clear the alert.</div>
+          </div>
+        </div>` + insightsHtml;
     }
 
     // Inject God Mode Cross-Module Analytics

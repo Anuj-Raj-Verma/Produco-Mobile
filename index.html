@@ -667,6 +667,15 @@
   </div>
 </div>
 
+<div class="bottom-sheet-overlay" id="sheetMissingAttendance" onclick="if(event.target===this) closeSheet('sheetMissingAttendance')">
+  <div class="bottom-sheet">
+    <div class="sheet-title">Missing Attendance</div>
+    <div id="missingAttendanceList" style="max-height: 53vh; overflow-y: auto; margin-bottom: 16px;"></div>
+    <div id="missingAttendanceBulkActions" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px;"></div>
+    <button class="btn-secondary" onclick="closeSheet('sheetMissingAttendance')">Close</button>
+  </div>
+</div>
+
 <div class="bottom-sheet-overlay" id="sheetGovNote" onclick="if(event.target===this) closeSheet('sheetGovNote')">
   <div class="bottom-sheet">
     <div class="sheet-title">Knowledge Vault Note</div>
