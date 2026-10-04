@@ -803,6 +803,7 @@
   .tx-title { font-size: 16px; font-weight: 500; }
   .tx-type { font-size: 12px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.18); width: fit-content; }
   body.dark-mode .tx-type, [data-theme="dark"] .tx-type { background: rgba(255,255,255,0.08); }
+  .tx-date { font-size: 11px; color: var(--md-sys-color-on-surface-variant); }
   .tx-amt { font-family: monospace; font-size: 16px; font-weight: 600; }
   .tx-del { background:none; border:none; color: var(--md-sys-color-error); font-size: 20px; padding: 4px 8px; cursor: pointer; }
   .streak-card { background: rgba(255, 255, 255, 0.24); border: 1px solid rgba(255, 255, 255, 0.55); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55); }

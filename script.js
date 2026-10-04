@@ -695,6 +695,7 @@
         <div class="tx-item-left">
           <div class="tx-title">${escapeHtml(r.label || 'Unnamed')}</div>
           <div class="tx-type" style="color:var(--md-sys-color-${isCredit?'success':'error'})">${isCredit ? 'Income' : 'Expense'}</div>
+          ${r.date ? `<div class="tx-date">${escapeHtml(r.date)}</div>` : ''}
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
           <div class="tx-amt" style="color:var(--md-sys-color-${isCredit?'success':'error'})">${isCredit?'+':'-'}₹${r.amount}</div>
@@ -717,7 +718,9 @@
     const label = document.getElementById('txLabel').value;
     if(!amt) return;
     const d = getTxData();
-    d[type].push({amount: amt, label: label});
+    const now = new Date();
+    const date = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
+    d[type].push({amount: amt, label: label, date: date});
     sv(`tx_${txYear}_${txMonth+1}`, d);
     closeSheet('txSheet'); renderTx();
     try { triggerHaptic('medium'); } catch(e){}
