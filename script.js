@@ -3065,8 +3065,27 @@ document.addEventListener('click', function(e) {
     
     // Register Service Worker for Offline PWA Support
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(() => console.log('Service Worker Registered successfully'))
+      const hadController = Boolean(navigator.serviceWorker.controller);
+      let refreshing = false;
+      if (hadController) {
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          refreshing = true;
+          window.location.reload();
+        });
+      }
+
+      navigator.serviceWorker.register(new URL('sw.js', document.baseURI), {updateViaCache: 'none'})
+        .then(registration => {
+          console.log('Service Worker Registered successfully');
+          const checkForUpdate = () => registration.update().catch(err => {
+            console.warn('Service Worker update check failed:', err);
+          });
+          checkForUpdate();
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') checkForUpdate();
+          });
+        })
         .catch(err => console.log('Service Worker Registration Failed:', err));
     }
     if (typeof updateFocusNavIndicator === 'function') {
