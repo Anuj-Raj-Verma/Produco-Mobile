@@ -805,6 +805,7 @@
   body.dark-mode .tx-type, [data-theme="dark"] .tx-type { background: rgba(255,255,255,0.08); }
   .tx-date { font-size: 11px; color: var(--md-sys-color-on-surface-variant); }
   .tx-amt { font-family: monospace; font-size: 16px; font-weight: 600; }
+  .tx-edit { background:none; border:none; color: var(--md-sys-color-on-surface-variant); font-size: 19px; padding: 4px 6px; cursor: pointer; }
   .tx-del { background:none; border:none; color: var(--md-sys-color-error); font-size: 20px; padding: 4px 8px; cursor: pointer; }
   .streak-card { background: rgba(255, 255, 255, 0.24); border: 1px solid rgba(255, 255, 255, 0.55); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
   body.dark-mode .streak-card, [data-theme="dark"] .streak-card { background: rgba(30, 30, 30, 0.28); border: 1px solid rgba(255, 255, 255, 0.16); box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08); }

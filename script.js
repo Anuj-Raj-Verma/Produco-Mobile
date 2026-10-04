@@ -669,7 +669,42 @@
   }
 
   // --- TRANSACTIONS ---
-  function getTxData(){ return ld(`tx_${txYear}_${txMonth+1}`, {debit:[], credit:[]}); }
+  function createTxId() { return `tx-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`; }
+  function txStorageKey(year = txYear, month = txMonth) { return `tx_${year}_${month+1}`; }
+  function getTxDataForKey(key) {
+    const data = ld(key, {debit:[], credit:[]});
+    const ids = new Set();
+    let changed = false;
+    ['debit', 'credit'].forEach(type => data[type].forEach(record => {
+      if (!record.id || !/^[A-Za-z0-9_-]+$/.test(record.id) || ids.has(record.id)) {
+        record.id = createTxId();
+        changed = true;
+      }
+      ids.add(record.id);
+    }));
+    if (changed) sv(key, data);
+    return data;
+  }
+  function getTxData(){ return getTxDataForKey(txStorageKey()); }
+  function txDateForInput(date) {
+    const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(date || '');
+    if (!match) return '';
+    const [, day, month, year] = match;
+    const parsed = new Date(Number(year), Number(month) - 1, Number(day));
+    if (parsed.getFullYear() !== Number(year) || parsed.getMonth() !== Number(month) - 1 || parsed.getDate() !== Number(day)) return '';
+    return `${year}-${month}-${day}`;
+  }
+  function txDateFromInput(date) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date || '');
+    if (!match) return null;
+    const [, year, month, day] = match;
+    const parsed = new Date(Number(year), Number(month) - 1, Number(day));
+    if (parsed.getFullYear() !== Number(year) || parsed.getMonth() !== Number(month) - 1 || parsed.getDate() !== Number(day)) return null;
+    return {date: `${day}-${month}-${year}`, key: `tx_${year}_${Number(month)}`};
+  }
+  let txEditingId = null;
+  let txEditingSourceKey = null;
+  let txPendingDelete = null;
   function renderTx() {
     document.getElementById('txMonthLabel').textContent = MONTHS[txMonth] + ' ' + txYear;
     const data = getTxData();
@@ -699,7 +734,8 @@
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
           <div class="tx-amt" style="color:var(--md-sys-color-${isCredit?'success':'error'})">${isCredit?'+':'-'}₹${r.amount}</div>
-          <button class="tx-del" onclick="deleteTx('${type}', ${idx})">×</button>
+          <button class="tx-edit" onclick="editTx('${type}', '${r.id}')" aria-label="Edit transaction">✎</button>
+          <button class="tx-del" onclick="deleteTx('${type}', '${r.id}')" aria-label="Delete transaction">×</button>
         </div>
       </div>
     `;
@@ -707,29 +743,118 @@
   function txPrev(){ txMonth--; if(txMonth<0){txMonth=11; txYear--;} renderTx(); }
   function txNext(){ txMonth++; if(txMonth>11){txMonth=0; txYear++;} renderTx(); }
   function openTxSheet() {
+    txEditingId = null;
+    txEditingSourceKey = null;
+    document.querySelector('#txSheet .sheet-title').textContent = 'Add Transaction';
+    document.getElementById('txDateGroup').style.display = 'none';
+    document.getElementById('txType').value = 'debit';
     document.getElementById('txAmt').value = '';
     document.getElementById('txLabel').value = '';
+    document.getElementById('txDate').value = '';
     document.getElementById('txSheet').classList.add('open');
     try { triggerHaptic('light'); } catch(e){}
+  }
+  function editTx(type, id) {
+    const key = txStorageKey();
+    const data = getTxDataForKey(key);
+    const record = data[type].find(item => item.id === id);
+    if (!record) return;
+    txEditingId = id;
+    txEditingSourceKey = key;
+    document.querySelector('#txSheet .sheet-title').textContent = 'Edit Transaction';
+    document.getElementById('txType').value = type;
+    document.getElementById('txAmt').value = record.amount;
+    document.getElementById('txLabel').value = record.label || '';
+    document.getElementById('txDate').value = txDateForInput(record.date);
+    document.getElementById('txDateGroup').style.display = '';
+    document.getElementById('txSheet').classList.add('open');
+    try { triggerHaptic('light'); } catch(e){}
+  }
+  function closeTxSheet() {
+    txEditingId = null;
+    txEditingSourceKey = null;
+    closeSheet('txSheet');
   }
   function saveTx() {
     const type = document.getElementById('txType').value;
     const amt = document.getElementById('txAmt').value;
     const label = document.getElementById('txLabel').value;
     if(!amt) return;
+    if (txEditingId) {
+      const sourceKey = txEditingSourceKey;
+      const sourceData = getTxDataForKey(sourceKey);
+      const sourceType = ['debit', 'credit'].find(txType =>
+        sourceData[txType].some(record => record.id === txEditingId)
+      );
+      if (!sourceType) {
+        console.error('Unable to find the transaction being edited.');
+        return;
+      }
+      const sourceIndex = sourceData[sourceType].findIndex(record => record.id === txEditingId);
+      const record = sourceData[sourceType][sourceIndex];
+      const inputDate = document.getElementById('txDate').value;
+      const parsedDate = inputDate ? txDateFromInput(inputDate) : null;
+      if (inputDate && !parsedDate) {
+        alert('Enter a valid transaction date.');
+        return;
+      }
+      const targetKey = parsedDate ? parsedDate.key : sourceKey;
+      record.amount = amt;
+      record.label = label;
+      if (parsedDate) record.date = parsedDate.date;
+      else delete record.date;
+
+      const movingRecord = sourceType !== type || sourceKey !== targetKey;
+      if (movingRecord) {
+        sourceData[sourceType].splice(sourceIndex, 1);
+        const targetData = sourceKey === targetKey ? sourceData : getTxDataForKey(targetKey);
+        targetData[type].push(record);
+        sv(sourceKey, sourceData);
+        if (sourceKey !== targetKey) sv(targetKey, targetData);
+      } else {
+        sv(sourceKey, sourceData);
+      }
+      closeTxSheet();
+      renderTx();
+      try { triggerHaptic('medium'); } catch(e){}
+      return;
+    }
+
     const d = getTxData();
     const now = new Date();
     const date = `${String(now.getDate()).padStart(2, '0')}-${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
-    d[type].push({amount: amt, label: label, date: date});
-    sv(`tx_${txYear}_${txMonth+1}`, d);
-    closeSheet('txSheet'); renderTx();
+    d[type].push({id: createTxId(), amount: amt, label: label, date: date});
+    sv(txStorageKey(), d);
+    closeTxSheet(); renderTx();
     try { triggerHaptic('medium'); } catch(e){}
   }
-  function deleteTx(type, idx) {
-    if(!confirm('Delete transaction?')) return;
-    const d = getTxData();
-    d[type].splice(idx, 1);
-    sv(`tx_${txYear}_${txMonth+1}`, d);
+  function deleteTx(type, id) {
+    const record = getTxData()[type].find(item => item.id === id);
+    if (!record) return;
+    txPendingDelete = {type, id, key: txStorageKey()};
+    document.getElementById('txDeleteMessage').textContent =
+      `Delete "${record.label || 'Unnamed'}" transaction of ₹${record.amount}?`;
+    document.getElementById('txDeleteSheet').classList.add('open');
+    try { triggerHaptic('light'); } catch(e){}
+  }
+  function cancelDeleteTx() {
+    txPendingDelete = null;
+    closeSheet('txDeleteSheet');
+  }
+  function confirmDeleteTx() {
+    if (!txPendingDelete) return;
+    const {type, id, key} = txPendingDelete;
+    const data = getTxDataForKey(key);
+    const index = data[type].findIndex(item => item.id === id);
+    if (index === -1) {
+      console.error('Unable to find the transaction selected for deletion.');
+      cancelDeleteTx();
+      return;
+    }
+    data[type].splice(index, 1);
+    sv(key, data);
+    txPendingDelete = null;
+    closeSheet('txDeleteSheet');
     renderTx();
     try { triggerHaptic('medium'); } catch(e){}
   }
