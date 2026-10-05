@@ -1180,6 +1180,90 @@
   .val.green { color: var(--md-sys-color-success); }
   .val.red { color: var(--md-sys-color-error); }
 
+  .fee-security-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.2;
+  }
+
+  .fee-lock-panel {
+    margin-top: 8px;
+    padding: 24px 20px 20px;
+    border-radius: 24px;
+    display: block;
+    max-width: 420px;
+    margin-inline: auto;
+  }
+  .fee-lock-header {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--md-sys-color-on-background);
+  }
+  .fee-lock-copy {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 14px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .fee-lock-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  .fee-lock-input {
+    padding-right: 44px !important;
+    letter-spacing: 0.32em;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .fee-password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .pin-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  .pin-input-wrap .mobile-input {
+    padding-right: 42px;
+  }
+  .pin-input-wrap .fee-password-toggle {
+    right: 8px;
+  }
+  .fee-inline-error {
+    min-height: 20px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--md-sys-color-error);
+    line-height: 1.4;
+  }
+  .fee-inline-body {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 14px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
   .cf-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; scrollbar-width: none; }
   .cf-filters::-webkit-scrollbar { display: none; }
   .cf-filter-sel {

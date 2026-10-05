@@ -74,6 +74,7 @@
     // Route-specific rendering (only call if functions exist)
     if (tabId === 'dashboard' && typeof renderDashboard === 'function') renderDashboard();
     if (tabId === 'calendar' && typeof renderCal === 'function') renderCal();
+    if (tabId === 'fees' && typeof renderCollegeFeesList === 'function') renderCollegeFeesList();
     if (tabId === 'health') {
       if (typeof renderLifestyle === 'function') renderLifestyle();
       if (typeof renderDiet === 'function') renderDiet();
@@ -3371,6 +3372,195 @@ function setCollegeFeesRecords(data){
 }
 function getMessCoveredMonths(r){ return Array.isArray(r?.months) ? r.months.filter(Boolean) : (r?.month ? [r.month] : []); }
 
+function hasCollegeFeesPin() {
+  const storedHash = localStorage.getItem('college_fees_pin_hash');
+  return Boolean(storedHash && storedHash.trim().length > 0);
+}
+
+function setCollegeFeesLockState(isLocked){
+  localStorage.setItem('college_fees_lock_state', isLocked ? 'true' : 'false');
+}
+
+function isCollegeFeesLocked(){
+  return hasCollegeFeesPin() && localStorage.getItem('college_fees_lock_state') === 'true';
+}
+
+function enforceNumericPinInput(input){
+  if (!input) return;
+  input.value = String(input.value || '').replace(/\D/g, '').slice(0, 4);
+}
+
+function toggleFeePinVisibility(inputId, btnOrId) {
+  const input = typeof inputId === 'string' ? document.getElementById(inputId) : inputId;
+  const btn = typeof btnOrId === 'string' ? document.getElementById(btnOrId) : btnOrId;
+  if (!input || !btn) return;
+  const isPassword = input.type === 'password';
+  input.type = isPassword ? 'text' : 'password';
+  btn.textContent = isPassword ? '🙈' : '👁';
+  btn.setAttribute('aria-label', isPassword ? 'Hide PIN' : 'Show PIN');
+}
+
+function clearFeePinError(elementId){
+  const el = document.getElementById(elementId);
+  if (el) el.textContent = '';
+}
+
+async function hashCollegeFeesPin(pin){
+  if (!window.crypto || !window.crypto.subtle) {
+    throw new Error('Web Crypto API is unavailable in this browser.');
+  }
+  const encoder = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(pin), { name: 'PBKDF2' }, false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({
+    name: 'PBKDF2',
+    salt,
+    iterations: 120000,
+    hash: 'SHA-256'
+  }, keyMaterial, 256);
+  const h = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2,'0')).join('');
+  const s = Array.from(salt).map(b => b.toString(16).padStart(2,'0')).join('');
+  return `${s}:${h}`;
+}
+
+function hexToBytes(hex){
+  const cleaned = (hex || '').replace(/\s+/g, '');
+  if (cleaned.length % 2 !== 0) return new Uint8Array();
+  const bytes = new Uint8Array(cleaned.length / 2);
+  for (let i = 0; i < cleaned.length; i += 2) {
+    bytes[i / 2] = parseInt(cleaned.slice(i, i + 2), 16);
+  }
+  return bytes;
+}
+
+async function verifyCollegeFeesPin(pin){
+  if (!window.crypto || !window.crypto.subtle) return false;
+  const stored = localStorage.getItem('college_fees_pin_hash');
+  if (!stored || !stored.includes(':')) return false;
+  const [saltHex, expectedHash] = stored.split(':');
+  const salt = hexToBytes(saltHex);
+  if (!salt.length) return false;
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(pin), { name: 'PBKDF2' }, false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({
+    name: 'PBKDF2',
+    salt,
+    iterations: 120000,
+    hash: 'SHA-256'
+  }, keyMaterial, 256);
+  const candidate = Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2,'0')).join('');
+  return candidate === expectedHash;
+}
+
+function updateCollegeFeesProtectionUI() {
+  const pinExists = hasCollegeFeesPin();
+  const locked = isCollegeFeesLocked();
+  const main = document.getElementById('collegeFeesMainContent');
+  const lockedPanel = document.getElementById('collegeFeesLockedPanel');
+  const setBtn = document.getElementById('feeSetPinBtn');
+  const lockBtn = document.getElementById('feeLockBtn');
+  const removeBtn = document.getElementById('feeRemovePinBtn');
+  const exportBtn = document.querySelector('#feeSecurityActions .btn-secondary:last-child');
+
+  if (main) main.style.display = locked ? 'none' : 'block';
+  if (lockedPanel) lockedPanel.style.display = locked ? 'block' : 'none';
+
+  if (setBtn) setBtn.style.display = pinExists ? 'none' : 'inline-flex';
+  if (lockBtn) lockBtn.style.display = pinExists && !locked ? 'inline-flex' : 'none';
+  if (removeBtn) removeBtn.style.display = pinExists && !locked ? 'inline-flex' : 'none';
+  if (exportBtn) exportBtn.style.display = locked ? 'none' : 'inline-flex';
+
+  if (!pinExists) {
+    setCollegeFeesLockState(false);
+  }
+}
+
+function openFeePinSheet() {
+  const sheet = document.getElementById('sheetFeePin');
+  if (!sheet) return;
+  const pinInput = document.getElementById('feePinInput');
+  const confirmInput = document.getElementById('feePinConfirmInput');
+  const errorEl = document.getElementById('feePinError');
+  if (pinInput) pinInput.value = '';
+  if (confirmInput) confirmInput.value = '';
+  if (errorEl) errorEl.textContent = '';
+  sheet.classList.add('open');
+}
+
+function openRemoveFeePinSheet() {
+  const sheet = document.getElementById('sheetFeeRemovePin');
+  if (sheet) sheet.classList.add('open');
+}
+
+async function saveCollegeFeesPin() {
+  const pinInput = document.getElementById('feePinInput');
+  const confirmInput = document.getElementById('feePinConfirmInput');
+  const errorEl = document.getElementById('feePinError');
+  if (!pinInput || !confirmInput || !errorEl) return;
+  const pin = String(pinInput.value || '').replace(/\D/g, '').slice(0, 4);
+  const confirmPin = String(confirmInput.value || '').replace(/\D/g, '').slice(0, 4);
+
+  if (!/^\d{4}$/.test(pin) || !/^\d{4}$/.test(confirmPin)) {
+    errorEl.textContent = 'Enter a valid 4-digit PIN.';
+    return;
+  }
+  if (pin !== confirmPin) {
+    errorEl.textContent = 'PINs do not match.';
+    return;
+  }
+
+  localStorage.setItem('college_fees_pin_hash', await hashCollegeFeesPin(pin));
+  setCollegeFeesLockState(false);
+  closeSheet('sheetFeePin');
+  updateCollegeFeesProtectionUI();
+  renderFees();
+}
+
+function lockCollegeFees() {
+  if (!hasCollegeFeesPin()) return;
+  setCollegeFeesLockState(true);
+  clearFeePinError('feeUnlockError');
+  const unlockInput = document.getElementById('feeUnlockPin');
+  if (unlockInput) unlockInput.value = '';
+  updateCollegeFeesProtectionUI();
+}
+
+async function unlockCollegeFees() {
+  const unlockInput = document.getElementById('feeUnlockPin');
+  const errorEl = document.getElementById('feeUnlockError');
+  if (!unlockInput || !errorEl) return;
+
+  const value = String(unlockInput.value || '').replace(/\D/g, '').slice(0, 4);
+  if (!/^\d{4}$/.test(value)) {
+    errorEl.textContent = 'Incorrect PIN.';
+    unlockInput.value = '';
+    return;
+  }
+
+  const isCorrect = await verifyCollegeFeesPin(value);
+  if (!isCorrect) {
+    errorEl.textContent = 'Incorrect PIN.';
+    unlockInput.value = '';
+    return;
+  }
+
+  setCollegeFeesLockState(false);
+  clearFeePinError('feeUnlockError');
+  unlockInput.value = '';
+  updateCollegeFeesProtectionUI();
+}
+
+function confirmRemoveCollegeFeesPin() {
+  localStorage.removeItem('college_fees_pin_hash');
+  setCollegeFeesLockState(false);
+  closeSheet('sheetFeeRemovePin');
+  const unlockInput = document.getElementById('feeUnlockPin');
+  if (unlockInput) unlockInput.value = '';
+  clearFeePinError('feeUnlockError');
+  updateCollegeFeesProtectionUI();
+  renderFees();
+}
+
 // Initialize Month Dropdown
 function initCfDropdown() {
   const drop = document.getElementById('cfDrop');
@@ -3397,6 +3587,9 @@ function toggleFeeCat() {
 // Main Render Function
 function renderCollegeFeesList(){ renderFees(); }
 function renderFees() {
+  updateCollegeFeesProtectionUI();
+  if (isCollegeFeesLocked()) return;
+
   const records = getCollegeFeesRecords();
   const academicRecords = Array.isArray(records.academic) ? records.academic : [];
   const messRecords = Array.isArray(records.mess) ? records.mess : [];
@@ -3666,6 +3859,7 @@ document.addEventListener('click', function(e) {
 
   // --- INITIALIZATION ---
   document.addEventListener('DOMContentLoaded', () => {
+    updateCollegeFeesProtectionUI();
     // Properly boot the UI and load the first tab
     switchTab('dashboard');
     restoreSleepButtonState();
