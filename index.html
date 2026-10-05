@@ -335,61 +335,43 @@
   </section>
 
   <section id="page-fees" class="page">
-    <div id="feeSecurityBar" style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px;">
-      <div style="font-size: 18px; font-weight: 600;">Fee Summary</div>
-      <div id="feeSecurityActions" style="display:flex; justify-content:flex-end; align-items:center; gap:8px; flex-wrap:wrap;">
-        <button id="feeSetPinBtn" class="btn-secondary fee-security-btn" style="margin:0; padding:8px 12px; width:auto; font-size:13px; display:none;" onclick="openFeePinSheet()">Set PIN</button>
-        <button id="feeLockBtn" class="btn-secondary fee-security-btn" style="margin:0; padding:8px 12px; width:auto; font-size:13px; display:none;" onclick="lockCollegeFees()">Lock</button>
-        <button id="feeRemovePinBtn" class="btn-secondary fee-security-btn" style="margin:0; padding:8px 12px; width:auto; font-size:13px; display:none; color:var(--md-sys-color-error); border-color:var(--md-sys-color-error);" onclick="openRemoveFeePinSheet()">Remove PIN</button>
-        <button class="btn-secondary" style="margin:0; padding:8px 12px; width:auto; font-size:13px;" onclick="exportCollegeFeesPdf()">Export PDF</button>
-      </div>
-    </div>
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+    <div style="font-size: 18px; font-weight: 600;">Fee Summary</div>
+    <button class="btn-secondary" style="margin:0; padding:8px 12px; width:auto; font-size:13px;" onclick="exportCollegeFeesPdf()">Export PDF</button>
+  </div>
+  
+  <div class="cf-summary">
+    <div class="cf-box"><h4>Academic Paid</h4><div class="val green" id="cfAcadPaid">₹0</div></div>
+    <div class="cf-box"><h4>Mess Paid</h4><div class="val green" id="cfMessPaid">₹0</div></div>
+    <div class="cf-box"><h4>Academic Pending</h4><div class="val red" id="cfAcadPending">₹0</div></div>
+    <div class="cf-box"><h4>Mess Pending</h4><div class="val red" id="cfMessPending">₹0</div></div>
+  </div>
+  
+  <div class="cf-box" style="margin-bottom: 16px; text-align: center; background: linear-gradient(135deg, rgba(200,240,105,0.1) 0%, rgba(200,240,105,0.02) 100%); border: 1px solid var(--md-sys-color-primary);">
+    <h4 style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);">Total Paid Overall</h4>
+    <div class="val" id="cfTotalPaid" style="font-size: 28px; color: var(--md-sys-color-primary);">₹0</div>
+  </div>
+  
+  <div class="cf-filters">
+    <select class="cf-filter-sel" id="cfFilterCategory" onchange="renderCollegeFeesList()">
+      <option value="">All Categories</option>
+      <option value="academic">Academic Fees</option>
+      <option value="mess">Mess Fees</option>
+    </select>
+    <select class="cf-filter-sel" id="cfFilterSemester" onchange="renderCollegeFeesList()"></select>
+    <select class="cf-filter-sel" id="cfFilterYear" onchange="renderCollegeFeesList()"></select>
+    <select class="cf-filter-sel" id="cfFilterMonth" onchange="renderCollegeFeesList()">
+      <option value="">All Months</option>
+      <option>January</option><option>February</option><option>March</option><option>April</option>
+      <option>May</option><option>June</option><option>July</option><option>August</option>
+      <option>September</option><option>October</option><option>November</option><option>December</option>
+    </select>
+    <input type="text" class="cf-filter-sel" id="cfFilterSearch" placeholder="Search Title or Notes..." oninput="renderCollegeFeesList()" style="width:160px;">
+  </div>
 
-    <div id="collegeFeesMainContent">
-      <div class="cf-summary">
-        <div class="cf-box"><h4>Academic Paid</h4><div class="val green" id="cfAcadPaid">₹0</div></div>
-        <div class="cf-box"><h4>Mess Paid</h4><div class="val green" id="cfMessPaid">₹0</div></div>
-        <div class="cf-box"><h4>Academic Pending</h4><div class="val red" id="cfAcadPending">₹0</div></div>
-        <div class="cf-box"><h4>Mess Pending</h4><div class="val red" id="cfMessPending">₹0</div></div>
-      </div>
-      
-      <div class="cf-box" style="margin-bottom: 16px; text-align: center; background: linear-gradient(135deg, rgba(200,240,105,0.1) 0%, rgba(200,240,105,0.02) 100%); border: 1px solid var(--md-sys-color-primary);">
-        <h4 style="font-size: 13px; color: var(--md-sys-color-on-surface-variant);">Total Paid Overall</h4>
-        <div class="val" id="cfTotalPaid" style="font-size: 28px; color: var(--md-sys-color-primary);">₹0</div>
-      </div>
-      
-      <div class="cf-filters">
-        <select class="cf-filter-sel" id="cfFilterCategory" onchange="renderCollegeFeesList()">
-          <option value="">All Categories</option>
-          <option value="academic">Academic Fees</option>
-          <option value="mess">Mess Fees</option>
-        </select>
-        <select class="cf-filter-sel" id="cfFilterSemester" onchange="renderCollegeFeesList()"></select>
-        <select class="cf-filter-sel" id="cfFilterYear" onchange="renderCollegeFeesList()"></select>
-        <select class="cf-filter-sel" id="cfFilterMonth" onchange="renderCollegeFeesList()">
-          <option value="">All Months</option>
-          <option>January</option><option>February</option><option>March</option><option>April</option>
-          <option>May</option><option>June</option><option>July</option><option>August</option>
-          <option>September</option><option>October</option><option>November</option><option>December</option>
-        </select>
-        <input type="text" class="cf-filter-sel" id="cfFilterSearch" placeholder="Search Title or Notes..." oninput="renderCollegeFeesList()" style="width:160px;">
-      </div>
-
-      <div id="cfList"></div>
-      <button class="fab liquid-fab" onclick="openFeeSheet()">+</button>
-    </div>
-
-    <div id="collegeFeesLockedPanel" class="fee-lock-panel liquid-panel" style="display:none;">
-      <div class="fee-lock-header">College Fees</div>
-      <div class="fee-lock-copy">Enter your PIN to view fee records.</div>
-      <div class="fee-lock-input-wrap">
-        <input id="feeUnlockPin" class="mobile-input fee-lock-input" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="4" placeholder="••••" aria-label="Enter PIN to unlock College Fees" oninput="enforceNumericPinInput(this)">
-        <button type="button" class="fee-password-toggle" id="feeUnlockToggle" aria-label="Show PIN" onclick="toggleFeePinVisibility('feeUnlockPin', 'feeUnlockToggle')">👁</button>
-      </div>
-      <div id="feeUnlockError" class="fee-inline-error" aria-live="polite"></div>
-      <button class="btn-primary" type="button" onclick="unlockCollegeFees()">Unlock</button>
-    </div>
-  </section>
+  <div id="cfList"></div>
+  <button class="fab liquid-fab" onclick="openFeeSheet()">+</button>
+</section>
 
   <section id="page-mood" class="page">
     <div class="module-header">
@@ -783,38 +765,6 @@
       <button class="btn-primary" type="submit">Save Record</button>
       <button type="button" class="btn-secondary" id="btnDeleteFee" style="display:none; color:var(--md-sys-color-error); border-color:var(--md-sys-color-error);" onclick="deleteFeeMobile()">Delete Record</button>
     </form>
-  </div>
-</div>
-
-<div class="bottom-sheet-overlay" id="sheetFeePin" onclick="if(event.target===this) closeSheet('sheetFeePin')">
-  <div class="bottom-sheet">
-    <div class="sheet-title">Set a 4-digit PIN</div>
-    <div class="form-group">
-      <label class="form-label">PIN</label>
-      <div class="pin-input-wrap">
-        <input id="feePinInput" class="mobile-input" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" aria-label="College fees PIN" oninput="enforceNumericPinInput(this)">
-        <button type="button" class="fee-password-toggle" aria-label="Show PIN" onclick="toggleFeePinVisibility('feePinInput', this)">👁</button>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Confirm PIN</label>
-      <div class="pin-input-wrap">
-        <input id="feePinConfirmInput" class="mobile-input" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" aria-label="Confirm college fees PIN" oninput="enforceNumericPinInput(this)">
-        <button type="button" class="fee-password-toggle" aria-label="Show PIN" onclick="toggleFeePinVisibility('feePinConfirmInput', this)">👁</button>
-      </div>
-    </div>
-    <div id="feePinError" class="fee-inline-error" aria-live="polite"></div>
-    <button class="btn-primary" type="button" onclick="saveCollegeFeesPin()">Set PIN</button>
-    <button type="button" class="btn-secondary" onclick="closeSheet('sheetFeePin')">Cancel</button>
-  </div>
-</div>
-
-<div class="bottom-sheet-overlay" id="sheetFeeRemovePin" onclick="if(event.target===this) closeSheet('sheetFeeRemovePin')">
-  <div class="bottom-sheet">
-    <div class="sheet-title">Remove PIN protection?</div>
-    <div class="fee-inline-body">This removes the College Fees privacy lock without deleting any records.</div>
-    <button class="btn-primary" type="button" style="background: var(--md-sys-color-error);" onclick="confirmRemoveCollegeFeesPin()">Remove PIN</button>
-    <button type="button" class="btn-secondary" onclick="closeSheet('sheetFeeRemovePin')">Cancel</button>
   </div>
 </div>
 
