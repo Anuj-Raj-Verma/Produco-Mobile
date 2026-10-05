@@ -376,21 +376,23 @@
   <section id="page-mood" class="page">
     <div class="module-header">
       <button class="icon-btn liquid-btn glass-icon-btn" onclick="moodPrev()">←</button>
-      <div class="module-month" id="moodMonthLabel"></div>
+      <div class="module-month" id="moodYearLabel">2026</div>
       <button class="icon-btn liquid-btn glass-icon-btn" onclick="moodNext()">→</button>
     </div>
-    <div class="card liquid-card">
-      <div class="card-title" style="text-align:center; font-size: 14px;">Monthly Overview</div>
-      <div style="position:relative; height:180px; width:100%; margin-bottom:20px;"><canvas id="moodPieChart"></canvas></div>
+
+    <div style="display:flex; justify-content:center; margin: 0 0 16px;">
+      <button class="btn-secondary" style="width:auto; min-width:110px; padding:9px 16px; margin:0; font-size:13px;" onclick="moodJumpToThisYear()">This year</button>
     </div>
-    <div class="card liquid-card">
-      <div class="cal-grid" id="moodGrid"></div>
-      <div style="display:flex; justify-content:center; gap:16px; margin-top:20px; font-size:12px; color:var(--md-sys-color-on-surface-variant);">
-        <span style="color:var(--md-sys-color-primary)">● Good</span>
-        <span style="color:var(--md-sys-color-warning)">● Normal</span>
-        <span style="color:var(--md-sys-color-error)">● Bad</span>
-      </div>
+
+    <div class="mood-legend" aria-label="Mood legend">
+      <span class="mood-legend-item mood-legend-good">■ Good</span>
+      <span class="mood-legend-item mood-legend-normal">■ Normal</span>
+      <span class="mood-legend-item mood-legend-bad">■ Bad</span>
+      <span class="mood-legend-item mood-legend-unmarked">□ Unmarked</span>
     </div>
+
+    <div class="mood-helper-text">Tap a day to cycle: Good, Normal, Bad, Unmarked.</div>
+    <div id="moodYearGrid" class="mood-year-grid"></div>
   </section>
 
   <section id="page-streak" class="page">

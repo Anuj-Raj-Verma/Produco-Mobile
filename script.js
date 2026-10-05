@@ -573,7 +573,17 @@
     if(moreNav) moreNav.classList.add('active');
 
     if(pageId === 'transactions') renderTx();
-    if(pageId === 'mood') renderMood();
+    if (pageId === 'mood') {
+      today = new Date();
+      moodYear = today.getFullYear();
+      renderMood();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const todayButton = document.getElementById('mood-today');
+          if (todayButton) todayButton.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+        });
+      });
+    }
     if(pageId === 'streak') renderStreaks();
     if(pageId === 'attendance') renderAttendance();
     if(pageId === 'foundation') renderGovExam();
@@ -925,63 +935,160 @@
   }
 
   // --- MOOD TRACKER ---
-  function renderMood() {
-    document.getElementById('moodMonthLabel').textContent = MONTHS[moodMonth] + ' ' + moodYear;
-    const g = document.getElementById('moodGrid');
-    g.innerHTML = DAYS.map(d => `<div class="cal-dow">${d.charAt(0)}</div>`).join('');
-    const first = new Date(moodYear, moodMonth, 1).getDay();
-    const days = new Date(moodYear, moodMonth+1, 0).getDate();
-    let counts = {good: 0, normal: 0, bad: 0};
-    for(let i=0; i<first; i++) g.innerHTML += `<div class="cal-day other-month"></div>`;
-    for(let d=1; d<=days; d++) {
-      const dateKey = `${moodYear}-${moodMonth+1}-${d}`;
-      const mood = ld('mood_'+dateKey, null);
-      if(mood === 'good') counts.good++;
-      else if(mood === 'normal') counts.normal++;
-      else if(mood === 'bad') counts.bad++;
-      const isToday = d===today.getDate() && moodMonth===today.getMonth() && moodYear===today.getFullYear();
-      let cls = `cal-day ${isToday ? 'today' : ''}`;
-      if(mood) cls += ` mood-${mood}`;
-      g.innerHTML += `<div class="${cls}" onclick="openMoodSheet('${dateKey}', ${d})">${d}</div>`;
+  const MOOD_SEQUENCE = ['unmarked', 'good', 'normal', 'bad'];
+
+  function getMoodStorageKeys(dateKey) {
+    const [year, month, day] = dateKey.split('-');
+    if (!year || !month || !day) return [`mood_${dateKey}`];
+
+    const monthNum = String(Number(month));
+    const dayNum = String(Number(day));
+    const monthPadded = String(Number(month)).padStart(2, '0');
+    const dayPadded = String(Number(day)).padStart(2, '0');
+
+    return [
+      `mood_${year}-${monthPadded}-${dayPadded}`,
+      `mood_${year}-${monthPadded}-${dayNum}`,
+      `mood_${year}-${monthNum}-${dayPadded}`,
+      `mood_${year}-${monthNum}-${dayNum}`
+    ];
+  }
+
+  function canonicalMoodKey(dateKey) {
+    return `mood_${dateKey.split('-').map(part => String(Number(part)).padStart(2, '0')).join('-')}`;
+  }
+
+  function getMoodState(dateKey) {
+    for (const key of getMoodStorageKeys(dateKey)) {
+      const value = ld(key, null);
+      if (MOOD_SEQUENCE.includes(value)) return value;
     }
-    renderMoodChart(counts);
+    return 'unmarked';
   }
-  function moodPrev(){ moodMonth--; if(moodMonth<0){moodMonth=11; moodYear--;} renderMood(); }
-  function moodNext(){ moodMonth++; if(moodMonth>11){moodMonth=0; moodYear++;} renderMood(); }
+
+  function persistMoodState(dateKey, value) {
+    const canonicalKey = canonicalMoodKey(dateKey);
+    getMoodStorageKeys(dateKey).forEach(key => localStorage.removeItem(key));
+    if (value === 'unmarked') {
+      localStorage.removeItem(canonicalKey);
+      return;
+    }
+    sv(canonicalKey, value);
+  }
+
+  function getNextMoodState(currentState) {
+    const currentIndex = MOOD_SEQUENCE.indexOf(currentState);
+    const nextIndex = (currentIndex + 1) % MOOD_SEQUENCE.length;
+    return MOOD_SEQUENCE[nextIndex];
+  }
+
+  function getDateFromKey(dateKey) {
+    const [year, month, day] = (dateKey || '').split('-').map(Number);
+    if (!year || !month || !day) return null;
+    return new Date(year, month - 1, day);
+  }
+
+  function isDateKeyInFuture(dateKey) {
+    const selectedDate = getDateFromKey(dateKey);
+    if (!selectedDate) return false;
+    const todayDate = new Date();
+    const todayLocal = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate());
+    return selectedDate > todayLocal;
+  }
+
+  function formatMoodDateLabel(dateKey) {
+    const date = getDateFromKey(dateKey);
+    if (!date) return '';
+    return `${date.getDate()} ${MONTHS[date.getMonth()]}`;
+  }
+
+  function renderMood() {
+    const yearLabel = document.getElementById('moodYearLabel');
+    if (yearLabel) yearLabel.textContent = String(moodYear);
+
+    const moodGrid = document.getElementById('moodYearGrid');
+    if (!moodGrid) return;
+
+    const monthMarkup = MONTHS.map((monthName, monthIndex) => {
+      const daysInMonth = new Date(moodYear, monthIndex + 1, 0).getDate();
+      const firstDay = new Date(moodYear, monthIndex, 1).getDay();
+      const cells = [];
+
+      for (let spacer = 0; spacer < firstDay; spacer++) {
+        cells.push('<div class="mood-day mood-day-empty" aria-hidden="true"></div>');
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = `${moodYear}-${String(monthIndex + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const state = getMoodState(dateKey);
+        const isToday = moodYear === today.getFullYear() && monthIndex === today.getMonth() && day === today.getDate();
+        const isFuture = isDateKeyInFuture(dateKey) || (moodYear > today.getFullYear());
+        const classes = ['mood-day'];
+
+        if (state !== 'unmarked') classes.push(`mood-state-${state}`);
+        if (isToday) classes.push('mood-today');
+        if (isFuture) classes.push('mood-future');
+
+        const isDisabled = isFuture;
+        const title = isDisabled ? `Future date: ${formatMoodDateLabel(dateKey)}` : `Mood for ${formatMoodDateLabel(dateKey)}`;
+        const clickHandler = isDisabled ? '' : `onclick="handleMoodDayClick('${dateKey}')"`;
+
+        cells.push(`<button type="button" ${isToday ? 'id="mood-today"' : ''} class="${classes.join(' ')}" ${clickHandler} aria-label="${title}" title="${title}" data-date-key="${dateKey}" ${isDisabled ? 'disabled' : ''}>${day}</button>`);
+      }
+
+      return `
+        <div class="mood-month-block">
+          <div class="mood-month-name">${monthName}</div>
+          <div class="mood-days-grid">${cells.join('')}</div>
+        </div>
+      `;
+    }).join('');
+
+    moodGrid.innerHTML = monthMarkup;
+  }
+
+  function moodPrev() {
+    moodYear--;
+    renderMood();
+  }
+
+  function moodNext() {
+    moodYear++;
+    renderMood();
+  }
+
+  function moodJumpToThisYear() {
+    moodYear = today.getFullYear();
+    renderMood();
+  }
+
+  function handleMoodDayClick(dateKey) {
+    if (isDateKeyInFuture(dateKey) || moodYear > today.getFullYear()) return;
+
+    const currentState = getMoodState(dateKey);
+    const nextState = getNextMoodState(currentState);
+
+    persistMoodState(dateKey, nextState);
+
+    renderMood();
+    try { triggerHaptic('light'); } catch (e) {}
+  }
+
   function openMoodSheet(key, dayNum) {
-    document.getElementById('moodDateKey').value = key;
-    document.getElementById('moodSheetTitle').textContent = `Mood for ${dayNum} ${MONTHS[moodMonth]}`;
-    document.getElementById('moodSheet').classList.add('open');
-    try { triggerHaptic('light'); } catch(e){}
+    return null;
   }
+
   function saveMood(val) {
-    const key = document.getElementById('moodDateKey').value;
-    if(val) sv('mood_'+key, val);
-    else localStorage.removeItem('mood_'+key);
-    closeSheet('moodSheet'); renderMood();
+    const key = document.getElementById('moodDateKey') ? document.getElementById('moodDateKey').value : null;
+    if (!key) return;
+    if (isDateKeyInFuture(key)) return;
+    persistMoodState(key, val || 'unmarked');
+    closeSheet('moodSheet');
+    renderMood();
   }
+
   function renderMoodChart(c) {
-    const ctx = document.getElementById('moodPieChart');
-    if(!ctx) return;
-    if(moodChartInstance) moodChartInstance.destroy();
-    const themeStyles = getComputedStyle(document.body);
-    const pri = themeStyles.getPropertyValue('--md-sys-color-primary').trim();
-    const warn = themeStyles.getPropertyValue('--md-sys-color-warning').trim();
-    const err = themeStyles.getPropertyValue('--md-sys-color-error').trim();
-    const surface = themeStyles.getPropertyValue('--md-sys-color-surface-variant').trim();
-    const total = c.good + c.normal + c.bad;
-    moodChartInstance = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: total === 0 ? ['No Data'] : ['Good', 'Normal', 'Bad'],
-        datasets: [{
-          data: total === 0 ? [1] : [c.good, c.normal, c.bad],
-          backgroundColor: total === 0 ? [surface] : [pri, warn, err],
-          borderWidth: 0
-        }]
-      },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: themeStyles.getPropertyValue('--md-sys-color-on-surface-variant').trim(), font: { family: 'Outfit' } } } }, cutout: '70%' }
-    });
+    return null;
   }
 
   // --- STREAKS ---
