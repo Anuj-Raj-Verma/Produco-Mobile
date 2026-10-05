@@ -1,5 +1,5 @@
 // --- CORE UTILS ---
-  const today = new Date();
+  let today = new Date();
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const DEFAULT_DIET_CATS = ['Breakfast', 'Lunch', 'Dinner', 'Snacks', 'Water', 'Fruits', 'Vegetables', 'Protein', 'Milk', 'Oats'];
@@ -16,6 +16,22 @@
   let trendBarChartInstance = null;
 
   function fd(d) { return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+  function getDateKey(date = new Date()) {
+    const d = date instanceof Date ? date : new Date(date);
+    return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+  }
+  function refreshTodayContext() {
+    today = new Date();
+    calYear = today.getFullYear();
+    calMonth = today.getMonth();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+    txYear = today.getFullYear();
+    txMonth = today.getMonth();
+    moodYear = today.getFullYear();
+    moodMonth = today.getMonth();
+    return today;
+  }
   function sv(k,v) { try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
   function ld(k,def) { try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):def;}catch(e){return def;} }
   function escapeHtml(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
@@ -2233,7 +2249,8 @@
   // --- DASHBOARD ---
   
   function calculateLifeScore() {
-    const y = today.getFullYear(), m = today.getMonth() + 1, d = today.getDate();
+    const now = refreshTodayContext();
+    const y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate();
     const ls = ld(`ls_${y}_${m}_${d}`, {});
     
     let score = 10; // Baseline points
@@ -2277,8 +2294,9 @@
     return Math.max(0, Math.min(100, Math.round(score)));
   }
   function renderDashboard() {
-    const y = today.getFullYear(), m = today.getMonth() + 1, d = today.getDate();
-    const key = y + '-' + m + '-' + d;
+    const now = refreshTodayContext();
+    const y = now.getFullYear(), m = now.getMonth() + 1, d = now.getDate();
+    const key = getDateKey(now);
 
     const hour = new Date().getHours();
     let greeting = 'Good evening';
@@ -2725,7 +2743,8 @@
   }
 
   function saveToLifestyle(category, hoursToAdd) {
-    const key = `ls_${today.getFullYear()}_${today.getMonth()+1}_${today.getDate()}`;
+    const now = new Date();
+    const key = `ls_${now.getFullYear()}_${now.getMonth()+1}_${now.getDate()}`;
     let dailyData = ld(key, { study: '', screen: '', workout: '', wake: '', sleep: '', tags: {} });
     
     let currentVal = parseFloat(dailyData[category] || 0);
@@ -2741,6 +2760,7 @@
     
     sv(key, dailyData);
     if(typeof renderLifestyle === 'function') renderLifestyle();
+    if(typeof renderDashboard === 'function') renderDashboard();
   }
 
   // 2. POMODORO LOGIC
@@ -2916,6 +2936,7 @@
 
   // --- LIFESTYLE ---
   function renderLifestyle() {
+    refreshTodayContext();
     document.getElementById('lsMonthLabel').textContent = MONTHS[currentMonth] + ' ' + currentYear;
     const days = new Date(currentYear, currentMonth+1, 0).getDate();
     let html = '';
@@ -3175,12 +3196,14 @@
     try { triggerHaptic('medium'); } catch(e){}
     closeSheet('lsSheet');
     renderLifestyle();
+    if (typeof renderDashboard === 'function') renderDashboard();
   }
 
   // --- DIET ---
   function getDietCats(){ return ld('diet_cats_'+currentYear+'_'+(currentMonth+1), DEFAULT_DIET_CATS); }
   
   function renderDiet() {
+    refreshTodayContext();
     document.querySelectorAll('.current-month-display').forEach(el => el.innerText = `${MONTHS[currentMonth]} ${currentYear}`);
     document.getElementById('dietMonthLabel').textContent = MONTHS[currentMonth] + ' ' + currentYear;
     const days = new Date(currentYear, currentMonth+1, 0).getDate();
@@ -3298,6 +3321,7 @@
 
       // Refresh month/day UI summaries
       if (typeof renderDiet === 'function') renderDiet();
+      if (typeof renderDashboard === 'function') renderDashboard();
 
       // Update the diet pie/chart for the open date if present
       const dateStringEl = document.getElementById('dietDateKey');
@@ -3669,6 +3693,17 @@ document.addEventListener('click', function(e) {
     // Properly boot the UI and load the first tab
     switchTab('dashboard');
     restoreSleepButtonState();
+
+    setInterval(() => {
+      const now = new Date();
+      const todayChanged = now.getFullYear() !== today.getFullYear() || now.getMonth() !== today.getMonth() || now.getDate() !== today.getDate();
+      if (todayChanged) {
+        refreshTodayContext();
+        if (document.getElementById('page-dashboard') && document.getElementById('page-dashboard').classList.contains('active')) {
+          renderDashboard();
+        }
+      }
+    }, 60000);
     
     // Register Service Worker for Offline PWA Support
     if ('serviceWorker' in navigator) {
