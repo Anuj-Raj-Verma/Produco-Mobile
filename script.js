@@ -3722,46 +3722,139 @@ function deleteFeeMobile() {
 
 // PDF EXPORT
 async function exportCollegeFeesPdf() {
-  if(!window.jspdf || !window.jspdf.jsPDF) { 
-    alert("PDF library is still loading. Please wait a moment."); 
-    return; 
+  if(!window.jspdf || !window.jspdf.jsPDF) {
+    alert("PDF library is still loading. Please wait a moment.");
+    return;
   }
-  
+
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
   const records = getCollegeFeesRecords();
-  
-  doc.setFontSize(18); 
-  doc.text('PRODUCO', 14, 20);
-  doc.setFontSize(12); 
-  doc.text('College Fees Report', 14, 28);
-  
-  const rows = [];
-  [
+
+  const allRecords = [
     ...records.academic.map(r=>({...r, cat:'Academic'})), 
     ...records.mess.map(r=>({...r, cat:'Mess'}))
-  ]
-  .sort((a,b) => new Date(a.paymentDate) - new Date(b.paymentDate))
-  .forEach((r, i) => {
-    rows.push([ 
+  ].sort((a,b) => new Date(a.paymentDate) - new Date(b.paymentDate));
+  const totals = { academicPaid: 0, academicPending: 0, messPaid: 0, messPending: 0 };
+  const transactionIdColumnWidth = 42;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+
+  const rows = allRecords.map((r, i) => {
+    const amount = Number(r.amount);
+    const hasAmount = r.amount !== null && r.amount !== undefined
+      && String(r.amount).trim() !== '' && Number.isFinite(amount);
+    const amountText = hasAmount
+      ? `Rs. ${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      : String(r.amount ?? '');
+    const isPaid = String(r.status || '').toLowerCase() === 'paid';
+    const totalKey = `${r.cat.toLowerCase()}${isPaid ? 'Paid' : 'Pending'}`;
+    totals[totalKey] += hasAmount ? amount : 0;
+
+    const transactionId = String(r.transactionId || '');
+    const longTransactionId = transactionId
+      && doc.getTextWidth(transactionId) > transactionIdColumnWidth - 5;
+    const details = [
+      r.feeTitle ? `Fee: ${r.feeTitle}` : '',
+      r.cat === 'Academic'
+        ? (r.semester ? `Semester: ${r.semester}` : '')
+        : [
+            getMessCoveredMonths(r).length ? `Covered: ${getMessCoveredMonths(r).join(', ')}` : '',
+            r.year ? String(r.year) : ''
+          ].filter(Boolean).join(' '),
+      r.paymentMode ? `Payment mode: ${r.paymentMode}` : '',
+      r.notes ? `Notes: ${r.notes}` : '',
+      longTransactionId ? `Transaction ID: ${transactionId}` : ''
+    ].filter(Boolean).join('\n');
+    const paymentDate = String(r.paymentDate || '');
+    const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(paymentDate);
+    const formattedDate = dateMatch
+      ? `${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`
+      : paymentDate;
+
+    return [
       i+1, 
-      r.paymentDate, 
+      formattedDate,
       r.cat, 
-      `Rs. ${parseFloat(r.amount).toLocaleString('en-IN')}`, 
-      r.status.toUpperCase(), 
-      r.transactionId || '-', 
-      r.cat==='Academic' ? r.semester : getMessCoveredMonths(r).join(', ') 
-    ]);
+      amountText,
+      String(r.status || '').toUpperCase(),
+      longTransactionId ? '' : transactionId,
+      details
+    ];
   });
 
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const leftMargin = 14;
+  const rightMargin = 14;
+  const contentWidth = pageWidth - leftMargin - rightMargin;
+
+  doc.setTextColor(31, 41, 55);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(17);
+  doc.text('Produco – College Fees Report', leftMargin, 17);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(75, 85, 99);
+  doc.text(
+    `Academic paid: Rs. ${totals.academicPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}   |   Academic pending: Rs. ${totals.academicPending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}   |   Mess paid: Rs. ${totals.messPaid.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}   |   Mess pending: Rs. ${totals.messPending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}   |   Total paid: Rs. ${(totals.academicPaid + totals.messPaid).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    leftMargin,
+    24
+  );
+
   doc.autoTable({
-    startY: 40,
-    head: [['S.No', 'Date', 'Type', 'Amount', 'Status', 'Txn ID', 'Details']],
+    startY: 31,
+    margin: { left: leftMargin, right: rightMargin, bottom: 14 },
+    tableWidth: contentWidth,
+    head: [['S. No.', 'Payment Date', 'Fee Type', 'Amount (Rs.)', 'Status', 'Transaction ID', 'Payment Details']],
     body: rows,
-    styles: { fontSize: 9 }, 
-    headStyles: { fillColor: [200, 240, 105], textColor: [26, 26, 26] }
+    theme: 'grid',
+    styles: {
+      font: 'helvetica',
+      fontSize: 8,
+      textColor: [31, 41, 55],
+      cellPadding: { top: 3.2, right: 2.5, bottom: 3.2, left: 2.5 },
+      valign: 'middle',
+      overflow: 'linebreak',
+      lineColor: [220, 225, 231],
+      lineWidth: 0.15
+    },
+    headStyles: {
+      fillColor: [38, 50, 56],
+      textColor: [255, 255, 255],
+      fontStyle: 'bold',
+      fontSize: 8,
+      halign: 'left',
+      cellPadding: { top: 4, right: 2.5, bottom: 4, left: 2.5 }
+    },
+    alternateRowStyles: { fillColor: [244, 247, 249] },
+    columnStyles: {
+      0: { cellWidth: 18, halign: 'center' },
+      1: { cellWidth: 29, noWrap: true },
+      2: { cellWidth: 26, noWrap: true },
+      3: { cellWidth: 32, halign: 'right', noWrap: true },
+      4: { cellWidth: 23, halign: 'center', noWrap: true },
+      5: { cellWidth: transactionIdColumnWidth, fontSize: 7.5 },
+      6: { cellWidth: 99 }
+    },
+    didParseCell: data => {
+      if (data.section === 'body' && data.column.index === 4) {
+        const status = String(data.cell.raw || '').toLowerCase();
+        data.cell.styles.textColor = status === 'paid' ? [22, 101, 52] : [153, 27, 27];
+        data.cell.styles.fontStyle = 'bold';
+      }
+    },
   });
-  
+
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
+    doc.setPage(pageNumber);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(107, 114, 128);
+    doc.text(`Page ${pageNumber} of ${pageCount}`, pageWidth - rightMargin, pageHeight - 6, { align: 'right' });
+  }
+
   doc.save(`Produco_College_Fees_${fd(today)}.pdf`);
 }
 
